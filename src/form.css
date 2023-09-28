@@ -1,0 +1,39 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Mukta:wght@300&display=swap');
+
+.form{
+  text-align: center;
+}
+
+#navbar, #offcanvasDarkNavbar{
+  background: linear-gradient(to bottom right, #02005e, #001e52, #010236);
+color: #fff;
+}
+
+#offcanvasDarkNavbar{
+width: 15%;
+}
+
+.txt{
+  margin-top: 10px;
+  font-family: 'Bebas Neue', sans-serif;
+}
+
+.txtDados{
+  margin-top: 70px;
+  margin-bottom: -15px;
+  font-family: 'Bebas Neue', sans-serif;
+}
+
+#btnCadastro{
+  background: linear-gradient(to bottom right, #02005e, #001e52, #010236);
+  width: 150px;
+}
+
+#btnCadastro:hover{
+opacity: 0.9;
+}
+
+.error-message{
+  font-size: 12px;
+  color: red;
+}
