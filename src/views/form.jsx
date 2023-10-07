@@ -1,83 +1,24 @@
-import './form.css'
+import '../css/form.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.min.js';
-import { Button, Form } from 'reactstrap';
+import { Button, Form, } from 'reactstrap';
 import { useForm } from "react-hook-form";
-import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from 'yup';
+
 
 function Formulario() {
 
-    const validationFields = yup.object().shape({
-        código: yup.string().required("Este campo é obrigatório."),
-        unidade: yup.string().required("Este campo é obrigatório."),
-        habil: yup.string().required("Este campo é obrigatório."),
-        condor: yup.string().required("Este campo é obrigatório."),
-        natureza: yup.string().required("Este campo é obrigatório."),
-        cpfcnpj: yup.string().required("Este campo é obrigatório."),
-        inscMunicipal: yup.string().required("Este campo é obrigatório."),
-        nome: yup.string().required("Este campo é obrigatório."),
-        nomeFantasia: yup.string().required("Este campo é obrigatório."),
-        cidade: yup.string().required("Este campo é obrigatório."),
-        bairro: yup.string().required("Este campo é obrigatório."),
-        endereço: yup.string().required("Este campo é obrigatório."),
-        uf: yup.string().required("Este campo é obrigatório."),
-        cep: yup.string().required("Este campo é obrigatório."),
-        nomeContato: yup.string().required("Este campo é obrigatório."),
-        telefone: yup.string().required("Este campo é obrigatório."),
-        senha: yup.string().required("Este campo é obrigatório."),
-        contraSenha: yup.string().required("Este campo é obrigatório."),
-        dataNascimento: yup.string().required("Este campo é obrigatório."),
-        setor: yup.string().required("Este campo é obrigatório."),
-        localInstalação: yup.string().required("Este campo é obrigatório.")
-    })
-
-    const { register, handleSubmit, formState: { errors } } = useForm({
-        resolver: yupResolver(validationFields)
-    });
+    const { register, handleSubmit, formState: { errors } } = useForm({});
 
 
     const onSubmit = (data) => {
-        console.log(data)
+        console.log((data))
     }
+
 
 
     return (
 
         <div>
-
-            <nav className=" navbar navbar-dark bg-primary fixed-top mb-5" id="navbar">
-                <button className="navbar-toggler ms-3" type="button" data-bs-toggle="offcanvas"
-                    data-bs-target="#offcanvasDarkNavbar" aria-controls="offcanvasDarkNavbar">
-                    <span className="navbar-toggler-icon"></span>
-
-                </button>
-                <div className=" offcanvas offcanvas-start text-bg-primary" tabIndex="-1" id="offcanvasDarkNavbar"
-                    aria-labelledby="offcanvasDarkNavbarLabel">
-                    <div className="offcanvas-header">
-                        <h5 className="offcanvas-title" id="offcanvasDarkNavbarLabel">AZSIM 2.0.0</h5>
-
-                        <button type="button" className="btn-close btn-close-white" data-bs-dismiss="offcanvas"
-                            aria-label="Close"></button>
-                    </div>
-                    <div className="offcanvas-body">
-                        <ul className="navbar-nav justify-content-start flex-grow-1 pe-3">
-                            <li className="nav-item">
-                                <a className="nav-link" aria-current="page" href="#">Inicio</a>
-                            </li>
-
-                            <li className="nav-item">
-                                <a className="nav-link" aria-current="page" href="dados">Cadastro</a>
-                            </li>
-
-                            <li className="nav-item">
-                                <a className="nav-link" aria-current="page" href="#">Sair</a>
-                            </li>
-
-                        </ul>
-                    </div>
-                </div>
-            </nav>
 
 
             <div className="container justify-content-center">
@@ -88,86 +29,71 @@ function Formulario() {
                     className="text-start justify-content-center p-3">
                     <div className="row">
                         <div className="col">
-                            <label htmlFor="documento" className="form-label">* Código</label>
+                            <label htmlFor="documento" className="form-label"><strong>* Código</strong></label>
                             <input name='codigo' {...register("código", { required: true })} type="text" className="form-control" id="documento" placeholder=""
                             />
-                            <p className='error-message'>{errors.código?.message}</p>
                         </div>
                         <div className="col mb-2">
-                            <label htmlFor="unidade" className="form-label">* Unidade</label>
+                            <label htmlFor="unidade" className="form-label"><strong>* Unidade</strong></label>
                             <select name='unidade'  {...register("unidade", { required: true })} id="unidade" className="form-select" aria-label=".form-select example">
                                 <option defaultValue={"Montenegro"} value="1">Montenegro</option>
                                 <option value="2">Porto Alegre</option>
                             </select>
-                            <p className='error-message'>{errors.unidade?.message}</p>
-
                         </div>
                         <div className="col">
-                            <label htmlFor="habil" className="form-label">* Hábil</label>
+                            <label htmlFor="habil" className="form-label"><strong>* Hábil</strong></label>
                             <input name='habil' {...register("habil", { required: true })} type="text" className="form-control" id="habil" placeholder="" />
-                            <p className='error-message'>{errors.habil?.message}</p>
                         </div>
                         <div className="col h-25">
-                            <label htmlFor="condor" className="form-label">* Condor</label>
+                            <label htmlFor="condor" className="form-label"><strong>* Condor</strong></label>
                             <input name='condor' {...register("condor", { required: true })} type="text" className="form-control" id="condor" placeholder="" />
-                            <p className='error-message'>{errors.condor?.message}</p>
                         </div>
                     </div>
                     <div className="row mb-2">
                         <div className="col">
-                            <label htmlFor="natureza" className="form-label">* Natureza</label>
+                            <label htmlFor="natureza" className="form-label"><strong>* Natureza</strong></label>
                             <select name='natureza' {...register("natureza", { required: true })} id="natureza" className="form-select" aria-label=".form-select example"
                             >
                                 <option defaultValue={"FÍSICA"} value="1">FÍSICA</option>
                                 <option value="2">JURÍDICA</option>
                             </select>
-                            <p className='error-message'>{errors.natureza?.message}</p>
                         </div>
                         <div className="col">
-                            <label htmlFor="cpf" className="form-label">* CPF/CNPJ</label>
+                            <label htmlFor="cpf" className="form-label"><strong>* CPF/CNPJ</strong></label>
                             <input name='cpf/cnpj' maxLength="14" type="text" {...register("cpfcnpj", { required: true })} className="form-control" id="cpf" placeholder="" />
-                            <p className='error-message'>{errors.cpfcnpj?.message}</p>
                         </div>
                         <div className="col">
-                            <label htmlFor="inscMunicipal" className="form-label">* Inscrição Municipal</label>
-                            <input name='insc.municipal' {...register("incmunincipal", { required: true })} type="text" className="form-control" id="inscMunicipal" placeholder=""
-                            />
-                            <p className='error-message'>{errors.inscMunicipal?.message}</p>
+                            <label htmlFor="inscMunicipal" className="form-label"><strong>* Inscrição Municipal</strong></label>
+                            <input name='insc.municipal' {...register("incmunincipal", { required: true })} type="number" className="form-control" id="inscMunicipal" placeholder="" />
                         </div>
                     </div>
                     <div className="row">
                         <div className="col mb-2">
 
-                            <label htmlFor="nome" className="form-label">* Nome/Razão Social</label>
-                            <input name='nome'  {...register("nome/razao-social", { required: true })} type="text" className="form-control" id="nome" placeholder="" />
-                            <p className='error-message'>{errors.nome?.message}</p>
-                        </div>
+                            <label htmlFor="nome" className="form-label"><strong>* Nome/Razão Social</strong></label>
+                            <input name='nome'  {...register("nome/razao-social", { required: true })} type="text" className="form-control" id="nome" placeholder="" />                        </div>
                         <div className="col">
-                            <label htmlFor="nome_fantasia" className="form-label">* Nome Fantasia</label>
+                            <label htmlFor="nome_fantasia" className="form-label"><strong>* Nome Fantasia</strong></label>
                             <input name='nomeFantasia' {...register("nome-fantasia", { required: true })} type="text" className="form-control" id="nome_fantasia" placeholder="" />
-                            <p className='error-message'>{errors.nomeFantasia?.message}</p>
                         </div>
                     </div>
                     <div className="row">
                         <div className="col mb-2">
-                            <label htmlFor="endereco" className="form-label">* Endereço</label>
+                            <label htmlFor="endereco" className="form-label"><strong>* Endereço</strong></label>
                             <input name='endereco' {...register("endereço", { required: true })} type="text" className="form-control" id="endereco" placeholder="" />
-                            <p className='error-message'>{errors.endereço?.message}</p>
                         </div>
                         <div className="col">
-                            <label htmlFor="bairro" className="form-label">* Bairro</label>
+                            <label htmlFor="bairro" className="form-label"><strong>* Bairro</strong></label>
                             <input name='bairro' {...register("bairro", { required: true })} type="text" className="form-control" id="bairro" placeholder="" />
-                            <p className='error-message'>{errors.bairro?.message}</p>
                         </div>
                     </div>
                     <div className="row">
                         <div className="col">
-                            <label htmlFor="cidade" className="form-label">* Cidade</label>
+                            <label htmlFor="cidade" className="form-label"><strong>* Cidade</strong></label>
                             <input name='cidade' {...register("cidade", { required: true })} type="text" className="form-control" id="cidade" placeholder="" />
-                            <p className='error-message'>{errors.cidade?.message}</p>
                         </div>
                         <div className="col">
-                            <label htmlFor="uf" className="form-label">* Uf</label>
+                            <label htmlFor="uf" className="form-label"><strong>* Uf</strong></label>
                             <select name='uf' {...register("uf", { required: true })} id="uf" className="form-select" aria-label=".form-select example">
                                 <option defaultValue={"AC"} value="1">AC</option>
                                 <option value="2">AL</option>
@@ -196,20 +122,18 @@ function Formulario() {
                                 <option value="25">SE</option>
                                 <option value="26">TO</option>
                             </select>
-                            <p className='error-message'>{errors.uf?.message}</p>
                         </div>
 
                         <div className="col">
-                            <label htmlFor="cep" className="form-label">* CEP</label>
+                            <label htmlFor="cep" className="form-label"><strong>* CEP</strong></label>
                             <input name='cep' {...register("cep", { required: true })} required type="number" maxLength="9" className="form-control" id="cep"
                                 placeholder="" />
-                            <p className='error-message'>{errors.cep?.message}</p>
                         </div>
 
                     </div>
                     <div className="row mt-2">
                         <div className="col-lg ">
-                            <label htmlFor="observacao" className="form-label">Observações</label>
+                            <label htmlFor="observacao" className="form-label"><strong>Observações</strong></label>
                             <textarea {...register("observacoes", { required: false })} className="form-control" id="observacao" rows="3"></textarea>
                         </div>
 
@@ -223,48 +147,42 @@ function Formulario() {
             <div className="container justify-content-center">
                 <h2 className='txt'>2 - Contatos</h2>
 
-                <Form method="post">
+                <Form method="post" className="text-start justify-content-center p-3">
                     <div className="row">
                         <div className="col mb-2">
-                            <label htmlFor="nomeContato" className="form-label">* Nome</label>
+                            <label htmlFor="nomeContato" className="form-label"><strong>* Nome</strong></label>
                             <input  {...register("contatoNome", { required: true })} type="text" className="form-control" id="nomeContato" placeholder="" />
-                            <p className='error-message'>{errors.nomeContato?.message}</p>
                         </div>
 
                         <div className="col mb-2">
-                            <label htmlFor="telefone" className="form-label">* Telefone</label>
+                            <label htmlFor="telefone" className="form-label"><strong>* Telefone</strong></label>
                             <input  {...register("telefone", { required: true })} maxLength="15" required type="number"
                                 className="form-control" id="telefone" placeholder="" />
-                            <p className='error-message'>{errors.telefone?.message}</p>
                         </div>
                     </div>
                     <div className="row">
                         <div className="col mb-2">
-                            <label htmlFor="senha" className="form-label">* Senha </label>
+                            <label htmlFor="senha" className="form-label"><strong>* Senha </strong></label>
                             <input  {...register("senha", { required: true })} type="password" className="form-control" id="senha" placeholder="" />
-                            <p className='error-message'>{errors.senha?.message}</p>
                         </div>
 
 
                         <div className="col mb-2">
-                            <label htmlFor="contraSenha" className="form-label">* Contra-Senha</label>
+                            <label htmlFor="contraSenha" className="form-label"><strong>* Contra-Senha</strong></label>
                             <input  {...register("contraSenha", { required: true })} type="password" className="form-control" id="contraSenha" placeholder="" />
-                            <p className='error-message'>{errors.contraSenha?.message}</p>
-
                         </div>
                     </div>
                     <div className="row">
                         <div className="col mb-2">
-                            <label htmlFor="DataDeNascimento" className="form-label">* Data de Nascimento</label>
+                            <label htmlFor="DataDeNascimento" className="form-label"><strong>* Data de Nascimento</strong></label>
                             <input  {...register("dataNascimento", { required: true })} type="date" className="form-control" id="DataDeNascimento"
                                 placeholder="" />
-                            <p className='error-message'>{errors.dataNascimento?.message}</p>
                         </div>
                     </div>
 
                     <div className="mb-3">
-                        <label htmlFor="exampleFormControlTextarea1" className="form-label">Observações</label>
-                        <textarea  {...register("observacoes", { required: false })} className="form-control" id="exampleFormControlTextarea1" rows="3" ></textarea>
+                        <label htmlFor="obsContato" className="form-label"><strong>Observações</strong></label>
+                        <textarea  {...register("observacoes", { required: false })} className="form-control" id="obsContato" rows="3" ></textarea>
                     </div>
                 </Form>
             </div>
@@ -276,28 +194,26 @@ function Formulario() {
                 <h2 className='txt'>3 - Setorização</h2>
 
 
-                <Form method="post">
+                <Form method="post" className="text-start justify-content-center p-3">
                     <div className="row">
                         <div className="col mb-2">
-                            <label htmlFor="Setor" className="form-label">* Setor</label>
+                            <label htmlFor="Setor" className="form-label"><strong>* Setor</strong></label>
                             <input  {...register("setor", { required: true })} type="text" className="form-control" id="Setor" placeholder=""
                             />
-                            <p className='error-message'>{errors.setor?.message}</p>
                         </div>
 
                         <div className="col mb-2">
-                            <label htmlFor="localInstalacao" className="form-label">* Local da
-                                Instalação</label>
+                            <label htmlFor="localInstalacao" className="form-label"><strong>* Local da
+                                Instalação</strong></label>
                             <input  {...register("localInstalacao", { required: true })} type="text" className="form-control" id="localInstalacao"
                                 placeholder="" />
-                            <p className='error-message'>{errors.localInstalação?.message}</p>
                         </div>
 
 
                         <div className="mb-3">
-                            <label htmlFor="exampleFormControlTextarea1"
-                                className="form-label">Observações</label>
-                            <textarea  {...register("observacoes", { required: false })} className="form-control" id="exampleFormControlTextarea1"
+                            <label htmlFor="obsSetor"
+                                className="form-label"><strong>Observações</strong></label>
+                            <textarea  {...register("observacoes", { required: false })} className="form-control" id="obsSetor"
                                 rows="3"></textarea>
                         </div>
                     </div>
@@ -311,41 +227,43 @@ function Formulario() {
                 <h2 className='txt'>4 - Viagens</h2>
 
 
-                <Form method="post">
+                <Form method="post" className="text-start justify-content-center p-3">
                     <div className="row">
                         <div className="col mb-2">
-                            <label htmlFor="nomeContato" className="form-label">Nome</label>
-                            <input  {...register("viagem-nome", { required: false })} type="text" className="form-control" id="nomeContato" placeholder=""
+                            <label htmlFor="nomeViagem" className="form-label"><strong>Nome</strong></label>
+                            <input  {...register("viagem-nome", { required: false })} type="text" className="form-control" id="nomeViagem" placeholder=""
                             />
                         </div>
 
 
                         <div className="mb-3">
-                            <label htmlFor="exampleFormControlTextarea1" className="form-label">Observações</label>
-                            <textarea  {...register("viagem-observacoes", { required: false })} className="form-control" id="exampleFormControlTextarea1" rows="3"
+                            <label htmlFor="obsviagem" className="form-label"><strong>Observações</strong></label>
+                            <textarea  {...register("viagem-observacoes", { required: false })} className="form-control" id="obsviagem" rows="3"
                             ></textarea>
                         </div>
                     </div>
                     <div className="row">
 
                         <div className="col mb-2">
-                            <label htmlFor="dataIda" className="form-label">Data de Volta</label>
+                            <label htmlFor="dataIda" className="form-label"><strong>Data de Volta</strong></label>
                             <input  {...register("data-volta", { required: false })} type="date" className="form-control" id="dataIda" />
                         </div>
 
                         <div className="col mb-2">
-                            <label htmlFor="dataVolta" className="form-label">Data de Saída</label>
-                            <input {...register("data-saida", { required: true })} type="date" className="form-control" id="dataVolta" />
+                            <label htmlFor="dataVolta" className="form-label"><strong>Data de Saída</strong></label>
+                            <input {...register("data-saida", { required: false })} type="date" className="form-control" id="dataVolta" />
                         </div>
 
                     </div>
 
                     <div className="mb-3">
-                        <label htmlFor="Procedimentos" className="form-label">Procedimentos</label>
-                        <textarea {...register("viagem-observacoes", { required: true })} className="form-control" id="Procedimentos" rows="3"
+                        <label htmlFor="Procedimentos" className="form-label"><strong>Procedimentos</strong></label>
+                        <textarea {...register("viagem-observacoes", { required: false })} className="form-control" id="Procedimentos" rows="3"
                         ></textarea>
                     </div>
                 </Form>
+
+
 
                 <div className="col">
                     <div className="col text-center mt-3 mb-3">
@@ -354,7 +272,10 @@ function Formulario() {
                 </div>
             </div>
 
+
         </div>
+
+
     )
 }
 
