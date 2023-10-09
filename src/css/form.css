@@ -4,6 +4,14 @@
   text-align: center;
 }
 
+html{
+  background: linear-gradient(to bottom right, #dbdbdb, snow);
+}
+
+body{
+  background: linear-gradient(to bottom right, #dbdbdb, snow);
+}
+
 #navbar, #offcanvasDarkNavbar{
   background: linear-gradient(to bottom right, #02005e, #001e52, #010236);
 color: #fff;
@@ -38,3 +46,7 @@ opacity: 0.9;
   color: red;
 }
 
+#viagens-tab, #contatos-tab, #setorizacao-tab{
+  text-decoration: none;
+  color: #000000;
+}

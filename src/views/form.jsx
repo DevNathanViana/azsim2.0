@@ -18,6 +18,9 @@ function Formulario() {
 
     return (
 
+<body className='DivOfAll'>
+    
+
         <div>
 
 
@@ -275,8 +278,11 @@ function Formulario() {
 
         </div>
 
+        </body>
 
     )
+
+    
 }
 
 export default Formulario

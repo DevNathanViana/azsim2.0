@@ -1,3 +1,8 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Mukta:wght@300&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Mukta:wght@300&family=Questrial&display=swap');
+*{
+    font-family: 'Questrial', sans-serif;
+}
 
 .navbar, #offcanvasDarkNavbar {
     background: linear-gradient(to bottom right, #02005e, #001e52);
@@ -219,11 +224,11 @@ thead th.active, tbody td.active {
     border-radius: 10px;
     margin-left: 5px;
     margin-right: 5px;
-
+    text-transform: uppercase;
     font-size: 15px;
     margin-left: 5%;
     white-space: nowrap;
-    background: linear-gradient(to bottom right, #DBDBDB, snow);
+    background: linear-gradient(to bottom right, #f8f8f8, rgb(255, 255, 255));
     color: black;
 }
 
@@ -282,7 +287,7 @@ thead th.active, tbody td.active {
 .infoOcorrencia {
     width: 90%;
     margin-left: 5%;
-    color: #fff;
+    color: #000000;
     font-size: 15px;
     white-space: nowrap;
 
@@ -290,6 +295,8 @@ thead th.active, tbody td.active {
 
 .card-header{
 cursor:pointer;
+background: linear-gradient(to bottom right, #fdfdfd, snow);
+
 }
 
 .card-important {
@@ -305,8 +312,7 @@ cursor:pointer;
     height: 100%;
     max-height: 700px;
     display: inline-block;
-    background: #fff;
-    overflow: auto;
+    overflow: scroll;
 }
 
 .divOcorrencias {
@@ -315,9 +321,8 @@ cursor:pointer;
     max-height: 700px;
     height: 100%;
     float: right;
-    background: #fff;
-    overflow: auto;
-    overflow-x: auto;
+    overflow: scroll;
+    overflow-x: scroll;
 }
 
 
@@ -348,3 +353,15 @@ text-align: center;
 }
 
 
+#monitorEventos {
+    text-transform: uppercase;
+
+}
+
+.fundoInformacoes{
+
+background-color: #001e52;
+border-radius: 2px;
+color: #fff;
+padding: 10px;
+}

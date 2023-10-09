@@ -1,3 +1,4 @@
+import '../css/form.css'
 
 
 function Tabs () {

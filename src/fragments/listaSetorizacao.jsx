@@ -23,37 +23,7 @@ return (
             </div>
         </div>
 
-        <div class="divInformacoesSetores p-3 mt-2 mb-2">
-            <div class="container">
-                <div class="row">
-                    <div class="col">
-                        <div class="mb-1"><strong>SETOR: 11</strong> &nbsp; <strong>LOCAL DA
-                            INSTALAÇÃO:</strong> QUARTO DOS FUNDOS
-                        </div>
-
-                        <div class="mb-1"><strong>OBSERVAÇÕES:</strong> LIGAR PARA OS CONTATOS
-                            SALVOS, CASO NÃO SEJA POSSÍVEL UMA COMUNICAÇÃO , ACIONAR OS BOMBEIROS
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="divInformacoesSetores p-3 mt-2 mb-2">
-            <div class="container">
-                <div class="row">
-                    <div class="col">
-                        <div class="mb-1"><strong>SETOR: 11</strong> &nbsp; <strong>LOCAL DA
-                            INSTALAÇÃO:</strong> QUARTO DOS FUNDOS
-                        </div>
-
-                        <div class="mb-1"><strong>OBSERVAÇÕES:</strong> LIGAR PARA OS CONTATOS
-                            SALVOS, CASO NÃO SEJA POSSÍVEL UMA COMUNICAÇÃO , ACIONAR OS BOMBEIROS
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+     
         <div class="divInformacoesSetores p-3 mt-2 mb-2">
             <div class="container">
                 <div class="row">
