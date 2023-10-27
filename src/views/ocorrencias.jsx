@@ -1,375 +1,136 @@
-import '../css/ocorrencias.css'
+import '../css/ocorrencias.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.min.js';
 import ModalOcorrencias from '../fragments/modal-ocorrencias';
+import { useEffect, useState } from 'react';
 
 function Ocorrencias() {
+  const [colocaEventosNaTela, setColocaEventosNaTela] = useState([]);
+  const [colocaOcorrenciasNaTela, setColocaOcorrenciasNaTela] = useState([]);
 
+  // Função para carregar os dados do localStorage quando a página é renderizada
+  useEffect(() => {
+    const cachedData = JSON.parse(localStorage.getItem('cachedData') || '[]');
+    setColocaEventosNaTela(cachedData);
+    setColocaOcorrenciasNaTela(cachedData);
+  }, []);
+
+  useEffect(() => {
+    const ws = new WebSocket('ws://localhost:8080'); // Use a URL WebSocket apropriada
+
+    ws.onmessage = (event) => {
+      const dadosRecebidos = JSON.parse(event.data);
+
+      const novosDados = dadosRecebidos;
+      const dadosEmCache = JSON.parse(localStorage.getItem('cachedData') || '[]');
+      dadosEmCache.unshift(novosDados); // Insira os novos dados no início (no topo)
+       // Corte o array se ele exceder um limite de tamanho específico (250)
+    if (dadosEmCache.length > 250) {
+        dadosEmCache.splice(250); // Mantenha apenas os 250 primeiros elementos
+      }
+      localStorage.setItem('cachedData', JSON.stringify(dadosEmCache));
+  
+      // Atualize com os dados mais recentes
+   
+      // Mantenha a lista de tamanho máximo 250
+      setColocaEventosNaTela((prevDataListEvent) => {
+        const newEventList = [...prevDataListEvent, dadosRecebidos];
+        return newEventList;
+      });
+
+      setColocaOcorrenciasNaTela((prevDataListOcorrencia) => {
+        const newOcorrenciaList = [...prevDataListOcorrencia, dadosRecebidos];
+        return newOcorrenciaList;
+      });
+
+      setColocaEventosNaTela(dadosEmCache);
+      setColocaOcorrenciasNaTela(dadosEmCache);
+    
+  
+    };
+
+    return () => {
+      ws.close();
+    };
+  }, []);
+
+
+
+    // Função para renderizar um card com os dados recebidos
+    const renderEventCard = (data, index) => (
+        <div key={index} className="divInformacoesEventos p-3 mt-2 mb-2">
+            <div className="container">
+
+                <div className="row mb-1">
+                    <div className="col">
+                        <strong>DATA:</strong> {data.data}
+                    </div>
+                    <div className="col">
+                        <strong>DESCRIÇÃO:</strong> {data.descricao}
+                    </div>
+                    <div className="col text-end">
+                        <strong>STATUS:</strong> {data.status}
+                    </div>
+                </div>
+                <div className="row mb-1">
+                    <div className="col">
+                        <strong>CODIFICADOR:</strong> {data.codificador}
+                    </div>
+                    <div className="col">
+                        <strong>CLIENTE:</strong> {data.cliente}
+                    </div>
+                    <div className="col text-end">
+                        <strong>COM:</strong> {data.com}
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col">
+                        <strong>CTX:</strong> {data.ctx}
+                    </div>
+                    <div className="col">
+                        <strong>ENDEREÇO:</strong> {data.endereco}
+                    </div>
+                    <div className="col text-end">
+                        <strong>CIDADE:</strong> {data.cidade}
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+
+    const renderOcorrenciaCard = (data, index) => (
+        <div key={index} className="infoOcorrencia card mb-3">
+            <div className="card-important card-header" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                <div className="row">
+                    <div className="col">
+                        <div className=" dataEHoraCard mt-1 h6 text-start"><strong>{data.dataOcorrencia}</strong>
+                        </div>
+                    </div>
+                    <div className="col">
+                        <div className="dataEHoraCard mt-1 h6 text-end"><strong>{data.hora}</strong>
+                        </div>
+                    </div>
+                    <div className="mt-1 h5 text-center"><strong>{data.descricaoDaOcorrencia}</strong></div>
+                </div>
+            </div>
+
+            <div classNameName='fundoInformacoes'>
+                <div className="mb-1 text-center"><strong>{data.nomeOcorrencia}</strong></div>
+                <div className="mb-1 text-center"><strong>{data.enderecoOcorrencia}</strong></div>
+            </div>
+
+
+        </div>
+    )
 
     return (
         <>
-
-            <br />
-            <br />
-            <br />
-
-            <div class="divEventos ">
-
-                <div id="monitorEventos" class="divInformacoesEventos p-3 mt-2 mb-2 ">
-                    <div class="container">
-                        <div class="row mb-1">
-                            <div class="col">
-                                <strong> DATA:</strong> 12/02/23
-                            </div>
-                            <div class="col">
-                                <strong> DESCRIÇÃO: </strong>arrombamento
-                            </div>
-                            <div class="col text-end">
-                                <strong> STATUS:</strong> 121212
-                            </div>
-                        </div>
-                        <div class="row mb-1">
-                            <div class="col">
-                                <strong> CODIFICADOR:</strong> 00987
-                            </div>
-                            <div class="col">
-                                <strong> CLIENTE:</strong> Nathan Viana
-                            </div>
-                            <div class="col text-end">
-                                <strong>COM:</strong> 09909
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                <strong>CTX:</strong> 09877
-                            </div>
-                            <div class="col">
-                                <strong>ENDEREÇO:</strong> Estrada Geral De Laranjeiras
-                            </div>
-                            <div class="col text-end">
-                                <strong>CIDADE:</strong> Pescaria Brava
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="monitorEventos" class="divInformacoesEventos p-3 mt-2 mb-2 ">
-                    <div class="container">
-                        <div class="row mb-1">
-                            <div class="col">
-                                <strong> DATA:</strong> 12/02/23
-                            </div>
-                            <div class="col">
-                                <strong> DESCRIÇÃO: </strong>arrombamento
-                            </div>
-                            <div class="col text-end">
-                                <strong> STATUS:</strong> 121212
-                            </div>
-                        </div>
-                        <div class="row mb-1">
-                            <div class="col">
-                                <strong> CODIFICADOR:</strong> 00987
-                            </div>
-                            <div class="col">
-                                <strong> CLIENTE:</strong> Nathan Viana
-                            </div>
-                            <div class="col text-end">
-                                <strong>COM:</strong> 09909
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                <strong>CTX:</strong> 09877
-                            </div>
-                            <div class="col">
-                                <strong>ENDEREÇO:</strong> Estrada Geral De Laranjeiras
-                            </div>
-                            <div class="col text-end">
-                                <strong>CIDADE:</strong> Pescaria Brava
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="monitorEventos" class="divInformacoesEventos p-3 mt-2 mb-2 ">
-                    <div class="container">
-                        <div class="row mb-1">
-                            <div class="col">
-                                <strong> DATA:</strong> 12/02/23
-                            </div>
-                            <div class="col">
-                                <strong> DESCRIÇÃO: </strong>arrombamento
-                            </div>
-                            <div class="col text-end">
-                                <strong> STATUS:</strong> 121212
-                            </div>
-                        </div>
-                        <div class="row mb-1">
-                            <div class="col">
-                                <strong> CODIFICADOR:</strong> 00987
-                            </div>
-                            <div class="col">
-                                <strong> CLIENTE:</strong> Nathan Viana
-                            </div>
-                            <div class="col text-end">
-                                <strong>COM:</strong> 09909
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                <strong>CTX:</strong> 09877
-                            </div>
-                            <div class="col">
-                                <strong>ENDEREÇO:</strong> Estrada Geral De Laranjeiras
-                            </div>
-                            <div class="col text-end">
-                                <strong>CIDADE:</strong> Pescaria Brava
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div id="monitorEventos" class="divInformacoesEventos p-3 mt-2 mb-2 ">
-                    <div class="container">
-                        <div class="row mb-1">
-                            <div class="col">
-                                <strong> DATA:</strong> 12/02/23
-                            </div>
-                            <div class="col">
-                                <strong> DESCRIÇÃO: </strong>arrombamento
-                            </div>
-                            <div class="col text-end">
-                                <strong> STATUS:</strong> 121212
-                            </div>
-                        </div>
-                        <div class="row mb-1">
-                            <div class="col">
-                                <strong> CODIFICADOR:</strong> 00987
-                            </div>
-                            <div class="col">
-                                <strong> CLIENTE:</strong> Nathan Viana
-                            </div>
-                            <div class="col text-end">
-                                <strong>COM:</strong> 09909
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                <strong>CTX:</strong> 09877
-                            </div>
-                            <div class="col">
-                                <strong>ENDEREÇO:</strong> Estrada Geral De Laranjeiras
-                            </div>
-                            <div class="col text-end">
-                                <strong>CIDADE:</strong> Pescaria Brava
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div id="monitorEventos" class="divInformacoesEventos p-3 mt-2 mb-2 ">
-                    <div class="container">
-                        <div class="row mb-1">
-                            <div class="col">
-                                <strong> DATA:</strong> 12/02/23
-                            </div>
-                            <div class="col">
-                                <strong> DESCRIÇÃO: </strong>arrombamento
-                            </div>
-                            <div class="col text-end">
-                                <strong> STATUS:</strong> 121212
-                            </div>
-                        </div>
-                        <div class="row mb-1">
-                            <div class="col">
-                                <strong> CODIFICADOR:</strong> 00987
-                            </div>
-                            <div class="col">
-                                <strong> CLIENTE:</strong> Nathan Viana
-                            </div>
-                            <div class="col text-end">
-                                <strong>COM:</strong> 09909
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                <strong>CTX:</strong> 09877
-                            </div>
-                            <div class="col">
-                                <strong>ENDEREÇO:</strong> Estrada Geral De Laranjeiras
-                            </div>
-                            <div class="col text-end">
-                                <strong>CIDADE:</strong> Pescaria Brava
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div id="monitorEventos" class="divInformacoesEventos p-3 mt-2 mb-2 ">
-                    <div class="container">
-                        <div class="row mb-1">
-                            <div class="col">
-                                <strong> DATA:</strong> 12/02/23
-                            </div>
-                            <div class="col">
-                                <strong> DESCRIÇÃO: </strong>arrombamento
-                            </div>
-                            <div class="col text-end">
-                                <strong> STATUS:</strong> 121212
-                            </div>
-                        </div>
-                        <div class="row mb-1">
-                            <div class="col">
-                                <strong> CODIFICADOR:</strong> 00987
-                            </div>
-                            <div class="col">
-                                <strong> CLIENTE:</strong> Nathan Viana
-                            </div>
-                            <div class="col text-end">
-                                <strong>COM:</strong> 09909
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                <strong>CTX:</strong> 09877
-                            </div>
-                            <div class="col">
-                                <strong>ENDEREÇO:</strong> Estrada Geral De Laranjeiras
-                            </div>
-                            <div class="col text-end">
-                                <strong>CIDADE:</strong> Pescaria Brava
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div id="monitorEventos" class="divInformacoesEventos p-3 mt-2 mb-2 ">
-                    <div class="container">
-                        <div class="row mb-1">
-                            <div class="col">
-                                <strong> DATA:</strong> 12/02/23
-                            </div>
-                            <div class="col">
-                                <strong> DESCRIÇÃO: </strong>arrombamento
-                            </div>
-                            <div class="col text-end">
-                                <strong> STATUS:</strong> 121212
-                            </div>
-                        </div>
-                        <div class="row mb-1">
-                            <div class="col">
-                                <strong> CODIFICADOR:</strong> 00987
-                            </div>
-                            <div class="col">
-                                <strong> CLIENTE:</strong> Nathan Viana
-                            </div>
-                            <div class="col text-end">
-                                <strong>COM:</strong> 09909
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                <strong>CTX:</strong> 09877
-                            </div>
-                            <div class="col">
-                                <strong>ENDEREÇO:</strong> Estrada Geral De Laranjeiras
-                            </div>
-                            <div class="col text-end">
-                                <strong>CIDADE:</strong> Pescaria Brava
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
+            <div className='divEventos'>
+                {colocaEventosNaTela.map((data, index) => renderEventCard(data, index))}
             </div>
-
-            <div class="divOcorrencias mt-3 ">
-                <div class="infoOcorrencia card mb-3">
-                    <div class="card-important card-header" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                        <div class="row">
-                            <div class="col">
-                                <div class=" dataEHoraCard mt-1 h6 text-start"><strong>12/09/2023</strong>
-                                </div>
-                            </div>
-                            <div class="col">
-                                <div class="dataEHoraCard mt-1 h6 text-end"><strong>12:22:46</strong>
-                                </div>
-                            </div>
-                            <div class="mt-1 h5 text-center"><strong>INVASÃO</strong></div>
-                        </div>
-                    </div>
-
-                   <div className='fundoInformacoes'>
-                   <div class="mb-1 text-center"><strong>Nathan De Oliveira Viana</strong></div>
-                        <div class="mb-1 text-center"><strong>Rua Marcolino Martins Cabral</strong></div>
-                   </div>
-                      
-                    
-                </div>
-
-                <div class="infoOcorrencia card mb-3">
-                    <div class="card-important card-header" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                        <div class="row">
-                            <div class="col">
-                                <div class=" dataEHoraCard mt-1 h6 text-start"><strong>12/09/2023</strong>
-                                </div>
-                            </div>
-                            <div class="col">
-                                <div class="dataEHoraCard mt-1 h6 text-end"><strong>12:22:46</strong>
-                                </div>
-                            </div>
-                            <div class="mt-1 h5 text-center"><strong>INVASÃO</strong></div>
-                        </div>
-                    </div>
-
-                    <div className='fundoInformacoes'>
-                   <div class="mb-1 text-center"><strong>Nathan De Oliveira Viana</strong></div>
-                        <div class="mb-1 text-center"><strong>Rua Marcolino Martins Cabral</strong></div>
-                   </div>
-                </div>
-
-                <div class="infoOcorrencia card mb-3">
-                    <div class="card-important card-header" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                        <div class="row">
-                            <div class="col">
-                                <div class=" dataEHoraCard mt-1 h6 text-start"><strong>12/09/2023</strong>
-                                </div>
-                            </div>
-                            <div class="col">
-                                <div class="dataEHoraCard mt-1 h6 text-end"><strong>12:22:46</strong>
-                                </div>
-                            </div>
-                            <div class="mt-1 h5 text-center"><strong>INVASÃO</strong></div>
-                        </div>
-                    </div>
-
-                    <div className='fundoInformacoes'>
-                   <div class="mb-1 text-center"><strong>Nathan De Oliveira Viana</strong></div>
-                        <div class="mb-1 text-center"><strong>Rua Marcolino Martins Cabral</strong></div>
-                   </div>
-                </div>
-
-                <div class="infoOcorrencia card mb-3">
-                    <div class="card-important card-header" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                        <div class="row">
-                            <div class="col">
-                                <div class=" dataEHoraCard mt-1 h6 text-start"><strong>12/09/2023</strong>
-                                </div>
-                            </div>
-                            <div class="col">
-                                <div class="dataEHoraCard mt-1 h6 text-end"><strong>12:22:46</strong>
-                                </div>
-                            </div>
-                            <div class="mt-1 h5 text-center"><strong>INVASÃO</strong></div>
-                        </div>
-                    </div>
-
-                    <div className='fundoInformacoes'>
-                   <div class="mb-1 text-center"><strong>Nathan De Oliveira Viana</strong></div>
-                        <div class="mb-1 text-center"><strong>Rua Marcolino Martins Cabral</strong></div>
-                   </div>
-                </div>
-
+            <div className="divOcorrencias">
+                {colocaOcorrenciasNaTela.map((data, index) => renderOcorrenciaCard(data, index))}
             </div>
-
-
-
 
             <ModalOcorrencias />
 
