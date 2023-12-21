@@ -1,31 +1,113 @@
 import '../css/form.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.min.js';
-import { Button, Form, } from 'reactstrap';
+import { Button, Form } from 'reactstrap';
 import { useForm } from "react-hook-form";
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+import InputMask from 'react-input-mask';
 
 
 function Formulario() {
 
-  
-  
-    const { register, handleSubmit, formState: { errors } } = useForm({});
-    
-
-    const onSubmit = (data) => {
-        console.log((data))
-    }
 
 
-        const [ativo, setAtivo] = useState(false); 
+    const { register, handleSubmit, reset } = useForm({});
+    const [ativo, setAtivo] = useState(false);
+    const [natureza, setNatureza] = useState("FÍSICA");
+    const [contatos, setContatos] = useState([{}]); // Estado para armazenar os contatos
+    const [setor, setSetor] = useState([{}]); // Estado para armazenar os contatos
+    const [viagem, setViagem] = useState([{}]);
+    const clienteParaEdicao = location.state?.cliente;
 
-        const toggleAtivo = () => {
-          setAtivo(!ativo); 
-        };
+    const [dadosBasicos, setDadosBasicos] = useState({
+        codigo: '',
+        unidade: '',
+        habil: '',
+        condor: '',
+        natureza: 'FÍSICA',
+        cpfcnpj: '',
+        incmunincipal: '',
+        nomeRazaoSocial: '',
+        nomeFantasia: '',
+        endereco: '',
+        bairro: '',
+        cidade: '',
+        uf: 'AC',
+        cep: '',
+        observacoes: ''
+    });
 
-        
-  
+    useEffect(() => {
+        if (clienteParaEdicao) {
+            setDadosBasicos({
+                codigo: clienteParaEdicao.codigo,
+                unidade: clienteParaEdicao.unidade,
+                habil: clienteParaEdicao.habil,
+                condor: clienteParaEdicao.condor,
+                natureza: clienteParaEdicao.natureza,
+                cpfcnpj: clienteParaEdicao.cpfcnpj,
+                incmunincipal: clienteParaEdicao.incmunincipal,
+                nomeRazaoSocial: clienteParaEdicao.nomeRazaoSocial,
+                nomeFantasia: clienteParaEdicao.nomeFantasia,
+                endereco: clienteParaEdicao.endereco,
+                bairro: clienteParaEdicao.bairro,
+                cidade: clienteParaEdicao.cidade,
+                uf: clienteParaEdicao.uf,
+                cep: clienteParaEdicao.cep,
+                observacoes: clienteParaEdicao.observacoes
+            });
+            setContatos(clienteParaEdicao.contatos || [{}]);
+            setSetor(clienteParaEdicao.setores || [{}]);
+            setViagem(clienteParaEdicao.viagens || [{}]);
+        }
+    }, [clienteParaEdicao]);
+
+
+    const handleAddContato = () => {
+        setContatos([...contatos, {}]); // Adiciona um novo objeto de contato ao estado
+    };
+    const handleAddSetor = () => {
+        setSetor([...setor, {}]); // Adiciona um novo objeto de contato ao estado
+    };
+    const handleAddViagem = () => {
+        setViagem([...viagem, {}]); // Adiciona um novo objeto de contato ao estado
+    };
+
+
+    const onSubmit = async () => {
+        try {
+            const data = {
+                ...dadosBasicos,
+                contatos,
+                setor,
+                viagem
+                // Adicione outros campos do formulário aqui
+            };
+
+            if (clienteParaEdicao) {
+                // Cliente para edição, enviar requisição PUT
+                const resposta = await axios.put(`/formulario/editar/${clienteParaEdicao.id}`, data);
+                console.log(resposta)
+            } else {
+                // Nenhum cliente para edição, enviar requisição POST
+                const resposta = await axios.post('/formulario/salvar', data);
+                console.log(resposta)
+            }
+        } catch (error) {
+            console.error('Erro ao salvar o cadastro:', error);
+        }
+        reset()
+    };
+
+
+
+    const toggleAtivo = () => {
+        setAtivo(!ativo);
+    };
+
+
+
 
     return (
 
@@ -43,8 +125,16 @@ function Formulario() {
                         className="text-start justify-content-center p-3">
                         <div className="row">
                             <div className="col">
-                                <label htmlFor="documento" className="form-label"><strong>* Código</strong></label>
-                                <input name='codigo' {...register("código", { required: true })} type="text" className="form-control" id="documento" placeholder=""
+                                <label htmlFor="codigo" className="form-label"><strong>* Código</strong></label>
+                                <input
+                                    name='codigo'
+                                    {...register("código", { required: true })}
+                                    type="text"
+                                    className="form-control"
+                                    id="documento"
+                                    placeholder=""
+                                    value={dadosBasicos.codigo}
+                                    onChange={(e) => setDadosBasicos({ ...dadosBasicos, codigo: e.target.value })}
                                 />
                             </div>
                             <div className="col mb-2">
@@ -65,20 +155,39 @@ function Formulario() {
                         </div>
                         <div className="row mb-2">
                             <div className="col">
-                                <label htmlFor="natureza" className="form-label"><strong>* Natureza</strong></label>
-                                <select name='natureza' {...register("natureza", { required: true })} id="natureza" className="form-select" aria-label=".form-select example"
+                                <label htmlFor="natureza" className="form-label">
+                                    <strong>* Natureza</strong>
+                                </label>
+                                <select
+                                    name="natureza"
+                                    {...register("natureza", { required: true })}
+                                    id="natureza"
+                                    className="form-select"
+                                    aria-label=".form-select example"
+                                    onChange={(e) => setNatureza(e.target.value)}
                                 >
-                                    <option defaultValue={"FÍSICA"} value="1">FÍSICA</option>
-                                    <option value="2">JURÍDICA</option>
+                                    <option defaultValue={"FÍSICA"} value="FÍSICA">
+                                        FÍSICA
+                                    </option>
+                                    <option value="JURÍDICA">JURÍDICA</option>
                                 </select>
                             </div>
                             <div className="col">
-                                <label htmlFor="cpf" className="form-label"><strong>* CPF/CNPJ</strong></label>
-                                <input name='cpf/cnpj' maxLength="14" type="text" {...register("cpfcnpj", { required: true })} className="form-control" id="cpf" placeholder="" />
+                                <label htmlFor="cpf" className="form-label">    <strong>* {natureza === "FÍSICA" ? "CPF" : "CNPJ"}</strong></label>
+                                <InputMask
+                                    mask={natureza === "FÍSICA" ? "999.999.999-99" : "99.999.999/9999-99"}
+                                    maskChar=""
+                                    name="cpf/cnpj"
+                                    {...register("cpfcnpj", { required: true })}
+                                    type="text"
+                                    className="form-control"
+                                    id="cpfCnpj"
+                                    placeholder=""
+                                />
                             </div>
                             <div className="col">
                                 <label htmlFor="inscMunicipal" className="form-label"><strong>* Inscrição Municipal</strong></label>
-                                <input name='insc.municipal' {...register("incmunincipal", { required: true })} type="number" className="form-control" id="inscMunicipal" placeholder="" />
+                                <input name='insc.municipal' {...register("incmunincipal", { required: true })} type="text" className="form-control" id="inscMunicipal" placeholder="" />
                             </div>
                         </div>
                         <div className="row">
@@ -109,39 +218,48 @@ function Formulario() {
                             <div className="col">
                                 <label htmlFor="uf" className="form-label"><strong>* Uf</strong></label>
                                 <select name='uf' {...register("uf", { required: true })} id="uf" className="form-select" aria-label=".form-select example">
-                                    <option defaultValue={"AC"} value="1">AC</option>
-                                    <option value="2">AL</option>
-                                    <option value="3">AM</option>
-                                    <option value="4">BA</option>
-                                    <option value="5">CE</option>
-                                    <option value="6">DF</option>
-                                    <option value="7">ES</option>
-                                    <option value="8">GO</option>
-                                    <option value="9">MA</option>
-                                    <option value="10">MT</option>
-                                    <option value="11">MS</option>
-                                    <option value="12">MG</option>
-                                    <option value="13">PA</option>
-                                    <option value="14">PB</option>
-                                    <option value="15">PR</option>
-                                    <option value="16">PE</option>
-                                    <option value="17">PI</option>
-                                    <option value="18">RJ</option>
-                                    <option value="19">RN</option>
-                                    <option value="20">RS</option>
-                                    <option value="21">RO</option>
-                                    <option value="22">RR</option>
-                                    <option value="23">SC</option>
-                                    <option value="24">SP</option>
-                                    <option value="25">SE</option>
-                                    <option value="26">TO</option>
+                                    <option defaultValue={"AC"} value="AC">AC</option>
+                                    <option value="AL">AL</option>
+                                    <option value="AM">AM</option>
+                                    <option value="BA">BA</option>
+                                    <option value="CE">CE</option>
+                                    <option value="DF">DF</option>
+                                    <option value="ES">ES</option>
+                                    <option value="GO">GO</option>
+                                    <option value="MA">MA</option>
+                                    <option value="MT">MT</option>
+                                    <option value="MS">MS</option>
+                                    <option value="MG">MG</option>
+                                    <option value="PA">PA</option>
+                                    <option value="PB">PB</option>
+                                    <option value="PR">PR</option>
+                                    <option value="PE">PE</option>
+                                    <option value="PI">PI</option>
+                                    <option value="RJ">RJ</option>
+                                    <option value="RN">RN</option>
+                                    <option value="RS">RS</option>
+                                    <option value="RO">RO</option>
+                                    <option value="RR">RR</option>
+                                    <option value="SC">SC</option>
+                                    <option value="SP">SP</option>
+                                    <option value="SE">SE</option>
+                                    <option value="TO">TO</option>
                                 </select>
                             </div>
 
                             <div className="col">
                                 <label htmlFor="cep" className="form-label"><strong>* CEP</strong></label>
-                                <input name='cep' {...register("cep", { required: true })} required type="number" maxLength="9" className="form-control" id="cep"
-                                    placeholder="" />
+                                <InputMask
+                                    mask="99999-999"
+                                    maskChar=""
+                                    name="cep"
+                                    {...register("cep", { required: true })}
+                                    required
+                                    type="text"
+                                    className="form-control"
+                                    id="cep"
+                                    placeholder=""
+                                />
                             </div>
 
                         </div>
@@ -159,135 +277,150 @@ function Formulario() {
                 <hr />
 
                 <div className="container justify-content-center">
-                    <h2 className='txt'>2 - Contatos</h2>
+                    <h2 className='txt'>2 - Contatos  <Button id='addContBtn' onClick={handleAddContato}><i className="bi bi-person-add"></i></Button></h2>
 
-                    <Form method="post" className="text-start justify-content-center p-3">
-                        <div className="row">
-                            <div className="col mb-2">
-                                <label htmlFor="nomeContato" className="form-label"><strong>* Nome</strong></label>
-                                <input  {...register("contatoNome", { required: true })} type="text" className="form-control" id="nomeContato" placeholder="" />
-                            </div>
-
-                            <div className="col mb-2">
-                                <label htmlFor="telefone" className="form-label"><strong>* Telefone</strong></label>
-                                <input  {...register("telefone", { required: true })} maxLength="15" required type="number"
-                                    className="form-control" id="telefone" placeholder="" />
-                            </div>
-                        </div>
-                        <div className="row">
-                            <div className="col mb-2">
-                                <label htmlFor="senha" className="form-label"><strong>* Senha </strong></label>
-                                <input  {...register("senha", { required: true })} type="password" className="form-control" id="senha" placeholder="" />
-                            </div>
+                    {contatos.map((contato, index) => (
+                        <Form key={index + 1} method="post" className="text-start justify-content-center p-3">
 
 
-                            <div className="col mb-2">
-                                <label htmlFor="contraSenha" className="form-label"><strong>* Contra-Senha</strong></label>
-                                <input  {...register("contraSenha", { required: true })} type="password" className="form-control" id="contraSenha" placeholder="" />
-                            </div>
-                        </div>
-                        <div className="row">
-                            <div className="col mb-2">
-                                <label htmlFor="DataDeNascimento" className="form-label"><strong>* Data de Nascimento</strong></label>
-                                <input  {...register("dataNascimento", { required: true })} type="date" className="form-control" id="DataDeNascimento"
-                                    placeholder="" />
-                            </div>
-                        </div>
 
-                        <div className="mb-3">
-                            <label htmlFor="obsContato" className="form-label"><strong>Observações</strong></label>
-                            <textarea  {...register("observacoes", { required: false })} className="form-control" id="obsContato" rows="3" ></textarea>
-                        </div>
-                    </Form>
+                            <div className="row">
+                                <div className="col mb-2">
+                                    <label htmlFor={`nomeContato${index + 1}`} className="form-label"><strong>* Nome</strong></label>
+                                    <input  {...register(`contatoNome${index + 1}`, { required: true })} type="text" className="form-control" id={`nomeContato${index + 1}`} placeholder="" />
+                                </div>
+
+                                <div className="col mb-2">
+                                    <label htmlFor={`telefone${index + 1}`} className="form-label"><strong>* Telefone</strong></label>
+                                    <InputMask
+                                        mask="(99) 99999-9999" // Máscara para telefone
+                                        maskChar=""
+                                        name="telefone"
+                                        required
+                                        {...register(`telefone${index + 1}`, { required: true })}
+                                        type="text"
+                                        className="form-control"
+                                        htmlFor={`telefone${index + 1}`}
+                                        placeholder=""
+                                    />
+                                </div>
+
+                                <div className="col mb-2">
+                                    <label htmlFor={`senha${index + 1}`} className="form-label"><strong>* Senha </strong></label>
+                                    <input  {...register(`senha${index + 1}`, { required: true })} type="password" className="form-control" id={`senha${index + 1}`} placeholder="" />
+                                </div>
+
+
+                                <div className="col mb-2">
+                                    <label htmlFor={`contrasenha${index + 1}`} className="form-label"><strong>* Contra-Senha</strong></label>
+                                    <input  {...register(`contraSenha${index + 1}`, { required: true })} type="password" className="form-control" id={`contrasenha${index + 1}`} placeholder="" />
+                                </div>
+
+                                <div className="col mb-2">
+                                    <label htmlFor={`dataDeNascimento${index + 1}`} className="form-label"><strong>* Data de Nascimento</strong></label>
+                                    <input  {...register(`dataNascimento${index + 1}`, { required: true })} type="date" className="form-control" id={`dataDeNascimento${index + 1}`}
+                                        placeholder="" />
+                                </div>
+
+                                <div className="col mb-2">
+                                    <label htmlFor={`obsContato${index + 1}`} className="form-label"><strong>Observações</strong></label>
+                                    <textarea  {...register(`observacoesCtt${index + 1}`, { required: false })} className="form-control" id={`obsContato${index + 1}`} rows="1" ></textarea>
+                                </div>
+
+
+                            </div>
+                        </Form>
+
+                    ))}
                 </div>
 
                 <hr />
 
                 <div className="container justify-content-center">
 
-                    <h2 className='txt'>3 - Setorização</h2>
+                    <h2 className='txt'>3 - Setorização  <Button id='addSetorBtn' onClick={handleAddSetor}><i className="bi bi-building-add"></i></Button></h2>
+
+                    {setor.map((contato, index) => (
+                        <Form key={index + 1} method="post" className="text-start justify-content-center p-3">
+                            <div className="row">
+                                <div className="col mb-1">
+                                    <label htmlFor={`setor${index + 1}`} className="form-label"><strong>* Setor</strong></label>
+                                    <input  {...register(`setor${index + 1}`, { required: true })} type="text" className="form-control" id={`setor${index + 1}`} placeholder=""
+                                    />
+                                </div>
+
+                                <div className="col mb-1">
+                                    <label htmlFor={`localInstalacao${index + 1}`} className="form-label"><strong>* Local da
+                                        Instalação</strong></label>
+                                    <input  {...register(`localInstalacao${index + 1}`, { required: true })} type="text" className="form-control" id={`localInstalacao${index + 1}`}
+                                        placeholder="" />
+                                </div>
 
 
-                    <Form method="post" className="text-start justify-content-center p-3">
-                        <div className="row">
-                            <div className="col mb-2">
-                                <label htmlFor="Setor" className="form-label"><strong>* Setor</strong></label>
-                                <input  {...register("setor", { required: true })} type="text" className="form-control" id="Setor" placeholder=""
-                                />
+                                <div className=" col mb-1">
+                                    <label htmlFor={`obsSetor${index + 1}`}
+                                        className="form-label"><strong>Observações</strong></label>
+                                    <textarea  {...register(`observacoes${index + 1}`, { required: false })} className="form-control" id={`obsSetor${index + 1}`}
+                                        rows="1"></textarea>
+                                </div>
                             </div>
-
-                            <div className="col mb-2">
-                                <label htmlFor="localInstalacao" className="form-label"><strong>* Local da
-                                    Instalação</strong></label>
-                                <input  {...register("localInstalacao", { required: true })} type="text" className="form-control" id="localInstalacao"
-                                    placeholder="" />
-                            </div>
-
-
-                            <div className="mb-3">
-                                <label htmlFor="obsSetor"
-                                    className="form-label"><strong>Observações</strong></label>
-                                <textarea  {...register("observacoes", { required: false })} className="form-control" id="obsSetor"
-                                    rows="3"></textarea>
-                            </div>
-                        </div>
-                    </Form>
+                        </Form>
+                    ))}
                 </div>
 
                 <hr />
                 <div id="divDoCheckDasViagens" className="form-check form-switch">
-                        <input checked={ativo} onChange={toggleAtivo} className="form-check-input AtivaViagem" type="checkbox" role="switch" id="flexSwitchCheckChecked" />
-                        <label className="form-check-label" htmlFor="flexSwitchCheckDefault"><h5>Há viagens</h5></label>
-                    </div>
+                    <input checked={ativo} onChange={toggleAtivo} className="form-check-input AtivaViagem" type="checkbox" role="switch" id="flexSwitchCheckChecked" />
+                    <label className="form-check-label" htmlFor="flexSwitchCheckDefault"><h5>Há viagens</h5></label>
+                </div>
 
                 <div className="container justify-content-center">
 
-                    <h2 className='txt'>4 - Viagens</h2>
+                    <h2 className='txt'>4 - Viagens  <Button id='addViagemBtn' onClick={handleAddViagem}><i className="bi bi-send-plus"></i></Button></h2>
 
-                  
 
-                    <Form method="post" className="text-start justify-content-center p-3">
-                        <div className="row">
-                            <div className="col mb-2">
-                                <label htmlFor="nomeViagem" className="form-label"><strong>Nome</strong></label>
-                                <input disabled={!ativo} {...register("viagem-nome" )} required={ativo} type="text" className="form-control" id="nomeViagem" placeholder=""
-                                />
+                    {viagem.map((viagem, index) => (
+                        <Form key={index + 1} method="post" className="text-start justify-content-center p-3">
+                            <div className="row">
+                                <div className="col mb-2">
+                                    <label htmlFor={`nomeViagem${index + 1 + 1}`} className="form-label"><strong>Nome</strong></label>
+                                    <input disabled={!ativo} {...register(`viagem-nome${index + 1}`)} required={ativo} type="text" className="form-control" id={`nomeViagem${index + 1}`} placeholder=""
+                                    />
+                                </div>
+
+
+                                <div className=" col mb-3">
+                                    <label htmlFor={`obsViagem${index + 1}`} className="form-label"><strong>Observações</strong></label>
+                                    <textarea disabled={!ativo}  {...register(`viagem-observacoes${index + 1}`)} required={ativo} className="form-control" id={`obsViagem${index + 1}`} rows="1"
+                                    ></textarea>
+                                </div>
+
+
+                                <div className="col mb-2">
+                                    <label htmlFor={`dataIda${index + 1}`} className="form-label"><strong>Data de Volta</strong></label>
+                                    <input disabled={!ativo} {...register(`data-volta${index + 1}`)} required={ativo} type="date" className="form-control" id={`dataIda${index + 1}`} />
+                                </div>
+
+                                <div className="col mb-2">
+                                    <label htmlFor={`dataVolta${index + 1}`} className="form-label"><strong>Data de Saída</strong></label>
+                                    <input disabled={!ativo}  {...register(`data-ida${index + 1}`)} required={ativo} type="date" className="form-control" id={`dataVolta${index + 1}`} />
+                                </div>
+
+                                <div className="col mb-3">
+                                    <label htmlFor={`procedimentos${index + 1}`} className="form-label"><strong>Procedimentos</strong></label>
+                                    <textarea disabled={!ativo} {...register(`viagem-observacoes${index + 1}`)} required={ativo} className="form-control" id={`procedimentos${index + 1}`} rows="1"
+                                    ></textarea>
+                                </div>
                             </div>
+                        </Form>
+
+                    ))}
+                </div>
 
 
-                            <div className="mb-3">
-                                <label htmlFor="obsviagem" className="form-label"><strong>Observações</strong></label>
-                                <textarea disabled={!ativo}  {...register("viagem-observacoes")} required={ativo} className="form-control" id="obsviagem" rows="3"
-                                ></textarea>
-                            </div>
-                        </div>
-                        <div className="row">
-
-                            <div className="col mb-2">
-                                <label htmlFor="dataIda" className="form-label"><strong>Data de Volta</strong></label>
-                                <input disabled={!ativo} {...register("data-volta")}  required={ativo} type="date" className="form-control" id="dataIda" />
-                            </div>
-
-                            <div className="col mb-2">
-                                <label htmlFor="dataVolta" className="form-label"><strong>Data de Saída</strong></label>
-                                <input disabled={!ativo} {...register("data-saida")}  required={ativo} type="date" className="form-control" id="dataVolta" />
-                            </div>
-
-                        </div>
-
-                        <div className=" mb-3">
-                            <label htmlFor="Procedimentos" className="form-label"><strong>Procedimentos</strong></label>
-                            <textarea disabled={!ativo} {...register("viagem-observacoes")}  required={ativo} className="form-control" id="Procedimentos" rows="3"
-                            ></textarea>
-                        </div>
-                    </Form>
-
-
-
-                    <div className="col">
-                        <div className="col text-center mt-3 mb-3">
-                            <Button id="btnCadastro" onClick={() => handleSubmit(onSubmit)()} type="submit" className="btn btn-primary">Salvar</Button>
-                        </div>
+                <div className="col">
+                    <div className="col text-center mt-3 mb-3">
+                        <Button id="btnCadastro" onClick={() => handleSubmit(onSubmit)()} type="submit" className="btn btn-primary">Salvar</Button>
                     </div>
                 </div>
 
@@ -301,4 +434,4 @@ function Formulario() {
 
 }
 
-export default Formulario
+export default Formulario;

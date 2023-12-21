@@ -1,0 +1,122 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Mukta:wght@300&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Mukta:wght@300&family=Questrial&display=swap');
+
+* {
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Questrial', sans-serif;
+
+}
+
+.input-busca,
+.input-busca::placeholder {
+    margin-top: 70px;
+    margin-bottom: 20px;
+    margin-left: 13.7%;
+    width: 1000px;
+    text-align: center;
+    border: none;
+    background: rgb(192, 192, 192);
+    color: rgb(0, 0, 0);
+
+}
+
+
+.input-busca:focus {
+    text-decoration: none;
+    border: none;
+}
+
+thead {
+    color: rgb(0, 5, 73);
+    text-transform: capitalize;
+    background: rgb(255, 255, 255);
+    font-size: 20px;
+}
+
+.status {
+    width: 450px;
+    padding: .3rem 0;
+    border-radius: 1rem;
+    text-align: center;
+}
+
+.status.delivered {
+    background-color: #86e49d;
+    color: #006b21;
+}
+
+.status.cancelled {
+    background-color: #d893a3;
+    color: #b30021;
+}
+
+.status.pending {
+    background-color: #ebc474;
+}
+
+.status.shipped {
+    background-color: #6fcaea;
+}
+
+table {
+    font-size: 14px;
+    text-transform: uppercase;
+}
+
+.divTabela {
+    overflow: auto;
+    position: absolute;
+    top: 35%;
+    left: 50%;
+    transform: translate(-50%, -35%);
+    width: 90%;
+    padding: 20px;
+    background-color: white;
+    border-radius: 2px;
+    border: 0.2px solid rgb(236, 236, 236);
+}
+
+.filtros {
+    left: 50%;
+    transform: translate(-50%);
+    margin-bottom: 20px;
+    position: absolute;
+    margin-top: 80px;
+    display: flex;
+    background-color: #fff;
+    padding: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
+    width: 50%;
+    border-radius: 2px;
+    border: 0.2px solid rgb(236, 236, 236);
+
+}
+
+.input-group {
+    margin-top: 15px;
+}
+
+.btnEdit,
+.btnTrash,
+.btnView {
+    background-color: rgb(184, 184, 184);
+    color: black;
+    border: none;
+    padding-left: 10px;
+    padding-right: 10px;
+    margin: 5px;
+}
+
+.btnEdit:hover {
+    background-color: rgb(37, 97, 207);
+}
+
+.btnView:hover {
+    background-color: rgb(65, 65, 65);
+}
+
+.btnTrash:hover {
+    background-color: rgb(134, 0, 0);
+}

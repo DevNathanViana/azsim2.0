@@ -24,21 +24,16 @@ function Navbar() {
                     <div className="offcanvas-body">
                         <ul className="navbar-nav justify-content-start flex-grow-1 pe-3">
 
-
-                            <li className="nav-item">
-                                <Link className="nav-link" id='inicio' aria-current="page" to="/infoView">Inicio</Link>
-                            </li>
-
-                               <li className="nav-item">
-                                <Link className="nav-link" id='inicio' aria-current="page" to="/teste">Teste</Link>
-                            </li>
-
                             <li className="nav-item">
                                 <Link className="nav-link" id="form" aria-current="page" to="/form">Cadastrar</Link>
                             </li>
 
                             <li className="nav-item">
                                 <Link className="nav-link" id="ocorrencias" aria-current="page" to="/ocorrencias">Ocorrencias</Link>
+                            </li>
+
+                            <li className="nav-item">
+                                <Link className="nav-link" id="consultaCliente" aria-current="page" to="/consulta">Consultar Cliente</Link>
                             </li>
 
                         </ul>

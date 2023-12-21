@@ -8,3 +8,8 @@ body, html{
 
 
 }
+
+.modal-footer{
+    justify-content: end;
+
+}

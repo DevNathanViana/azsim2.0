@@ -1,64 +1,80 @@
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Mukta:wght@300&display=swap');
 
-.form{
+.form {
   text-align: center;
 }
 
-html{
+html {
   background: #f5f5f5;
 }
 
-body{
+body {
   background: #f5f5f5;
 }
 
-#navbar, #offcanvasDarkNavbar{
+#navbar,
+#offcanvasDarkNavbar {
   background: linear-gradient(to bottom right, #02005e, #001e52, #010236);
-color: #fff;
+  color: #fff;
 }
 
-#offcanvasDarkNavbar{
-width: 15%;
+#offcanvasDarkNavbar {
+  width: 15%;
 }
 
-.txt{
+.txt {
   margin-top: 10px;
   font-family: 'Bebas Neue', sans-serif;
 }
 
-.txtDados{
+.txtDados {
   margin-top: 70px;
   margin-bottom: -15px;
   font-family: 'Bebas Neue', sans-serif;
 }
 
-#btnCadastro{
+#btnCadastro {
   background: linear-gradient(to bottom right, #02005e, #001e52, #010236);
   width: 150px;
 }
 
-#btnCadastro:hover{
-opacity: 0.9;
+#btnCadastro:hover {
+  opacity: 0.9;
 }
 
-.error-message{
+.error-message {
   font-size: 12px;
   color: red;
 }
 
-#viagens-tab, #contatos-tab, #setorizacao-tab{
+#viagens-tab,
+#contatos-tab,
+#setorizacao-tab {
   text-decoration: none;
   color: #000000;
 }
 
-.AtivaViagem{
-
-  box-shadow: 05px 05px 15px 0px rgb(78, 78, 78);
-
+.AtivaViagem {
+  box-shadow: 05px 05px 05px 0px rgb(179, 179, 179);
+  transition: 3s;
 }
 
-#divDoCheckDasViagens{
-float: right;
-margin-right: 120px;
-margin-top: 10px;
+.AtivaViagem:hover {
+  cursor: pointer;
+}
+
+#divDoCheckDasViagens {
+  float: right;
+  margin-right: 120px;
+  margin-top: 10px;
+}
+
+#addViagemBtn,
+#addContBtn,
+#addSetorBtn {
+  background-color: rgba(97, 97, 97, 0.253);
+  padding: 2px;
+  border: none;
+  color: #000000;
+  margin-top: 3px;
 }
