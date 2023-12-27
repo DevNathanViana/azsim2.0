@@ -7,13 +7,23 @@ import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 function ConsultaCliente() {
   const [filtro, setFiltro] = useState('');
   const [clientes, setClientes] = useState([]);
-  const [clienteSelecionado, setClienteSelecionado] = useState(null);
+  const [clienteSelecionado] = useState(null);
   const [modal, setModal] = useState(false);
+  const [ordenacao, setOrdenacao] = useState('');
+  const [dataInicio, setDataInicio] = useState('');
+  const [dataFim, setDataFim] = useState('');
 
   // Mova a declaração da função para fora do useEffect
   const buscarClientes = async () => {
     try {
-      const response = await axios.get(`http://seu-backend.com/api/clientes/filtrar?filtro=${filtro}`);
+      const response = await axios.get('http://seu-backend.com/api/clientes/filtrar', {
+        params: {
+          filtro, // filtro de texto
+          dataInicio,
+          dataFim,
+          ordenacao
+        }
+      });
       setClientes(response.data);
     } catch (error) {
       console.error('Erro ao buscar clientes:', error);
@@ -22,12 +32,13 @@ function ConsultaCliente() {
 
   useEffect(() => {
     buscarClientes();
-  }, [filtro]);
+  }, []);
 
 
   const toggleModal = () => {
     setModal(!modal);
   };
+
   const handleEditCliente = async (cliente) => {
     try {
       const response = await axios.get(`http://seu-backend.com/api/clientes/${cliente.id}`);
@@ -50,20 +61,46 @@ function ConsultaCliente() {
       // Atualize o estado de clientes removendo o cliente
       const novosClientes = clientes.filter(cliente => cliente.id !== id);
       setClientes(novosClientes);
-
-      // Se o cliente excluído for o cliente selecionado, limpe os dados do formulário
-      if (id === clienteSelecionado?.id) {
-        setClienteSelecionado(null);
-      }
     } catch (error) {
       console.error('Erro ao excluir cliente:', error);
     }
   };
 
   const handleBuscarClientes = async () => {
-    // Quando o botão de busca é clicado, chama a função buscarClientes
-    buscarClientes();
+    // Carrega todos os clientes
+    await buscarClientes();
+
+    // Aplica o filtro de texto
+    let resultadosFiltrados = clientes.filter(cliente =>
+      Object.values(cliente).some(valor =>
+        valor.toString().toLowerCase().includes(filtro.toLowerCase())
+      )
+    );
+
+    // Aplica o filtro de data
+    if (dataInicio) {
+      resultadosFiltrados = resultadosFiltrados.filter(cliente =>
+        new Date(cliente.data) >= new Date(dataInicio)
+      );
+    }
+    if (dataFim) {
+      resultadosFiltrados = resultadosFiltrados.filter(cliente =>
+        new Date(cliente.data) <= new Date(dataFim)
+      );
+    }
+
+    // Aplica a ordenação
+    if (ordenacao === '1') {
+      resultadosFiltrados.sort((a, b) => new Date(a.data) - new Date(b.data));
+    } else if (ordenacao === '2') {
+      resultadosFiltrados.sort((a, b) => a.nome.localeCompare(b.nome));
+    } else if (ordenacao === '3') {
+      resultadosFiltrados.sort((a, b) => b.nome.localeCompare(a.nome));
+    }
+
+    setClientes(resultadosFiltrados);
   };
+
 
 
   const clientesFiltrados = clientes.filter((cliente) =>
@@ -80,8 +117,8 @@ function ConsultaCliente() {
       <div className="filtros">
         <div id='filtrosgroup' className="input-group me-3 w-50 mb-3">
           <label className="input-group-text" htmlFor="inputGroupSelect01">Ordenar</label>
-          <select className="form-select" id="inputGroupSelect01">
-            <option selected>Mais novos</option>
+          <select className="form-select" id="inputGroupSelect01" value={ordenacao} onChange={(e) => setOrdenacao(e.target.value)}>
+            <option value="">Mais novos</option>
             <option value="1">Mais antigos</option>
             <option value="2">A-Z</option>
             <option value="3">Z-A</option>
@@ -90,8 +127,8 @@ function ConsultaCliente() {
 
 
         <div id='filtrosgroup2' className="input-group me-3 w-50 mb-3">
-          <input className="form-control" type="date" name="" id="" />
-          <input className="form-control" type="date" name="" id="" />
+          <input className="form-control" type="date" value={dataInicio} onChange={(e) => setDataInicio(e.target.value)} />
+          <input className="form-control" type="date" value={dataFim} onChange={(e) => setDataFim(e.target.value)} />
         </div>
 
 

@@ -20,6 +20,7 @@ function Ocorrencias() {
   const [horas, setHoras] = useState('00');
   const [minutos, setMinutos] = useState('00');
   const [segundos, setSegundos] = useState('00');
+  // const [dismissModal, setDismissModal] = useState("")
   const [filtroNomeEventos, setFiltroNomeEventos] = useState(''); // Estado para o filtro de nome dos eventos
   // const [filtroNomeOcorrencias, setFiltroNomeOcorrencias] = useState(''); // Estado para o filtro de nome das ocorrencias
 
@@ -76,13 +77,15 @@ function Ocorrencias() {
   const onSubmit = (formData, dataId) => {
     const dataJson = JSON.stringify(formData);
     console.log(dataJson);
+    alert('Formulário enviado com sucesso!')
+    // setDismissModal("modal"); // Define o estado para permitir o fechamento do modal
 
 
 
     setColocaOcorrenciasNaTela((ocorrenciasAntigas) => {
       const novasOcorrencias = ocorrenciasAntigas.filter((ocorrencia) => ocorrencia.id !== dataId);
       return novasOcorrencias;
-    });
+    })
 
 
   };
@@ -281,6 +284,7 @@ function Ocorrencias() {
         onSubmit={onSubmit}
         register={register}
         selectedValue={selectedValue}
+      // dismissModal={dismissModal}
       />
 
     </>

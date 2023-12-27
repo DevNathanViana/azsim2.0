@@ -2,11 +2,19 @@ import '../css/ocorrencias.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.min.js';
 import PropTypes from 'prop-types';
+import { useForm } from 'react-hook-form';
 
 // import Modal from '../fragments/modal';
 // import { Form } from 'reactstrap'
 
-function ModalOcorrencia({ dataOcorrencia, handleSubmit, onSubmit, register, selectedValue, handleSelectChange }) {
+function ModalOcorrencia({ dataOcorrencia, onSubmit, selectedValue, handleSelectChange }) {
+    const { register, handleSubmit, formState: { errors } } = useForm();
+
+
+
+
+
+
     return <div className="modal fade" id={`modal-${dataOcorrencia.id}`} tabIndex="-1" aria-labelledby={`modalLabel-${dataOcorrencia.id}`} aria-hidden="true">
         <div className="modal-dialog modal-fullscreen">
             <div className="modal-content">
@@ -40,140 +48,149 @@ function ModalOcorrencia({ dataOcorrencia, handleSubmit, onSubmit, register, sel
 
                 <div className="modal-body p-0">
                     <div className="div1">
-
-                        <div className="row ms-1 me-2 mt-2">
-                            <div className="col">
-                                <label htmlFor="categoria" className="form-label">Categoria</label>
-                                <input {...register("categoria")} id={`categoria${dataOcorrencia.id}`} type="text" className="form-control" aria-label=".form-select example" />
-                            </div>
-                            <div className="col">
-                                <label htmlFor="sub-categoria" className="form-label">Sub-Categoria</label>
-                                <input {...register("sub-categoria")} id={`sub-categoria${dataOcorrencia.id}`} type="text" className="form-control" aria-label=".form-select example" />
-                            </div>
-
-                            <div className="col">
-                                <label htmlFor="operador" className="form-label">Operador</label>
-                                <input {...register("operador")} type="text" className="form-control" id={`operador${dataOcorrencia.id}`} aria-label=".form-select example" />
-                            </div>
-
-                        </div>
-                        <div className="row ms-1 me-2 mt-2">
-
-                            <div className="col-5">
-                                <label htmlFor="deslocamento" className="form-label">Foi necessário deslocamento?</label>
-                                <select {...register("deslocamento")} value={selectedValue} onChange={handleSelectChange} id={`deslocamento${dataOcorrencia.id}`} className="form-select" aria-label=".form-select example">
-                                    <option value="sim">Sim</option>
-                                    <option value="nao">Não</option>
-                                </select>
-                            </div>
-
-                            <div className="col">
-                                <label htmlFor="numAgente" className="form-label">Número Agente</label>
-                                <input {...register("numAgente")} disabled={selectedValue === 'nao'} type="text" className="form-control" id={`numAgente${dataOcorrencia.id}`} placeholder="" />
-                            </div>
-                            <div className="col">
-                                <label htmlFor="agente" className="form-label">Agente</label>
-                                <input {...register("agente")} disabled={selectedValue === 'nao'} id={`agente${dataOcorrencia.id}`} type="text" className="form-control" aria-label=".form-select example" />
-
-                            </div>
-
-                        </div>
-
-                        <div>
-                            <div className="row ms-2 me-2 mt-2">
-
+                        <form>
+                            <div className="row ms-1 me-2 mt-2">
                                 <div className="col">
-                                    <label htmlFor="horaSaida" className="form-label">H. Saída Empr.</label>
-                                    <input {...register("horaSaida")} disabled={selectedValue === 'nao'} type="text" className="form-control" id={`horaSaida${dataOcorrencia.id}`} placeholder="00:00" />
+                                    <label htmlFor="categoria" className="form-label">Categoria</label>
+                                    <input {...register("categoria", { required: true })} id={`categoria${dataOcorrencia.id}`} type="text" className="form-control" aria-label=".form-select example" />
+                                    {errors.categoria && <span className='fieldRequired'>Campo obrigatório</span>}
+                                </div>
+                                <div className="col">
+                                    <label htmlFor="sub-categoria" className="form-label">Sub-Categoria</label>
+                                    <input {...register("sub-categoria", { required: true })} id={`sub-categoria${dataOcorrencia.id}`} type="text" className="form-control" aria-label=".form-select example" />
+                                    {errors.categoria && <span className='fieldRequired'>Campo obrigatório</span>}
+
                                 </div>
 
                                 <div className="col">
-                                    <label htmlFor="horaChegada" className="form-label">H. Cheg. Local</label>
-                                    <input {...register("horaChegada")} disabled={selectedValue === 'nao'} type="text" className="form-control" id={`horaChegada${dataOcorrencia.id}`} placeholder="00:00" />
+                                    <label htmlFor="operador" className="form-label">Operador</label>
+                                    <input {...register("operador", { required: true })} type="text" className="form-control" id={`operador${dataOcorrencia.id}`} aria-label=".form-select example" />
+                                    {errors.categoria && <span className='fieldRequired'>Campo obrigatório</span>}
+
+                                </div>
+
+                            </div>
+                            <div className="row ms-1 me-2 mt-2">
+
+                                <div className="col-5">
+                                    <label htmlFor="deslocamento" className="form-label">Foi necessário deslocamento?</label>
+                                    <select {...register("deslocamento", { required: true })} value={selectedValue} onChange={handleSelectChange} id={`deslocamento${dataOcorrencia.id}`} className="form-select" aria-label=".form-select example">
+                                        <option value="sim">Sim</option>
+                                        <option value="nao">Não</option>
+                                    </select>
                                 </div>
 
                                 <div className="col">
-                                    <label htmlFor="tempDeslocamento" className="form-label">Tempo de Desloc.</label>
-                                    <input {...register("tempDeslocamento")} disabled={selectedValue === 'nao'} type="text" className="form-control" id={`tempDeslocamento${dataOcorrencia.id}`} placeholder="00:00" />
+                                    <label htmlFor="numAgente" className="form-label">Número Agente</label>
+                                    <input {...register("numAgente")} disabled={selectedValue === 'nao'} type="text" className="form-control" id={`numAgente${dataOcorrencia.id}`} placeholder="" />
+                                </div>
+                                <div className="col">
+                                    <label htmlFor="agente" className="form-label">Agente</label>
+                                    <input {...register("agente")} disabled={selectedValue === 'nao'} id={`agente${dataOcorrencia.id}`} type="text" className="form-control" aria-label=".form-select example" />
+
                                 </div>
 
                             </div>
 
-                            <div className="row ms-2 me-2 mt-2">
+                            <div>
+                                <div className="row ms-2 me-2 mt-2">
 
-                                <div className="col">
-                                    <label htmlFor="horaSaidaLocal" className="form-label">H. Saída Local</label>
-                                    <input {...register("horaSaidaLocal")} disabled={selectedValue === 'nao'} type="text" className="form-control" id={`horaSaidaLocal${dataOcorrencia.id}`} placeholder="00:00" />
+                                    <div className="col">
+                                        <label htmlFor="horaSaida" className="form-label">H. Saída Empr.</label>
+                                        <input {...register("horaSaida")} disabled={selectedValue === 'nao'} type="text" className="form-control" id={`horaSaida${dataOcorrencia.id}`} placeholder="00:00" />
+                                    </div>
+
+                                    <div className="col">
+                                        <label htmlFor="horaChegada" className="form-label">H. Cheg. Local</label>
+                                        <input {...register("horaChegada")} disabled={selectedValue === 'nao'} type="text" className="form-control" id={`horaChegada${dataOcorrencia.id}`} placeholder="00:00" />
+                                    </div>
+
+                                    <div className="col">
+                                        <label htmlFor="tempDeslocamento" className="form-label">Tempo de Desloc.</label>
+                                        <input {...register("tempDeslocamento")} disabled={selectedValue === 'nao'} type="text" className="form-control" id={`tempDeslocamento${dataOcorrencia.id}`} placeholder="00:00" />
+                                    </div>
+
                                 </div>
 
-                                <div className="col">
-                                    <label htmlFor="horaChegadaEmpresa" className="form-label">H. Cheg. Empr.</label>
-                                    <input {...register("horaChegadaEmpresa")} disabled={selectedValue === 'nao'} type="text" className="form-control" id={`horaChegadaEmpresa${dataOcorrencia.id}`} placeholder="00:00" />
+                                <div className="row ms-2 me-2 mt-2">
+
+                                    <div className="col">
+                                        <label htmlFor="horaSaidaLocal" className="form-label">H. Saída Local</label>
+                                        <input {...register("horaSaidaLocal")} disabled={selectedValue === 'nao'} type="text" className="form-control" id={`horaSaidaLocal${dataOcorrencia.id}`} placeholder="00:00" />
+                                    </div>
+
+                                    <div className="col">
+                                        <label htmlFor="horaChegadaEmpresa" className="form-label">H. Cheg. Empr.</label>
+                                        <input {...register("horaChegadaEmpresa")} disabled={selectedValue === 'nao'} type="text" className="form-control" id={`horaChegadaEmpresa${dataOcorrencia.id}`} placeholder="00:00" />
+                                    </div>
+
+                                    <div className="col">
+                                        <label htmlFor="tempRetorno" className="form-label">Tempo de Retorno</label>
+                                        <input {...register("tempRetorno")} disabled={selectedValue === 'nao'} type="text" className="form-control" id={`tempRetorno${dataOcorrencia.id}`} placeholder="00:00" />
+                                    </div>
                                 </div>
 
-                                <div className="col">
-                                    <label htmlFor="tempRetorno" className="form-label">Tempo de Retorno</label>
-                                    <input {...register("tempRetorno")} disabled={selectedValue === 'nao'} type="text" className="form-control" id={`tempRetorno${dataOcorrencia.id}`} placeholder="00:00" />
+                                <div className="row ms-2 me-2 mt-2">
+
+                                    <div className="col">
+                                        <label htmlFor="horaAbateLacre" className="form-label">H. Abate Lacre</label>
+                                        <input {...register("horaAbateLacre")} disabled={selectedValue === 'nao'} type="text" className="form-control" id={`horaAbateLacre${dataOcorrencia.id}`} placeholder="00:00" />
+                                    </div>
+
+                                    <div className="col">
+                                        <label htmlFor="horaLacre" className="form-label">H. Lacre</label>
+                                        <input {...register("horaLacre")} disabled={selectedValue === 'nao'} type="text" className="form-control" id={`horaLacre${dataOcorrencia.id}`} placeholder="00:00" />
+                                    </div>
+
+                                    <div className="col">
+                                        <label htmlFor="tempAtemdimento" className="form-label">Tempo de Atendimento</label>
+                                        <input {...register("tempAtendimento")} disabled={selectedValue === 'nao'} type="text" className="form-control" id={`tempAtendimento${dataOcorrencia.id}`} placeholder="00:00" />
+                                    </div>
                                 </div>
+                                <div className="row  ms-2 me-2 mt-2">
+                                    <div className="col">
+                                        <label htmlFor="kmSaida" className="form-label">Km de Saída</label>
+                                        <input {...register("kmSaida")} disabled={selectedValue === 'nao'} type="text" className="form-control" id={`kmSaida${dataOcorrencia.id}`} placeholder="00:00" />
+                                    </div>
+
+                                    <div className="col">
+                                        <label htmlFor="kmRetorno" className="form-label">Km de Retorno</label>
+                                        <input {...register("kmRetorno")} disabled={selectedValue === 'nao'} type="text" className="form-control" id={`kmRetorno${dataOcorrencia.id}`} placeholder="00:00" />
+                                    </div>
+
+                                    <div className="col">
+                                        <label htmlFor="kmTotal" className="form-label">Km Total Percorrido</label>
+                                        <input {...register("kmTotal")} disabled={selectedValue === 'nao'} type="text" className="form-control" id={`kmTotal${dataOcorrencia.id}`} placeholder="00:00" />
+                                    </div>
+                                </div>
+
+                                <div className="row ms-2 me-2 mt-2 mb-3">
+                                    <div className="col-sm">
+                                        <label htmlFor="resumo" className="form-label">Resumo*</label>
+                                        <textarea {...register("resumo")} disabled={selectedValue === 'nao'} className="form-control" id={`resumo${dataOcorrencia.id}`} rows="3"></textarea>
+                                    </div>
+
+                                </div>
+
+                                <div className="row ms-2 me-2 mt-2 mb-3">
+                                    <div className="col-sm">
+                                        <label htmlFor="procedimentos" className="form-label">Procedimentos</label>
+                                        <textarea {...register("procedimentos")} disabled={selectedValue === 'nao'} className="form-control" id="procedimentos" rows="3"></textarea>
+                                    </div>
+                                </div>
+
+                                <div className="row ms-2 me-2 mt-2 mb-3">
+                                    <div className="col-sm">
+                                        <label htmlFor="ocorrenciaPolicial" className="form-label">Ocorrência Policial</label>
+                                        <textarea {...register("ocorrenciaPolicial")} disabled={selectedValue === 'nao'} className="form-control" id="ocorrenciaPolicial" rows="3"></textarea>
+                                    </div>
+                                </div>
+
                             </div>
 
-                            <div className="row ms-2 me-2 mt-2">
 
-                                <div className="col">
-                                    <label htmlFor="horaAbateLacre" className="form-label">H. Abate Lacre</label>
-                                    <input {...register("horaAbateLacre")} disabled={selectedValue === 'nao'} type="text" className="form-control" id={`horaAbateLacre${dataOcorrencia.id}`} placeholder="00:00" />
-                                </div>
 
-                                <div className="col">
-                                    <label htmlFor="horaLacre" className="form-label">H. Lacre</label>
-                                    <input {...register("horaLacre")} disabled={selectedValue === 'nao'} type="text" className="form-control" id={`horaLacre${dataOcorrencia.id}`} placeholder="00:00" />
-                                </div>
-
-                                <div className="col">
-                                    <label htmlFor="tempAtemdimento" className="form-label">Tempo de Atendimento</label>
-                                    <input {...register("tempAtendimento")} disabled={selectedValue === 'nao'} type="text" className="form-control" id={`tempAtendimento${dataOcorrencia.id}`} placeholder="00:00" />
-                                </div>
-                            </div>
-                            <div className="row  ms-2 me-2 mt-2">
-                                <div className="col">
-                                    <label htmlFor="kmSaida" className="form-label">Km de Saída</label>
-                                    <input {...register("kmSaida")} disabled={selectedValue === 'nao'} type="text" className="form-control" id={`kmSaida${dataOcorrencia.id}`} placeholder="00:00" />
-                                </div>
-
-                                <div className="col">
-                                    <label htmlFor="kmRetorno" className="form-label">Km de Retorno</label>
-                                    <input {...register("kmRetorno")} disabled={selectedValue === 'nao'} type="text" className="form-control" id={`kmRetorno${dataOcorrencia.id}`} placeholder="00:00" />
-                                </div>
-
-                                <div className="col">
-                                    <label htmlFor="kmTotal" className="form-label">Km Total Percorrido</label>
-                                    <input {...register("kmTotal")} disabled={selectedValue === 'nao'} type="text" className="form-control" id={`kmTotal${dataOcorrencia.id}`} placeholder="00:00" />
-                                </div>
-                            </div>
-
-                            <div className="row ms-2 me-2 mt-2 mb-3">
-                                <div className="col-sm">
-                                    <label htmlFor="resumo" className="form-label">Resumo*</label>
-                                    <textarea {...register("resumo")} disabled={selectedValue === 'nao'} className="form-control" id={`resumo${dataOcorrencia.id}`} rows="3"></textarea>
-                                </div>
-
-                            </div>
-
-                            <div className="row ms-2 me-2 mt-2 mb-3">
-                                <div className="col-sm">
-                                    <label htmlFor="procedimentos" className="form-label">Procedimentos</label>
-                                    <textarea {...register("procedimentos")} disabled={selectedValue === 'nao'} className="form-control" id="procedimentos" rows="3"></textarea>
-                                </div>
-                            </div>
-
-                            <div className="row ms-2 me-2 mt-2 mb-3">
-                                <div className="col-sm">
-                                    <label htmlFor="ocorrenciaPolicial" className="form-label">Ocorrência Policial</label>
-                                    <textarea {...register("ocorrenciaPolicial")} disabled={selectedValue === 'nao'} className="form-control" id="ocorrenciaPolicial" rows="3"></textarea>
-                                </div>
-                            </div>
-                        </div>
-
+                        </form>
 
 
                     </div>
@@ -332,7 +349,7 @@ function ModalOcorrencia({ dataOcorrencia, handleSubmit, onSubmit, register, sel
                 </div>
             </div>
         </div>
-    </div>;
+    </div >;
 }
 
 ModalOcorrencia.propTypes = {
