@@ -32,7 +32,7 @@ function ConsultaCliente() {
 
   useEffect(() => {
     buscarClientes();
-  }, []);
+  },);
 
 
   const toggleModal = () => {

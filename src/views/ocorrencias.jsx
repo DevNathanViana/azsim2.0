@@ -16,7 +16,7 @@ function Ocorrencias() {
   const [colocaOcorrenciasNaTela, setColocaOcorrenciasNaTela] = useState([]);
   const [ocorrenciaModal, setOCorrenciaModal] = useState();
   const { register, handleSubmit } = useForm({});
-  const [selectedValue, setSelectedValue] = useState('');
+  const [selectedValue, setSelectedValue] = useState("sim");
   const [horas, setHoras] = useState('00');
   const [minutos, setMinutos] = useState('00');
   const [segundos, setSegundos] = useState('00');
@@ -75,18 +75,15 @@ function Ocorrencias() {
 
 
   const onSubmit = (formData, dataId) => {
+
     const dataJson = JSON.stringify(formData);
     console.log(dataJson);
     alert('Formulário enviado com sucesso!')
-    // setDismissModal("modal"); // Define o estado para permitir o fechamento do modal
-
-
 
     setColocaOcorrenciasNaTela((ocorrenciasAntigas) => {
       const novasOcorrencias = ocorrenciasAntigas.filter((ocorrencia) => ocorrencia.id !== dataId);
       return novasOcorrencias;
     })
-
 
   };
 

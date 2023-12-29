@@ -601,3 +601,13 @@ h3 {
 .fieldRequired {
     color: red;
 }
+
+.txt-TabDataVolta {
+    font-size: 13px;
+    float: right;
+}
+
+.txt-TabDataIda {
+    font-size: 13px;
+    float: left;
+}
