@@ -18,9 +18,6 @@ O Projeto Azsim é um sistema de monitoramento, utilizando React e Bootstrap par
 - **Axios:** Cliente HTTP baseado em Promises para requisições ao back-end.
 
 ## Contato
-
-Nathan de Oliveira Viana
-
 [![Gmail](https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:oliveiranathan700@gmail.com)
 [![GitHub](	https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](github.com/DevNathanViana)
 [![Instagram](https://img.shields.io/badge/Instagram-E4405F?style=for-the-badge&logo=instagram&logoColor=white)](https://www.instagram.com/nathan_viana07/)
