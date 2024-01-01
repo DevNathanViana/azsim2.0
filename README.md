@@ -1,9 +1,27 @@
-# React + Vite
+# Projeto Azsim
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Sobre
 
-Currently, two official plugins are available:
+O Projeto Azsim é um sistema de monitoramento, utilizando React e Bootstrap para a interface de usuário, e Axios para a comunicação com o back-end. Com ele, é possível monitorar eventos e ocorrências, tratar essas ocorrências, cadastrar usuários e consultar seus dados.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-# azsim2.0
+## Características
+
+- **Monitoramento de Eventos e Ocorrências:** Interface intuitiva para a visualização de eventos e ocorrências em tempo real.
+- **Tratamento de Ocorrências:** Permite aos usuários gerenciar e responder a ocorrências.
+- **Cadastro e Gestão de Usuários:** Funcionalidade para adicionar e gerenciar usuários.
+- **Consulta de Dados de Usuários:** Facilita o acesso e a análise de informações dos usuários.
+
+## Tecnologias
+
+- **React:** Biblioteca JavaScript para construir interfaces de usuário.
+- **Bootstrap:** Framework para desenvolvimento de interfaces responsivas.
+- **Axios:** Cliente HTTP baseado em Promises para requisições ao back-end.
+
+## Contato
+
+Nathan de Oliveira Viana
+
+[![Gmail](https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:oliveiranathan700@gmail.com)
+[![GitHub](	https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](github.com/DevNathanViana)
+[![Instagram](https://img.shields.io/badge/Instagram-E4405F?style=for-the-badge&logo=instagram&logoColor=white)](https://www.instagram.com/nathan_viana07/)
+[![Linkedin](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/nathan-oviana)
