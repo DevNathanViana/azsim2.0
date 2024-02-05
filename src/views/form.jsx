@@ -12,30 +12,30 @@ function Formulario() {
 
 
 
-    const { register, handleSubmit, reset } = useForm({});
+    const { register, handleSubmit, } = useForm({});
     const [ativo, setAtivo] = useState(false);
-    const [natureza, setNatureza] = useState("FÍSICA");
-    const [contatos, setContatos] = useState([{}]); // Estado para armazenar os contatos
-    const [setor, setSetor] = useState([{}]); // Estado para armazenar os contatos
-    const [viagem, setViagem] = useState([{}]);
+    const [natureza, setNatureza] = useState("FISICA");
+    const [contatos, setContatos] = useState([]); // Estado para armazenar os contatos
+    const [setor, setSetor] = useState([]); // Estado para armazenar os contatos
+    const [viagem, setViagem] = useState([]);
     const clienteParaEdicao = location.state?.cliente;
 
     const [dadosBasicos, setDadosBasicos] = useState({
-        codigo: '',
-        unidade: '',
-        habil: '',
-        condor: '',
-        natureza: 'FÍSICA',
-        cpfcnpj: '',
-        incmunincipal: '',
-        nomeRazaoSocial: '',
+        unidade: 'Montenegro',
+        codHabil: '',
+        codCondor: '',
+        natureza: 'FISICA',
+        documento: '',
+        incMunincipal: '',
+        nome: '',
         nomeFantasia: '',
         endereco: '',
         bairro: '',
         cidade: '',
         uf: 'AC',
         cep: '',
-        observacoes: ''
+        observacoes: '',
+        codificador: 87
     });
 
     useEffect(() => {
@@ -55,7 +55,9 @@ function Formulario() {
                 cidade: clienteParaEdicao.cidade,
                 uf: clienteParaEdicao.uf,
                 cep: clienteParaEdicao.cep,
-                observacoes: clienteParaEdicao.observacoes
+                observacoes: clienteParaEdicao.observacoes,
+                codificador: clienteParaEdicao.codificador
+
             });
             setContatos(clienteParaEdicao.contatos || [{}]);
             setSetor(clienteParaEdicao.setores || [{}]);
@@ -91,13 +93,14 @@ function Formulario() {
                 console.log(resposta)
             } else {
                 // Nenhum cliente para edição, enviar requisição POST
-                const resposta = await axios.post('/formulario/salvar', data);
+                const resposta = await axios.post('http://localhost:8080/api/cliente', data);
                 console.log(resposta)
             }
         } catch (error) {
+            alert("Erro no envio do formulaeio")
             console.error('Erro ao salvar o cadastro:', error);
         }
-        reset()
+        // reset()
     };
 
 
@@ -139,18 +142,26 @@ function Formulario() {
                             </div>
                             <div className="col mb-2">
                                 <label htmlFor="unidade" className="form-label"><strong>* Unidade</strong></label>
-                                <select name='unidade'  {...register("unidade", { required: true })} id="unidade" className="form-select" aria-label=".form-select example">
-                                    <option defaultValue={"Montenegro"} value="1">Montenegro</option>
-                                    <option value="2">Porto Alegre</option>
+                                <select name='unidade'  {...register("unidade", { required: true })} id="unidade" className="form-select" aria-label=".form-select example" onChange={(e) => setDadosBasicos({ ...dadosBasicos, unidade: e.target.value })}>
+                                    <option defaultValue={"Montenegro"} value="Montenegro">Montenegro</option>
+                                    <option value="Porto Alegre">Porto Alegre</option>
+
                                 </select>
                             </div>
                             <div className="col">
-                                <label htmlFor="habil" className="form-label"><strong>* Hábil</strong></label>
-                                <input name='habil' {...register("habil", { required: true })} type="text" className="form-control" id="habil" placeholder="" />
+                                <label htmlFor="codificador" className="form-label"><strong>* Codificador</strong></label>
+                                <input name='codificador' {...register("codificador", { required: true })} type="text" className="form-control" id="codificador" placeholder=""
+                                    onChange={(e) => setDadosBasicos({ ...dadosBasicos, codificador: e.target.value })} />
+                            </div>
+                            <div className="col">
+                                <label htmlFor="codHabil" className="form-label"><strong>* Hábil</strong></label>
+                                <input name='codHabil' {...register("codHabil", { required: true })} type="text" className="form-control" id="codHabil" placeholder=""
+                                    onChange={(e) => setDadosBasicos({ ...dadosBasicos, codHabil: e.target.value })} />
                             </div>
                             <div className="col h-25">
-                                <label htmlFor="condor" className="form-label"><strong>* Condor</strong></label>
-                                <input name='condor' {...register("condor", { required: true })} type="text" className="form-control" id="condor" placeholder="" />
+                                <label htmlFor="codCondor" className="form-label"><strong>* Condor</strong></label>
+                                <input name='codCondor' {...register("codCondor", { required: true })} type="text" className="form-control" id="codCondor" placeholder=""
+                                    onChange={(e) => setDadosBasicos({ ...dadosBasicos, codCondor: e.target.value })} />
                             </div>
                         </div>
                         <div className="row mb-2">
@@ -166,58 +177,71 @@ function Formulario() {
                                     aria-label=".form-select example"
                                     onChange={(e) => setNatureza(e.target.value)}
                                 >
-                                    <option defaultValue={"FÍSICA"} value="FÍSICA">
-                                        FÍSICA
+                                    <option defaultValue={"FISICA"} value="FISICA">
+                                        FISICA
                                     </option>
-                                    <option value="JURÍDICA">JURÍDICA</option>
+                                    <option value="JURIDICA">JURIDICA</option>
                                 </select>
                             </div>
                             <div className="col">
-                                <label htmlFor="cpf" className="form-label">    <strong>* {natureza === "FÍSICA" ? "CPF" : "CNPJ"}</strong></label>
+                                <label htmlFor="documento" className="form-label">    <strong>* {natureza === "FISICA" ? "CPF" : "CNPJ"}</strong></label>
                                 <InputMask
-                                    mask={natureza === "FÍSICA" ? "999.999.999-99" : "99.999.999/9999-99"}
+                                    mask={natureza === "FISICA" ? "999.999.999-99" : "99.999.999/9999-99"}
                                     maskChar=""
-                                    name="cpf/cnpj"
-                                    {...register("cpfcnpj", { required: true })}
+                                    name="documento"
+                                    {...register("documento", { required: true })}
                                     type="text"
                                     className="form-control"
-                                    id="cpfCnpj"
+                                    id="documento"
                                     placeholder=""
+                                    onChange={(e) => setDadosBasicos({ ...dadosBasicos, documento: e.target.value })}
                                 />
                             </div>
                             <div className="col">
                                 <label htmlFor="inscMunicipal" className="form-label"><strong>* Inscrição Municipal</strong></label>
-                                <input name='insc.municipal' {...register("incmunincipal", { required: true })} type="text" className="form-control" id="inscMunicipal" placeholder="" />
+                                <input name='incMunincipal' {...register("incMunincipal", { required: true })} type="text" className="form-control" id="inscMunicipal" placeholder=""
+                                    onChange={(e) => setDadosBasicos({ ...dadosBasicos, incMunincipal: e.target.value })}
+                                />
                             </div>
                         </div>
                         <div className="row">
                             <div className="col mb-2">
 
                                 <label htmlFor="nome" className="form-label"><strong>* Nome/Razão Social</strong></label>
-                                <input name='nome'  {...register("nome/razao-social", { required: true })} type="text" className="form-control" id="nome" placeholder="" />                        </div>
+                                <input name='nome'  {...register("nome/razao-social", { required: true })} type="text" className="form-control" id="nome" placeholder=""
+                                    onChange={(e) => setDadosBasicos({ ...dadosBasicos, nome: e.target.value })}
+                                />                        </div>
                             <div className="col">
-                                <label htmlFor="nome_fantasia" className="form-label"><strong>* Nome Fantasia</strong></label>
-                                <input name='nomeFantasia' {...register("nome-fantasia", { required: true })} type="text" className="form-control" id="nome_fantasia" placeholder="" />
+                                <label htmlFor="nomeFantasia" className="form-label"><strong>* Nome Fantasia</strong></label>
+                                <input name='nomeFantasia' {...register("nomeFantasia", { required: true })} type="text" className="form-control" id="nomeFantasia" placeholder=""
+                                    onChange={(e) => setDadosBasicos({ ...dadosBasicos, nomeFantasia: e.target.value })}
+                                />
                             </div>
                         </div>
                         <div className="row">
                             <div className="col mb-2">
                                 <label htmlFor="endereco" className="form-label"><strong>* Endereço</strong></label>
-                                <input name='endereco' {...register("endereço", { required: true })} type="text" className="form-control" id="endereco" placeholder="" />
+                                <input name='endereco' {...register("endereco", { required: true })} type="text" className="form-control" id="endereco" placeholder=""
+                                    onChange={(e) => setDadosBasicos({ ...dadosBasicos, endereco: e.target.value })}
+                                />
                             </div>
                             <div className="col">
                                 <label htmlFor="bairro" className="form-label"><strong>* Bairro</strong></label>
-                                <input name='bairro' {...register("bairro", { required: true })} type="text" className="form-control" id="bairro" placeholder="" />
+                                <input name='bairro' {...register("bairro", { required: true })} type="text" className="form-control" id="bairro" placeholder=""
+                                    onChange={(e) => setDadosBasicos({ ...dadosBasicos, bairro: e.target.value })}
+                                />
                             </div>
                         </div>
                         <div className="row">
                             <div className="col">
                                 <label htmlFor="cidade" className="form-label"><strong>* Cidade</strong></label>
-                                <input name='cidade' {...register("cidade", { required: true })} type="text" className="form-control" id="cidade" placeholder="" />
+                                <input name='cidade' {...register("cidade", { required: true })} type="text" className="form-control" id="cidade" placeholder=""
+                                    onChange={(e) => setDadosBasicos({ ...dadosBasicos, cidade: e.target.value })}
+                                />
                             </div>
                             <div className="col">
                                 <label htmlFor="uf" className="form-label"><strong>* Uf</strong></label>
-                                <select name='uf' {...register("uf", { required: true })} id="uf" className="form-select" aria-label=".form-select example">
+                                <select name='uf' {...register("uf", { required: true })} id="uf" className="form-select" aria-label=".form-select example" onChange={(e) => setDadosBasicos({ ...dadosBasicos, uf: e.target.value })}>
                                     <option defaultValue={"AC"} value="AC">AC</option>
                                     <option value="AL">AL</option>
                                     <option value="AM">AM</option>
@@ -244,6 +268,7 @@ function Formulario() {
                                     <option value="SP">SP</option>
                                     <option value="SE">SE</option>
                                     <option value="TO">TO</option>
+
                                 </select>
                             </div>
 
@@ -259,6 +284,7 @@ function Formulario() {
                                     className="form-control"
                                     id="cep"
                                     placeholder=""
+                                    onChange={(e) => setDadosBasicos({ ...dadosBasicos, cep: e.target.value })}
                                 />
                             </div>
 
@@ -266,7 +292,7 @@ function Formulario() {
                         <div className="row mt-2">
                             <div className="col-lg ">
                                 <label htmlFor="observacao" className="form-label"><strong>Observações</strong></label>
-                                <textarea {...register("observacoes", { required: false })} className="form-control" id="observacao" rows="3"></textarea>
+                                <textarea {...register("observacoes", { required: false })} className="form-control" id="observacao" rows="3" onChange={(e) => setDadosBasicos({ ...dadosBasicos, observacoes: e.target.value })} />
                             </div>
 
                         </div>

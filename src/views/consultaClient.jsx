@@ -16,14 +16,17 @@ function ConsultaCliente() {
   // Mova a declaração da função para fora do useEffect
   const buscarClientes = async () => {
     try {
-      const response = await axios.get('http://seu-backend.com/api/clientes/filtrar', {
-        params: {
-          filtro, // filtro de texto
-          dataInicio,
-          dataFim,
-          ordenacao
-        }
-      });
+      const response = await axios.get('http://localhost:8080/api/cliente');
+
+      /* , {
+      //   // params: {
+      //   //   filtro, // filtro de texto
+      //   //   dataInicio,
+      //   //   dataFim,
+      //   //   ordenacao
+      //   // }
+      }*/
+
       setClientes(response.data);
     } catch (error) {
       console.error('Erro ao buscar clientes:', error);
@@ -57,7 +60,7 @@ function ConsultaCliente() {
 
   const handleDeleteCliente = async (id) => {
     try {
-      await axios.delete(`http://seu-backend.com/api/clientes/${id}`);
+      await axios.delete(`http://localhost:8080/api/clientes/${id}`);
       // Atualize o estado de clientes removendo o cliente
       const novosClientes = clientes.filter(cliente => cliente.id !== id);
       setClientes(novosClientes);
@@ -181,9 +184,9 @@ function ConsultaCliente() {
           </thead>
 
           <tbody>
-            {clientesParaExibir.map((cliente, index) => (
-              <tr key={index}>
-                <td className="col-1">{cliente.codigo}</td>
+            {clientesParaExibir.map((cliente, id) => (
+              <tr key={id}>
+                <td className="col-1">{cliente.codHabil}</td>
                 <td className="col-2">{cliente.nome}</td>
                 <td className="col-3">
                   <p>{cliente.cidade}</p>
