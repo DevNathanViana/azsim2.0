@@ -3,7 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.min.js';
 import { Fragment, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import ModalOcorrencia from '../fragments/modal';
+import ModalOcorrencia from '../fragments/ocorrenciaModal';
 import styled from 'styled-components';
 import axios from 'axios';
 // import axios from 'axios';
@@ -20,19 +20,11 @@ function Ocorrencias() {
   const [horas, setHoras] = useState('00');
   const [minutos, setMinutos] = useState('00');
   const [segundos, setSegundos] = useState('00');
-  // const [dismissModal, setDismissModal] = useState("")
-  const [filtroNomeEventos, setFiltroNomeEventos] = useState(''); // Estado para o filtro de nome dos eventos
-  // const [filtroNomeOcorrencias, setFiltroNomeOcorrencias] = useState(''); // Estado para o filtro de nome das ocorrencias
+  const [filtroNomeEventos, setFiltroNomeEventos] = useState('');
 
   const handleFiltroNomeChangeEvento = (event) => {
     setFiltroNomeEventos(event.target.value);
   };
-
-  // se houverfiltro para as ocorrencias:
-
-  // const handleFiltroNomeChangeOcorrencia = (ocorrencia) => {
-  //   setFiltroNomeOcorrencias(ocorrencia.target.value);
-  // };
 
   const filtrarDados = async () => {
     try {
@@ -93,24 +85,16 @@ function Ocorrencias() {
     ws.onmessage = (event) => {
       const dadosRecebidos = JSON.parse(event.data);
       const dadosEmCache = JSON.parse(localStorage.getItem('cachedData') || '[]');
-
-      // Adiciona novos dados no início da lista
       dadosEmCache.unshift(dadosRecebidos);
-
-      // Limita o número de elementos na lista
       const limiteLista = 20;
       const dadosLimitados = dadosEmCache.slice(0, limiteLista);
-
       localStorage.setItem('cachedData', JSON.stringify(dadosLimitados));
-
-      // Verifica se é um evento ou ocorrência
       if (dadosRecebidos.type === 'evento') {
         setColocaEventosNaTela((dadosAntigosDaListaEventos) => [dadosRecebidos, ...dadosAntigosDaListaEventos]);
       } else if (dadosRecebidos.type === 'ocorrencia') {
         setColocaOcorrenciasNaTela((dadosAntigosDaListaOcorrencias) => [dadosRecebidos, ...dadosAntigosDaListaOcorrencias]);
       }
     };
-
     return () => {
       ws.close();
     };

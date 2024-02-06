@@ -25,7 +25,7 @@ function Navbar() {
                         <ul className="navbar-nav justify-content-start flex-grow-1 pe-3">
 
                             <li className="nav-item">
-                                <Link className="nav-link" id="form" aria-current="page" to="/form">Cadastrar</Link>
+                                <Link className="nav-link" id="form" aria-current="page" to="/cadastroCliente">Cadastrar</Link>
                             </li>
 
                             <li className="nav-item">
@@ -33,7 +33,7 @@ function Navbar() {
                             </li>
 
                             <li className="nav-item">
-                                <Link className="nav-link" id="consultaCliente" aria-current="page" to="/consulta">Consultar Cliente</Link>
+                                <Link className="nav-link" id="consultaCliente" aria-current="page" to="/consultaCliente">Consultar Cliente</Link>
                             </li>
 
                         </ul>
