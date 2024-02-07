@@ -1,4 +1,4 @@
-import '../css/form.css'
+import '../css/cadastros.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.min.js';
 import { Button, Form } from 'reactstrap';
@@ -140,6 +140,31 @@ function Formulario() {
                 setErrorMessage('Erro ao configurar a requisição.');
             }
             setTimeout(clearMessages, 5000);
+        }
+    };
+
+    const deleteItem = (type, index) => {
+        switch (type) {
+            case 'contatos':
+                setDadosBasicos({
+                    ...dadosBasicos,
+                    contatos: dadosBasicos.contatos.filter((_, i) => i !== index),
+                });
+                break;
+            case 'setores':
+                setDadosBasicos({
+                    ...dadosBasicos,
+                    setores: dadosBasicos.setores.filter((_, i) => i !== index),
+                });
+                break;
+            case 'viagens':
+                setDadosBasicos({
+                    ...dadosBasicos,
+                    viagens: dadosBasicos.viagens.filter((_, i) => i !== index),
+                });
+                break;
+            default:
+                break;
         }
     };
 
@@ -436,6 +461,15 @@ function Formulario() {
                                     </div>
 
 
+                                    <div className="col-1">
+                                        <button
+                                            type="button"
+                                            className="btn btn-danger  btn-excluir"
+                                            onClick={() => deleteItem('contatos', index)}
+                                        >
+                                            X
+                                        </button>
+                                    </div>
                                 </div>
                             ))}
                             <button type="button" className="btn btn-primary" onClick={duplicateContato}>Adicionar Contato</button>
@@ -450,7 +484,7 @@ function Formulario() {
 
                             {dadosBasicos.setores.map((setor, index) => (
                                 <div key={index} className="row">
-                                    <div className="col mb-1">
+                                    <div className="col-3 mb-1">
                                         <label htmlFor={`setor${index}`} className="form-label"><strong>Setor</strong></label>
                                         <input  {...register(`setor${index}`, { required: false })} type="number" className="form-control" id={`setor${index}`} placeholder="" onChange={(e) => setDadosBasicos({
                                             ...dadosBasicos,
@@ -458,7 +492,7 @@ function Formulario() {
                                         })} />
                                     </div>
 
-                                    <div className="col mb-1">
+                                    <div className="col-4 mb-1">
                                         <label htmlFor={`localInstalacao${index}`} className="form-label"><strong>Local da
                                             Instalação</strong></label>
                                         <input  {...register(`localInstalacao${index}`, { required: false })} type="text" className="form-control" id={`localInstalacao${index}`}
@@ -470,7 +504,7 @@ function Formulario() {
                                     </div>
 
 
-                                    <div className=" col mb-1">
+                                    <div className=" col-4 mb-1">
                                         <label htmlFor={`observacoes${index}`}
                                             className="form-label"><strong>Observações</strong></label>
                                         <textarea {...register(`observacoes${index}`, { required: false })} className="form-control" id={`observacoes${index}`} onChange={(e) => setDadosBasicos({
@@ -478,6 +512,15 @@ function Formulario() {
                                             setores: dadosBasicos.setores.map((c, i) => (i === index ? { ...c, observacao: e.target.value } : c)),
                                         })} rows="1"></textarea>
 
+                                    </div>
+                                    <div className=" col mb-1 btn-excluir">
+                                        <button
+                                            type="button"
+                                            className="btn btn-danger"
+                                            onClick={() => deleteItem('setores', index)}
+                                        >
+                                            X
+                                        </button>
                                     </div>
                                 </div>
                             ))}
@@ -549,7 +592,15 @@ function Formulario() {
                                             viagens: dadosBasicos.viagens.map((c, i) => (i === index ? { ...c, procedimentos: e.target.value } : c)),
                                         })}></textarea>
                                     </div>
-
+                                    <div className=" col-1 btn-excluir">
+                                        <button
+                                            type="button"
+                                            className="btn btn-danger"
+                                            onClick={() => deleteItem('viagens', index)}
+                                        >
+                                            X
+                                        </button>
+                                    </div>
                                 </div>
 
                             ))}
