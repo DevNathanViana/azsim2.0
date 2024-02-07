@@ -167,8 +167,6 @@ function Formulario() {
                 break;
         }
     };
-
-
     return (
 
         <body className='DivOfAll'>
@@ -464,7 +462,7 @@ function Formulario() {
                                     <div className="col-1">
                                         <button
                                             type="button"
-                                            className="btn btn-danger  btn-excluir"
+                                            className="btn btn-danger btn-excluir"
                                             onClick={() => deleteItem('contatos', index)}
                                         >
                                             X
@@ -486,7 +484,7 @@ function Formulario() {
                                 <div key={index} className="row">
                                     <div className="col-3 mb-1">
                                         <label htmlFor={`setor${index}`} className="form-label"><strong>Setor</strong></label>
-                                        <input  {...register(`setor${index}`, { required: false })} type="number" className="form-control" id={`setor${index}`} placeholder="" onChange={(e) => setDadosBasicos({
+                                        <input value={setor.setor} {...register(`setor${index}`, { required: false })} type="number" className="form-control" id={`setor${index}`} placeholder="" onChange={(e) => setDadosBasicos({
                                             ...dadosBasicos,
                                             setores: dadosBasicos.setores.map((c, i) => (i === index ? { ...c, setor: e.target.value } : c)),
                                         })} />
@@ -495,7 +493,7 @@ function Formulario() {
                                     <div className="col-4 mb-1">
                                         <label htmlFor={`localInstalacao${index}`} className="form-label"><strong>Local da
                                             Instalação</strong></label>
-                                        <input  {...register(`localInstalacao${index}`, { required: false })} type="text" className="form-control" id={`localInstalacao${index}`}
+                                        <input value={setor.localInstalacao} {...register(`localInstalacao${index}`, { required: false })} type="text" className="form-control" id={`localInstalacao${index}`}
                                             placeholder="" onChange={(e) => setDadosBasicos({
                                                 ...dadosBasicos,
                                                 setores: dadosBasicos.setores.map((c, i) => (i === index ? { ...c, localInstalacao: e.target.value } : c)),
@@ -507,16 +505,16 @@ function Formulario() {
                                     <div className=" col-4 mb-1">
                                         <label htmlFor={`observacoes${index}`}
                                             className="form-label"><strong>Observações</strong></label>
-                                        <textarea {...register(`observacoes${index}`, { required: false })} className="form-control" id={`observacoes${index}`} onChange={(e) => setDadosBasicos({
+                                        <textarea value={setor.observacao} {...register(`observacoes${index}`, { required: false })} className="form-control" id={`observacoes${index}`} onChange={(e) => setDadosBasicos({
                                             ...dadosBasicos,
                                             setores: dadosBasicos.setores.map((c, i) => (i === index ? { ...c, observacao: e.target.value } : c)),
                                         })} rows="1"></textarea>
 
                                     </div>
-                                    <div className=" col mb-1 btn-excluir">
+                                    <div className=" col mb-1 ">
                                         <button
                                             type="button"
-                                            className="btn btn-danger"
+                                            className="btn btn-danger btn-excluir"
                                             onClick={() => deleteItem('setores', index)}
                                         >
                                             X
@@ -540,7 +538,7 @@ function Formulario() {
                                 <div key={index} className="row">
                                     <div className="col mb-2">
                                         <label htmlFor={`nomeSaida${index}`} className="form-label"><strong>Nome - Notificação Saida</strong></label>
-                                        <input  {...register(`nomeSaida${index}`, { required: false })} type="text" className="form-control" id={`nomeSaida${index}`} placeholder=""
+                                        <input value={viagem.nomeSaida} {...register(`nomeSaida${index}`, { required: false })} type="text" className="form-control" id={`nomeSaida${index}`} placeholder=""
                                             onChange={(e) => setDadosBasicos({
                                                 ...dadosBasicos,
                                                 viagens: dadosBasicos.viagens.map((c, i) => (i === index ? { ...c, nomeSaida: e.target.value } : c)),
@@ -550,7 +548,7 @@ function Formulario() {
 
                                     <div className="col mb-2">
                                         <label htmlFor={`nomeVolta${index}`} className="form-label"><strong>Nome - Notificação Volta</strong></label>
-                                        <input  {...register(`nomeVolta${index}`, { required: false })} type="text" className="form-control" id={`nomeVolta${index}`} placeholder=""
+                                        <input value={viagem.nomeVolta} {...register(`nomeVolta${index}`, { required: false })} type="text" className="form-control" id={`nomeVolta${index}`} placeholder=""
                                             onChange={(e) => setDadosBasicos({
                                                 ...dadosBasicos,
                                                 viagens: dadosBasicos.viagens.map((c, i) => (i === index ? { ...c, nomeVolta: e.target.value } : c)),
@@ -560,7 +558,7 @@ function Formulario() {
 
                                     <div className=" col mb-3">
                                         <label htmlFor={`observacao${index}`} className="form-label"><strong>Observações</strong></label>
-                                        <textarea {...register(`observacao${index}`, { required: false })} className="form-control" id={`observacao${index}`} rows="1" onChange={(e) => setDadosBasicos({
+                                        <textarea value={viagem.observacao} {...register(`observacao${index}`, { required: false })} className="form-control" id={`observacao${index}`} rows="1" onChange={(e) => setDadosBasicos({
                                             ...dadosBasicos,
                                             viagens: dadosBasicos.viagens.map((c, i) => (i === index ? { ...c, observacao: e.target.value } : c)),
                                         })}></textarea>
@@ -569,7 +567,7 @@ function Formulario() {
 
                                     <div className="col mb-2">
                                         <label htmlFor={`dataSaida${index}`} className="form-label"><strong>Data de Saída</strong></label>
-                                        <input   {...register(`data-saida${index}`, { required: false })} type="date" className="form-control" id={`dataSaida${index}`} onChange={(e) => setDadosBasicos({
+                                        <input value={viagem.dataSaida}  {...register(`data-saida${index}`, { required: false })} type="date" className="form-control" id={`dataSaida${index}`} onChange={(e) => setDadosBasicos({
                                             ...dadosBasicos,
                                             viagens: dadosBasicos.viagens.map((c, i) => (i === index ? { ...c, dataSaida: e.target.value } : c)),
                                         })}
@@ -578,7 +576,7 @@ function Formulario() {
 
                                     <div className="col mb-2">
                                         <label htmlFor={`dataVolta${index}`} className="form-label"><strong>Data de Volta</strong></label>
-                                        <input  {...register(`data-volta${index}`, { required: false })} type="date" className="form-control" id={`dataVolta${index}`} onChange={(e) => setDadosBasicos({
+                                        <input value={viagem.dataVolta} {...register(`data-volta${index}`, { required: false })} type="date" className="form-control" id={`dataVolta${index}`} onChange={(e) => setDadosBasicos({
                                             ...dadosBasicos,
                                             viagens: dadosBasicos.viagens.map((c, i) => (i === index ? { ...c, dataVolta: e.target.value } : c)),
                                         })}
@@ -587,7 +585,7 @@ function Formulario() {
 
                                     <div className="col mb-3">
                                         <label htmlFor={`procedimentos${index}`} className="form-label"><strong>Procedimentos</strong></label>
-                                        <textarea {...register(`procedimentos${index}`, { required: false })} className="form-control" id={`procedimentos${index}`} rows="1" onChange={(e) => setDadosBasicos({
+                                        <textarea value={viagem.procedimentos} {...register(`procedimentos${index}`, { required: false })} className="form-control" id={`procedimentos${index}`} rows="1" onChange={(e) => setDadosBasicos({
                                             ...dadosBasicos,
                                             viagens: dadosBasicos.viagens.map((c, i) => (i === index ? { ...c, procedimentos: e.target.value } : c)),
                                         })}></textarea>
@@ -595,7 +593,7 @@ function Formulario() {
                                     <div className=" col-1 btn-excluir">
                                         <button
                                             type="button"
-                                            className="btn btn-danger"
+                                            className="btn btn-danger btn-excluir"
                                             onClick={() => deleteItem('viagens', index)}
                                         >
                                             X

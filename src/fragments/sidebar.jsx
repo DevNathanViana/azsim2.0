@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom"
-import '../css/form.css'
+import '../css/ocorrencias.css'
 
 function Navbar() {
 
