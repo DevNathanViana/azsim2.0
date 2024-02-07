@@ -37,20 +37,35 @@ function Formulario() {
         cidade: '',
         uf: 'AC',
         cep: '',
-        observacoes: '',
+        observacao: '',
         codificador: 87,
-        contatos: [{ nomectt: '', telefone: '', senha: '', contraSenha: '', dataNascimento: '', observacoes: '' }],
-        setores: [{ setor: '', localInstalacao: '', observacoes: '' }],
-        viagens: [{ nomeSaida: '', nomeVolta: '', observacoes: '', dataSaida: '', dataVolta: '', procedimentos: '' }],
+        contatos: [{ nome: '', telefone: '', senha: '', contraSenha: '', dataNascimento: '', observacao: '' }],
+        setores: [{ setor: '', localInstalacao: '', observacao: '' }],
+        viagens: [{ nomeSaida: '', nomeVolta: '', observacao: '', dataSaida: '', dataVolta: '', procedimentos: '' }],
     });
 
+    const duplicateContato = () => {
+        setDadosBasicos({
+            ...dadosBasicos,
+            contatos: [...dadosBasicos.contatos, { nomectt: '', telefone: '', senha: '', contraSenha: '', dataNascimento: '', observacao: '' }],
+        });
+    };
 
+    const duplicateSetor = () => {
+        setDadosBasicos({
+            ...dadosBasicos,
+            setores: [...dadosBasicos.setores, { setor: '', localInstalacao: '', observacao: '' }],
+        });
+    };
+
+    const duplicateViagem = () => {
+        setDadosBasicos({
+            ...dadosBasicos,
+            viagens: [...dadosBasicos.viagens, { nomeSaida: '', nomeVolta: '', observacao: '', dataSaida: '', dataVolta: '', procedimentos: '' }],
+        });
+    };
 
     const onSubmit = async (data) => {
-        // Validar campos obrigatórios
-
-
-
         const camposObrigatorios = ['unidade', 'codificador', 'natureza', 'documento', 'nome/razao-social'];
         camposObrigatorios.forEach((campo) => {
             if (!data[campo]) {
@@ -61,35 +76,31 @@ function Formulario() {
             }
         });
         try {
-            const contatos = [
-                {
-                    nome: data['nome'],
-                    telefone: data['telefone'],
-                    senha: data['senha'],
-                    contraSenha: data['contraSenha'],
-                    dataNascimento: data['dataNascimento'],
-                    observacoesContato: data['observacoes'],
-                }
-            ];
 
-            const setores = [
-                {
-                    setor: data['setor'],
-                    localizacao: data['localInstalacao'],
-                    observacao: data['observacoesSetor'],
-                }
-            ];
+            const contatos = dadosBasicos.contatos.map((contato) => ({
+                nome: contato.nome,
+                telefone: contato.telefone,
+                senha: contato.senha,
+                contraSenha: contato.contraSenha,
+                dataNascimento: contato.dataNascimento,
+                observacao: contato.observacao,
+            }));
 
-            const viagens = [
-                {
-                    nomeContatoNotificacaoSaida: data['nomeSaida'],
-                    nomeContatoNotificacaoVolta: data['nomeVolta'],
-                    observacao: data['ViagemObservacoes'],
-                    dataSaida: data['data-ida'],
-                    dataVolta: data['data-volta'],
-                    procedimento: data['procedimentos'],
-                }
-            ];
+            const setores = dadosBasicos.setores.map((setor) => ({
+                setor: setor.setor,
+                localizacao: setor.localInstalacao,
+                observacao: setor.observacao,
+            }));
+
+            const viagens = dadosBasicos.viagens.map((viagem) => ({
+                nomeContatoNotificacaoSaida: viagem.nomeSaida,
+                nomeContatoNotificacaoVolta: viagem.nomeVolta,
+                observacao: viagem.observacao,
+                dataSaida: viagem.dataSaida,
+                dataVolta: viagem.dataVolta,
+                procedimento: viagem.procedimentos,
+            }));
+
 
             // Construa o objeto de dados para a requisição
             const dadosRequisicao = {
@@ -310,7 +321,7 @@ function Formulario() {
                         <div className="row mt-2">
                             <div className="col-lg ">
                                 <label htmlFor="observacao" className="form-label"><strong>Observações</strong></label>
-                                <input {...register("observacoes", { required: false })} className="form-control" id="observacao" rows="3" onChange={(e) => setDadosBasicos({ ...dadosBasicos, observacoes: e.target.value })} />
+                                <input {...register("observacao", { required: false })} className="form-control" id="observacao" rows="3" onChange={(e) => setDadosBasicos({ ...dadosBasicos, observacao: e.target.value })} />
                             </div>
 
                         </div>
@@ -319,65 +330,115 @@ function Formulario() {
 
 
                         <hr />
-
                         <div className="container justify-content-center">
                             <h2 className='txt'>2 - Contatos </h2>
+                            {dadosBasicos.contatos.map((contato, index) => (
+                                <div className="row" key={index}>
+                                    <div className="col mb-2">
+                                        <label htmlFor={`nome${index}`} className="form-label"><strong>Nome</strong></label>
+                                        <input
+                                            name={`nome${index}`}
+                                            {...register(`nome${index}`, { required: false })}
+                                            type="text"
+                                            className="form-control"
+                                            id={`nome${index}`}
+                                            placeholder=""
+                                            value={contato.nome}
+                                            onChange={(e) => setDadosBasicos({
+                                                ...dadosBasicos,
+                                                contatos: dadosBasicos.contatos.map((c, i) => (i === index ? { ...c, nome: e.target.value } : c)),
+                                            })}
+
+                                        />
+
+                                    </div>
+
+                                    <div className="col mb-2">
+                                        <label htmlFor={`telefone${index}`} className="form-label"><strong>Telefone</strong></label>
+                                        <InputMask
+                                            mask="(99) 99999-9999"
+                                            maskChar=""
+                                            name={`telefone${index}`}
+                                            required
+                                            {...register(`telefone${index}`, { required: false })}
+                                            type="text"
+                                            className="form-control"
+                                            htmlFor={`telefone${index}`}
+                                            placeholder=""
+                                            value={contato.telefone}
+                                            onChange={(e) => setDadosBasicos({
+                                                ...dadosBasicos,
+                                                contatos: dadosBasicos.contatos.map((c, i) => (i === index ? { ...c, telefone: e.target.value } : c)),
+                                            })}
+                                        />
+                                    </div>
+                                    <div className="col mb-2">
+                                        <label htmlFor={`senha${index}`} className="form-label"><strong>Senha</strong></label>
+                                        <input
+                                            {...register(`senha${index}`, { required: false })}
+                                            type="password"
+                                            className="form-control"
+                                            id={`senha${index}`}
+                                            placeholder=""
+                                            value={contato.senha}
+                                            onChange={(e) => setDadosBasicos({
+                                                ...dadosBasicos,
+                                                contatos: dadosBasicos.contatos.map((c, i) => (i === index ? { ...c, senha: e.target.value } : c)),
+                                            })}
+                                        />
+                                    </div>
 
 
+                                    <div className="col mb-2">
+                                        <label htmlFor={`contraSenha${index}`} className="form-label"><strong>Contra-Senha</strong></label>
+                                        <input
+                                            {...register(`contraSenha${index}`, { required: false })}
+                                            type="password"
+                                            className="form-control"
+                                            id={`contraSenha${index}`}
+                                            placeholder=""
+                                            value={contato.contraSenha}
+                                            onChange={(e) => setDadosBasicos({
+                                                ...dadosBasicos,
+                                                contatos: dadosBasicos.contatos.map((c, i) => (i === index ? { ...c, contraSenha: e.target.value } : c)),
+                                            })}
+                                        />
+                                    </div>
 
+                                    <div className="col mb-2">
+                                        <label htmlFor={`dataNascimento${index}`} className="form-label"><strong>Data de Nascimento</strong></label>
+                                        <input
+                                            {...register(`dataNascimento${index}`, { required: false })}
+                                            type="date"
+                                            className="form-control"
+                                            id={`dataNascimento${index}`}
+                                            value={contato.dataNascimento}
+                                            onChange={(e) => setDadosBasicos({
+                                                ...dadosBasicos,
+                                                contatos: dadosBasicos.contatos.map((c, i) => (i === index ? { ...c, dataNascimento: e.target.value } : c)),
+                                            })}
+                                        />
+                                    </div>
 
-                            <div className="row">
-                                <div className="col mb-2">
-                                    <label htmlFor={`nome`} className="form-label"><strong>Nome</strong></label>
-                                    <input name='nome'  {...register(`nome`, { required: false })} type="text" className="form-control" id={`nome`} placeholder="" onChange={(e) => setDadosBasicos({ ...dadosBasicos, contatos: [{ ...dadosBasicos.contatos[0], [e.target.name]: e.target.value }] })}
+                                    <div className="col mb-2">
+                                        <label htmlFor={`observacoesctt${index}`} className="form-label"><strong>Observações</strong></label>
+                                        <textarea
+                                            {...register(`contatos[${index}].observacoes`, { required: false })}
+                                            className="form-control"
+                                            id={`observacoesctt${index}`}
+                                            rows="1"
+                                            value={contato.observacoes}
+                                            onChange={(e) => setDadosBasicos({
+                                                ...dadosBasicos,
+                                                contatos: dadosBasicos.contatos.map((c, i) => (i === index ? { ...c, observacao: e.target.value } : c)),
+                                            })}
+                                        ></textarea>
+                                    </div>
 
-
-                                    />
 
                                 </div>
-
-                                <div className="col mb-2">
-                                    <label htmlFor={`telefone`} className="form-label"><strong>Telefone</strong></label>
-                                    <InputMask
-                                        mask="(99) 99999-9999" // Máscara para telefone
-                                        maskChar=""
-                                        name="telefone"
-                                        required
-                                        {...register(`telefone`, { required: false })}
-                                        type="text"
-                                        className="form-control"
-                                        htmlFor={`telefone`}
-                                        placeholder=""
-                                        onChange={(e) => setDadosBasicos({ ...dadosBasicos, contatos: e.target.value })}
-                                    />
-                                </div>
-
-                                <div className="col mb-2">
-                                    <label htmlFor={`senha`} className="form-label"><strong>Senha </strong></label>
-                                    <input  {...register(`senha`, { required: false })} type="password" className="form-control" id={`senha`} placeholder="" onChange={(e) => setDadosBasicos({ ...dadosBasicos, contatos: e.target.value })}
-                                    />
-                                </div>
-
-
-                                <div className="col mb-2">
-                                    <label htmlFor={`contraSenha`} className="form-label"><strong>Contra-Senha</strong></label>
-                                    <input  {...register(`contraSenha`, { required: false })} type="password" className="form-control" id={`contraSenha`} placeholder="" onChange={(e) => setDadosBasicos({ ...dadosBasicos, contatos: e.target.value })} />
-                                </div>
-
-                                <div className="col mb-2">
-                                    <label htmlFor={`dataNascimento`} className="form-label"><strong>Data de Nascimento</strong></label>
-                                    <input  {...register(`dataNascimento`, { required: false })} type="date" className="form-control" id={`dataNascimento`} onChange={(e) => setDadosBasicos({ ...dadosBasicos, contatos: e.target.value })}
-                                        placeholder="" />
-                                </div>
-
-                                <div className="col mb-2">
-                                    <label htmlFor={`observacoesctt`} className="form-label"><strong>Observações</strong></label>
-                                    <textarea {...register(`contatos[0].observacoes`, { required: false })} className="form-control" id={`observacoesctt`} rows="1"></textarea>
-                                </div>
-
-
-                            </div>
-
+                            ))}
+                            <button type="button" className="btn btn-primary" onClick={duplicateContato}>Adicionar Contato</button>
                         </div>
 
                         <hr />
@@ -387,31 +448,40 @@ function Formulario() {
                             <h2 className='txt'>3 - Setorização</h2>
 
 
+                            {dadosBasicos.setores.map((setor, index) => (
+                                <div key={index} className="row">
+                                    <div className="col mb-1">
+                                        <label htmlFor={`setor${index}`} className="form-label"><strong>Setor</strong></label>
+                                        <input  {...register(`setor${index}`, { required: false })} type="number" className="form-control" id={`setor${index}`} placeholder="" onChange={(e) => setDadosBasicos({
+                                            ...dadosBasicos,
+                                            setores: dadosBasicos.setores.map((c, i) => (i === index ? { ...c, setor: e.target.value } : c)),
+                                        })} />
+                                    </div>
 
-                            <div className="row">
-                                <div className="col mb-1">
-                                    <label htmlFor={`setor`} className="form-label"><strong>Setor</strong></label>
-                                    <input  {...register(`setor`, { required: false })} type="text" className="form-control" id={`setor`} placeholder="" onChange={(e) => setDadosBasicos({ ...dadosBasicos, setores: e.target.value })}
+                                    <div className="col mb-1">
+                                        <label htmlFor={`localInstalacao${index}`} className="form-label"><strong>Local da
+                                            Instalação</strong></label>
+                                        <input  {...register(`localInstalacao${index}`, { required: false })} type="text" className="form-control" id={`localInstalacao${index}`}
+                                            placeholder="" onChange={(e) => setDadosBasicos({
+                                                ...dadosBasicos,
+                                                setores: dadosBasicos.setores.map((c, i) => (i === index ? { ...c, localInstalacao: e.target.value } : c)),
+                                            })}
+                                        />
+                                    </div>
 
-                                    />
+
+                                    <div className=" col mb-1">
+                                        <label htmlFor={`observacoes${index}`}
+                                            className="form-label"><strong>Observações</strong></label>
+                                        <textarea {...register(`observacoes${index}`, { required: false })} className="form-control" id={`observacoes${index}`} onChange={(e) => setDadosBasicos({
+                                            ...dadosBasicos,
+                                            setores: dadosBasicos.setores.map((c, i) => (i === index ? { ...c, observacao: e.target.value } : c)),
+                                        })} rows="1"></textarea>
+
+                                    </div>
                                 </div>
-
-                                <div className="col mb-1">
-                                    <label htmlFor={`localInstalacao`} className="form-label"><strong>Local da
-                                        Instalação</strong></label>
-                                    <input  {...register(`localInstalacao`, { required: false })} type="text" className="form-control" id={`localInstalacao`}
-                                        placeholder="" onChange={(e) => setDadosBasicos({ ...dadosBasicos, setores: e.target.value })}
-                                    />
-                                </div>
-
-
-                                <div className=" col mb-1">
-                                    <label htmlFor={`observacoesSetor`}
-                                        className="form-label"><strong>Observações</strong></label>
-                                    <textarea {...register(`observacoesSetor`, { required: false })} className="form-control" id={`observacoesSetor`} rows="1"></textarea>
-
-                                </div>
-                            </div>
+                            ))}
+                            <button type="button" className="btn btn-primary" onClick={duplicateSetor}>Adicionar Setor</button>
 
                         </div>
 
@@ -419,48 +489,74 @@ function Formulario() {
 
 
 
+                        <div className="container justify-content-center">
 
-                        <h2 className='txt'>4 - Viagens </h2>
+                            <h2 className='txt'>4 - Viagens </h2>
+
+                            {dadosBasicos.viagens.map((viagem, index) => (
+                                <div key={index} className="row">
+                                    <div className="col mb-2">
+                                        <label htmlFor={`nomeSaida${index}`} className="form-label"><strong>Nome - Notificação Saida</strong></label>
+                                        <input  {...register(`nomeSaida${index}`, { required: false })} type="text" className="form-control" id={`nomeSaida${index}`} placeholder=""
+                                            onChange={(e) => setDadosBasicos({
+                                                ...dadosBasicos,
+                                                viagens: dadosBasicos.viagens.map((c, i) => (i === index ? { ...c, nomeSaida: e.target.value } : c)),
+                                            })}
+                                        />
+                                    </div>
+
+                                    <div className="col mb-2">
+                                        <label htmlFor={`nomeVolta${index}`} className="form-label"><strong>Nome - Notificação Volta</strong></label>
+                                        <input  {...register(`nomeVolta${index}`, { required: false })} type="text" className="form-control" id={`nomeVolta${index}`} placeholder=""
+                                            onChange={(e) => setDadosBasicos({
+                                                ...dadosBasicos,
+                                                viagens: dadosBasicos.viagens.map((c, i) => (i === index ? { ...c, nomeVolta: e.target.value } : c)),
+                                            })}
+                                        />
+                                    </div>
+
+                                    <div className=" col mb-3">
+                                        <label htmlFor={`observacao${index}`} className="form-label"><strong>Observações</strong></label>
+                                        <textarea {...register(`observacao${index}`, { required: false })} className="form-control" id={`observacao${index}`} rows="1" onChange={(e) => setDadosBasicos({
+                                            ...dadosBasicos,
+                                            viagens: dadosBasicos.viagens.map((c, i) => (i === index ? { ...c, observacao: e.target.value } : c)),
+                                        })}></textarea>
+
+                                    </div>
+
+                                    <div className="col mb-2">
+                                        <label htmlFor={`dataSaida${index}`} className="form-label"><strong>Data de Saída</strong></label>
+                                        <input   {...register(`data-saida${index}`, { required: false })} type="date" className="form-control" id={`dataSaida${index}`} onChange={(e) => setDadosBasicos({
+                                            ...dadosBasicos,
+                                            viagens: dadosBasicos.viagens.map((c, i) => (i === index ? { ...c, dataSaida: e.target.value } : c)),
+                                        })}
+                                        />
+                                    </div>
+
+                                    <div className="col mb-2">
+                                        <label htmlFor={`dataVolta${index}`} className="form-label"><strong>Data de Volta</strong></label>
+                                        <input  {...register(`data-volta${index}`, { required: false })} type="date" className="form-control" id={`dataVolta${index}`} onChange={(e) => setDadosBasicos({
+                                            ...dadosBasicos,
+                                            viagens: dadosBasicos.viagens.map((c, i) => (i === index ? { ...c, dataVolta: e.target.value } : c)),
+                                        })}
+                                        />
+                                    </div>
+
+                                    <div className="col mb-3">
+                                        <label htmlFor={`procedimentos${index}`} className="form-label"><strong>Procedimentos</strong></label>
+                                        <textarea {...register(`procedimentos${index}`, { required: false })} className="form-control" id={`procedimentos${index}`} rows="1" onChange={(e) => setDadosBasicos({
+                                            ...dadosBasicos,
+                                            viagens: dadosBasicos.viagens.map((c, i) => (i === index ? { ...c, procedimentos: e.target.value } : c)),
+                                        })}></textarea>
+                                    </div>
+
+                                </div>
+
+                            ))}
+
+                            <button type="button" className="btn btn-primary" onClick={duplicateViagem}>Adicionar Viagem</button>
 
 
-                        <div className="row">
-                            <div className="col mb-2">
-                                <label htmlFor={`nomeSaida`} className="form-label"><strong>Nome - Notificação Saida</strong></label>
-                                <input  {...register(`nomeSaida`, { required: false })} type="text" className="form-control" id={`nomeSaida`} placeholder=""
-                                    onChange={(e) => setDadosBasicos({ ...dadosBasicos, viagens: e.target.value })}
-                                />
-                            </div>
-
-                            <div className="col mb-2">
-                                <label htmlFor={`nomeVolta`} className="form-label"><strong>Nome - Notificação Volta</strong></label>
-                                <input  {...register(`nomeVolta`, { required: false })} type="text" className="form-control" id={`nomeVolta`} placeholder=""
-                                    onChange={(e) => setDadosBasicos({ ...dadosBasicos, viagens: e.target.value })}
-                                />
-                            </div>
-
-                            <div className=" col mb-3">
-                                <label htmlFor={`ViagemObservacoes`} className="form-label"><strong>Observações</strong></label>
-                                <textarea {...register(`ViagemObservacoes`, { required: false })} className="form-control" id={`ViagemObservacoes`} rows="1"></textarea>
-
-                            </div>
-
-
-                            <div className="col mb-2">
-                                <label htmlFor={`dataIda`} className="form-label"><strong>Data de Volta</strong></label>
-                                <input  {...register(`data-volta`, { required: false })} type="date" className="form-control" id={`dataIda`} onChange={(e) => setDadosBasicos({ ...dadosBasicos, viagens: e.target.value })}
-                                />
-                            </div>
-
-                            <div className="col mb-2">
-                                <label htmlFor={`dataVolta`} className="form-label"><strong>Data de Saída</strong></label>
-                                <input   {...register(`data-ida`, { required: false })} type="date" className="form-control" id={`dataVolta`} onChange={(e) => setDadosBasicos({ ...dadosBasicos, viagens: e.target.value })}
-                                />
-                            </div>
-
-                            <div className="col mb-3">
-                                <label htmlFor={`procedimentos`} className="form-label"><strong>Procedimentos</strong></label>
-                                <textarea {...register(`procedimentos`, { required: false })} className="form-control" id={`procedimentos`} rows="1"></textarea>
-                            </div>
                         </div>
                     </Form>
 
