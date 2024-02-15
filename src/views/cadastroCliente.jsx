@@ -14,7 +14,7 @@ function Formulario() {
 
     const { register, handleSubmit, formState: { errors }, setError } = useForm({});
     const [natureza, setNatureza] = useState("FISICA");
-
+    const [idCliente, setIdCliente] = useState(null);
     const [errorMessage, setErrorMessage] = useState(null); // Estado para armazenar a mensagem de erro da requisição
     const [successMessage, setSuccessMessage] = useState('');
 
@@ -22,6 +22,7 @@ function Formulario() {
         setErrorMessage('');
         setSuccessMessage('');
     };
+
 
     const [dadosBasicos, setDadosBasicos] = useState({
         unidade: 'Montenegro',
@@ -104,6 +105,7 @@ function Formulario() {
 
             // Construa o objeto de dados para a requisição
             const dadosRequisicao = {
+                id: idCliente,
                 ...dadosBasicos,
                 contatos,
                 setores,
@@ -112,13 +114,26 @@ function Formulario() {
 
 
             console.log('Data antes da requisição:', dadosRequisicao);
-            const resposta = await axios.post('http://localhost:8080/api/cliente', dadosRequisicao);
-            console.log(resposta)
 
-            if (resposta.status === 200) {
-                setSuccessMessage('Cliente salvo com sucesso.');
-                setTimeout(clearMessages, 5000);
+            if (idCliente) {
+                // Se houver um ID de cliente, envie uma requisição PUT para atualizar o cliente
+                const resposta = await axios.post(`http://localhost:8080/api/cliente/`, dadosRequisicao);
+
+                if (resposta.status === 200) {
+                    setSuccessMessage('Cliente atualizado com sucesso.');
+                    setTimeout(clearMessages, 5000);
+                }
+            } else {
+                // Se não houver um ID de cliente, envie uma requisição POST para criar um novo cliente
+                const resposta = await axios.post('http://localhost:8080/api/cliente', dadosRequisicao);
+
+                if (resposta.status === 200) {
+                    setIdCliente(resposta.data.id); // Atualize o estado com o ID do cliente
+                    setSuccessMessage('Cliente salvo com sucesso.');
+                    setTimeout(clearMessages, 5000);
+                }
             }
+
         } catch (error) {
             console.error('Erro ao salvar o cadastro:', error);
 
@@ -618,6 +633,7 @@ function Formulario() {
                         {errorMessage && <div className="alert alert-danger">{errorMessage}</div>}
                         {successMessage && <div className="alert alert-success">{successMessage}</div>}
                         <Button id="btnCadastro" onClick={() => handleSubmit(onSubmit)()} type="submit" className="btn btn-primary">Salvar</Button>
+
                     </div>
                 </div>
 
