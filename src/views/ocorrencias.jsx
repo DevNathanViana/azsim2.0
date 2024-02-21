@@ -79,26 +79,26 @@ function Ocorrencias() {
 
   };
 
-  useEffect(() => {
-    const ws = new WebSocket('ws://localhost:8080');
+  // useEffect(() => {
+  //   const ws = new WebSocket('ws://localhost:8080');
 
-    ws.onmessage = (event) => {
-      const dadosRecebidos = JSON.parse(event.data);
-      const dadosEmCache = JSON.parse(localStorage.getItem('cachedData') || '[]');
-      dadosEmCache.unshift(dadosRecebidos);
-      const limiteLista = 20;
-      const dadosLimitados = dadosEmCache.slice(0, limiteLista);
-      localStorage.setItem('cachedData', JSON.stringify(dadosLimitados));
-      if (dadosRecebidos.type === 'evento') {
-        setColocaEventosNaTela((dadosAntigosDaListaEventos) => [dadosRecebidos, ...dadosAntigosDaListaEventos]);
-      } else if (dadosRecebidos.type === 'ocorrencia') {
-        setColocaOcorrenciasNaTela((dadosAntigosDaListaOcorrencias) => [dadosRecebidos, ...dadosAntigosDaListaOcorrencias]);
-      }
-    };
-    return () => {
-      ws.close();
-    };
-  }, []);
+  //   ws.onmessage = (event) => {
+  //     const dadosRecebidos = JSON.parse(event.data);
+  //     const dadosEmCache = JSON.parse(localStorage.getItem('cachedData') || '[]');
+  //     dadosEmCache.unshift(dadosRecebidos);
+  //     const limiteLista = 20;
+  //     const dadosLimitados = dadosEmCache.slice(0, limiteLista);
+  //     localStorage.setItem('cachedData', JSON.stringify(dadosLimitados));
+  //     if (dadosRecebidos.type === 'evento') {
+  //       setColocaEventosNaTela((dadosAntigosDaListaEventos) => [dadosRecebidos, ...dadosAntigosDaListaEventos]);
+  //     } else if (dadosRecebidos.type === 'ocorrencia') {
+  //       setColocaOcorrenciasNaTela((dadosAntigosDaListaOcorrencias) => [dadosRecebidos, ...dadosAntigosDaListaOcorrencias]);
+  //     }
+  //   };
+  //   return () => {
+  //     ws.close();
+  //   };
+  // }, []);
 
 
 

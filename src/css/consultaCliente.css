@@ -34,42 +34,16 @@ thead {
     font-size: 20px;
 }
 
-.status {
-    width: 450px;
-    padding: .3rem 0;
-    border-radius: 1rem;
-    text-align: center;
-}
-
-.status.delivered {
-    background-color: #86e49d;
-    color: #006b21;
-}
-
-.status.cancelled {
-    background-color: #d893a3;
-    color: #b30021;
-}
-
-.status.pending {
-    background-color: #ebc474;
-}
-
-.status.shipped {
-    background-color: #6fcaea;
-}
-
 table {
-    font-size: 14px;
+    font-size: 12px;
     text-transform: uppercase;
 }
 
 .divTabela {
     overflow: auto;
     position: fixed;
-    top: 75%;
-    left: 50%;
-    transform: translate(-50%, -75%);
+    margin-top: 10%;
+    margin-left: 5%;
     width: 90%;
     padding: 20px;
     background-color: rgb(114, 114, 114);
@@ -121,4 +95,9 @@ table {
 
 .btnTrash:hover {
     background-color: rgb(134, 0, 0);
+}
+
+#linhaInfoUsuario {
+    height: 20px;
+    cursor: pointer;
 }

@@ -9,6 +9,7 @@ function Home() {
       <Navbar />
       <Routes>
         <Route path='/cadastroCliente' element={<Formulario />} />
+        <Route path='/cadastroCliente/:id' element={<Formulario />} />
         <Route path='/ocorrencias' element={<Ocorrencias />} />
         <Route path='/consultaCliente' element={<ConsultaCliente />} />
       </Routes>

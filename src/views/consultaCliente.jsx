@@ -4,14 +4,19 @@ import 'bootstrap/dist/js/bootstrap.min.js';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import { useNavigate } from 'react-router-dom';
+
 function ConsultaCliente() {
+
   const [filtro, setFiltro] = useState('');
   const [clientes, setClientes] = useState([]);
-  const [clienteSelecionado] = useState(null);
+  const [clienteSelecionado, setClienteSelecionado] = useState(null);
   const [modal, setModal] = useState(false);
   const [ordenacao, setOrdenacao] = useState('');
   const [dataInicio, setDataInicio] = useState('');
   const [dataFim, setDataFim] = useState('');
+  const [dadosBasicos, setDadosBasicos] = useState({})
+
 
   // Mova a declaração da função para fora do useEffect
   const buscarClientes = async () => {
@@ -38,20 +43,46 @@ function ConsultaCliente() {
   },);
 
 
-  const toggleModal = () => {
+  const toggleModal = (cliente) => {
+    setClienteSelecionado(cliente)
     setModal(!modal);
   };
 
-  const handleEditCliente = async (cliente) => {
-    try {
-      const response = await axios.get(`http://seu-backend.com/api/clientes/${cliente.id}`);
-      const clienteParaEdicao = response.data; // Detalhes completos do cliente
+  const navigate = useNavigate();
 
-      // Redirecionar para a página de edição, passando os detalhes do cliente
-      history.push({
-        pathname: `/editar-cliente/${cliente.id}`,
-        state: { cliente: clienteParaEdicao }
-      });
+  const handleEditCliente = async (id) => {
+    try {
+      if (id) {
+        const response = await axios.get(`http://localhost:8080/api/cliente/${id}`);
+        const clienteParaEdicao = response.data;
+
+        console.log('Dados recebidos da API:', clienteParaEdicao);
+
+        // Preencha os campos do formulário com os dados do cliente para edição
+        setDadosBasicos({
+          ...dadosBasicos,
+          unidade: clienteParaEdicao.unidade,
+          codHabil: clienteParaEdicao.codHabil,
+          codCondor: clienteParaEdicao.codCondor,
+          natureza: clienteParaEdicao.natureza,
+          documento: clienteParaEdicao.documento,
+          incMunincipal: clienteParaEdicao.incMunincipal,
+          nome: clienteParaEdicao.nome,
+          nomeFantasia: clienteParaEdicao.nomeFantasia,
+          endereco: clienteParaEdicao.endereco,
+          bairro: clienteParaEdicao.bairro,
+          cidade: clienteParaEdicao.cidade,
+          uf: clienteParaEdicao.uf,
+          cep: clienteParaEdicao.cep,
+          observacao: clienteParaEdicao.observacao,
+          codificador: clienteParaEdicao.codificador,
+          contatos: clienteParaEdicao.contatos,
+          setores: clienteParaEdicao.setores,
+          viagens: clienteParaEdicao.viagens,
+        });
+      }
+      // Redirecionar para a página de edição, passando os detalhes do cliente como parâmetros na URL
+      navigate(`/cadastroCliente/${id}`);
     } catch (error) {
       console.error('Erro ao obter detalhes do cliente:', error);
     }
@@ -60,7 +91,7 @@ function ConsultaCliente() {
 
   const handleDeleteCliente = async (id) => {
     try {
-      await axios.delete(`http://localhost:8080/api/clientes/${id}`);
+      await axios.delete(`http://localhost:8080/api/cliente/${id}`);
       // Atualize o estado de clientes removendo o cliente
       const novosClientes = clientes.filter(cliente => cliente.id !== id);
       setClientes(novosClientes);
@@ -177,16 +208,14 @@ function ConsultaCliente() {
               <td className="col-2">
                 <strong>Editar/Excluir</strong>
               </td>
-              <td className="col-2">
-                <strong>Ver +</strong>
-              </td>
+
             </tr>
           </thead>
 
           <tbody>
-            {clientesParaExibir.map((cliente, id) => (
-              <tr key={id}>
-                <td className="col-1">{cliente.codHabil}</td>
+            {clientesParaExibir.map((cliente) => (
+              <tr onClick={toggleModal} id='linhaInfoUsuario' key={cliente.id}>
+                <td className="col-1">{cliente.codificador}</td>
                 <td className="col-2">{cliente.nome}</td>
                 <td className="col-3">
                   <p>{cliente.cidade}</p>
@@ -195,12 +224,10 @@ function ConsultaCliente() {
                   <p>{cliente.endereco}</p>
                 </td>
                 <td className="col-2">
-                  <Button className='btnEdit' onClick={() => handleEditCliente(cliente)}><i className="bi bi-pencil-square" /></Button>
+                  <Button className='btnEdit' onClick={() => handleEditCliente(cliente.id)}><i className="bi bi-pencil-square" /></Button>
                   <Button className='btnTrash' onClick={() => handleDeleteCliente(cliente.id)}><i className="bi bi-trash3"></i></Button>
                 </td>
-                <td className="col-1">
-                  <Button className='btnView' onClick={toggleModal}><i className="bi bi-eye"></i></Button>
-                </td>
+
               </tr>
             ))}
           </tbody>

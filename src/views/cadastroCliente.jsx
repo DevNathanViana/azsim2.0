@@ -3,10 +3,12 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.min.js';
 import { Button, Form } from 'reactstrap';
 import { useForm } from "react-hook-form";
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import InputMask from 'react-input-mask';
 import ErrorCard from '../fragments/ErrorCard';
+import { useParams } from 'react-router-dom';
+
 
 function Formulario() {
 
@@ -17,6 +19,48 @@ function Formulario() {
     const [idCliente, setIdCliente] = useState(null);
     const [errorMessage, setErrorMessage] = useState(null); // Estado para armazenar a mensagem de erro da requisição
     const [successMessage, setSuccessMessage] = useState('');
+    const { id: idNaURL } = useParams();
+
+
+    const { id } = useParams();
+
+    // Use o ID para carregar os dados do cliente ao montar o componente
+    useEffect(() => {
+        const carregarDadosCliente = async () => {
+            try {
+                if (id) {
+                    const response = await axios.get(`http://localhost:8080/api/cliente/${id}`);
+                    const clienteParaEdicao = response.data;
+
+                    setDadosBasicos({
+                        unidade: clienteParaEdicao.unidade,
+                        codHabil: clienteParaEdicao.codHabil,
+                        codCondor: clienteParaEdicao.codCondor,
+                        natureza: clienteParaEdicao.natureza,
+                        documento: clienteParaEdicao.documento,
+                        incMunincipal: clienteParaEdicao.incMunincipal,
+                        nome: clienteParaEdicao.nome,
+                        nomeFantasia: clienteParaEdicao.nomeFantasia,
+                        endereco: clienteParaEdicao.endereco,
+                        bairro: clienteParaEdicao.bairro,
+                        cidade: clienteParaEdicao.cidade,
+                        uf: clienteParaEdicao.uf,
+                        cep: clienteParaEdicao.cep,
+                        observacao: clienteParaEdicao.observacao,
+                        codificador: clienteParaEdicao.codificador,
+                        contatos: clienteParaEdicao.contatos,
+                        setores: clienteParaEdicao.setores,
+                        viagens: clienteParaEdicao.viagens,
+                    });
+                }
+            } catch (error) {
+                console.error('Erro ao obter detalhes do cliente:', error);
+            }
+        };
+
+        carregarDadosCliente();
+    }, [id]);
+
 
     const clearMessages = () => {
         setErrorMessage('');
@@ -39,7 +83,7 @@ function Formulario() {
         uf: 'AC',
         cep: '',
         observacao: '',
-        codificador: 87,
+        codificador: '',
         contatos: [{ nome: '', telefone: '', senha: '', contraSenha: '', dataNascimento: '', observacao: '' }],
         setores: [{ setor: '', localInstalacao: '', observacao: '' }],
         viagens: [{ nomeSaida: '', nomeVolta: '', observacao: '', dataSaida: '', dataVolta: '', procedimentos: '' }],
@@ -66,6 +110,8 @@ function Formulario() {
         });
     };
 
+
+
     const onSubmit = async (data) => {
         const camposObrigatorios = ['unidade', 'codificador', 'natureza', 'documento', 'nome/razao-social'];
         camposObrigatorios.forEach((campo) => {
@@ -77,7 +123,6 @@ function Formulario() {
             }
         });
         try {
-
             const contatos = dadosBasicos.contatos.map((contato) => ({
                 nome: contato.nome,
                 telefone: contato.telefone,
@@ -102,7 +147,6 @@ function Formulario() {
                 procedimento: viagem.procedimentos,
             }));
 
-
             // Construa o objeto de dados para a requisição
             const dadosRequisicao = {
                 id: idCliente,
@@ -112,28 +156,30 @@ function Formulario() {
                 viagens,
             };
 
-
             console.log('Data antes da requisição:', dadosRequisicao);
 
+            let resposta;
+
             if (idCliente) {
-                // Se houver um ID de cliente, envie uma requisição PUT para atualizar o cliente
-                const resposta = await axios.post(`http://localhost:8080/api/cliente/`, dadosRequisicao);
-
-                if (resposta.status === 200) {
-                    setSuccessMessage('Cliente atualizado com sucesso.');
-                    setTimeout(clearMessages, 5000);
-                }
+                resposta = await axios.put(`http://localhost:8080/api/cliente/${idCliente}`, dadosRequisicao);
+            } else if (idNaURL) {
+                resposta = await axios.put(`http://localhost:8080/api/cliente/${idNaURL}`, dadosRequisicao);
             } else {
-                // Se não houver um ID de cliente, envie uma requisição POST para criar um novo cliente
-                const resposta = await axios.post('http://localhost:8080/api/cliente', dadosRequisicao);
-
-                if (resposta.status === 200) {
-                    setIdCliente(resposta.data.id); // Atualize o estado com o ID do cliente
-                    setSuccessMessage('Cliente salvo com sucesso.');
-                    setTimeout(clearMessages, 5000);
-                }
+                resposta = await axios.post('http://localhost:8080/api/cliente', dadosRequisicao);
             }
 
+            if (resposta.status === 200) {
+                const novoIdCliente = resposta.data.id;
+
+                if (idCliente || idNaURL) {
+                    setSuccessMessage('Cliente atualizado com sucesso.');
+                } else {
+                    setIdCliente(novoIdCliente);
+                    setSuccessMessage('Cliente salvo com sucesso.');
+                }
+
+                setTimeout(clearMessages, 5000);
+            }
         } catch (error) {
             console.error('Erro ao salvar o cadastro:', error);
 
@@ -144,7 +190,7 @@ function Formulario() {
                     if (serverErrorMessage.includes('CODIFICADOR_EM_USO')) {
                         setErrorMessage('Erro: O codificador já está em uso.');
                     } else {
-                        setErrorMessage(`Erro no servidor: ${serverErrorMessage}`);
+                        setErrorMessage(`Erro: O codificador já está em uso.`);
                     }
                 } else {
                     setErrorMessage(`Erro no servidor: ${error.response.data?.message}`);
@@ -199,7 +245,7 @@ function Formulario() {
                         <div className="row">
                             <div className="col mb-2">
                                 <label htmlFor="unidade" className="form-label"><strong>* Unidade</strong></label>
-                                <select name='unidade'  {...register("unidade", { required: false })} id="unidade" className={`form-select ${errors.unidade ? 'is-invalid' : ''}`} aria-label=".form-select example" onChange={(e) => setDadosBasicos({ ...dadosBasicos, unidade: e.target.value })}>
+                                <select value={dadosBasicos.unidade || ""} name='unidade'  {...register("unidade", { required: false })} id="unidade" className={`form-select ${errors.unidade ? 'is-invalid' : ''}`} aria-label=".form-select example" onChange={(e) => setDadosBasicos({ ...dadosBasicos, unidade: e.target.value })}>
                                     <option defaultValue={"Montenegro"} value="Montenegro">Montenegro</option>
                                     <option value="Porto Alegre">Porto Alegre</option>
                                     <div className="invalid-feedback">{errors.unidade?.message}</div>
@@ -209,18 +255,20 @@ function Formulario() {
                             <div className="col">
                                 <label htmlFor="codificador" className="form-label"><strong>* Codificador</strong></label>
                                 <input name='codificador' {...register("codificador", { required: true })} type="text" className={`form-control ${errors['codificador'] ? 'is-invalid' : ''}`} id="codificador" placeholder=""
-                                    onChange={(e) => setDadosBasicos({ ...dadosBasicos, codificador: e.target.value })} />
-                                {errors['codificador'] && <ErrorCard message="O campo codificadorcadastro deve ser preenchido." />}
+                                    onChange={(e) => setDadosBasicos({ ...dadosBasicos, codificador: e.target.value })} value={dadosBasicos.codificador || ""} />
+                                {errors['codificador'] && <ErrorCard message="O campo codificador deve ser preenchido." />}
                             </div>
                             <div className="col">
                                 <label htmlFor="codHabil" className="form-label"><strong>Hábil</strong></label>
                                 <input name='codHabil' {...register("codHabil", { required: false })} type="text" className="form-control" id="codHabil" placeholder=""
-                                    onChange={(e) => setDadosBasicos({ ...dadosBasicos, codHabil: e.target.value })} />
+                                    onChange={(e) => setDadosBasicos({ ...dadosBasicos, codHabil: e.target.value })} value={dadosBasicos.codHabil || ""}
+                                />
                             </div>
                             <div className="col h-25">
                                 <label htmlFor="codCondor" className="form-label"><strong>Condor</strong></label>
                                 <input name='codCondor' {...register("codCondor", { required: false })} type="text" className="form-control" id="codCondor" placeholder=""
-                                    onChange={(e) => setDadosBasicos({ ...dadosBasicos, codCondor: e.target.value })} />
+                                    onChange={(e) => setDadosBasicos({ ...dadosBasicos, codCondor: e.target.value })} value={dadosBasicos.codCondor || ""}
+                                />
                             </div>
                         </div>
                         <div className="row mb-2">
@@ -229,6 +277,7 @@ function Formulario() {
                                     <strong>* Natureza</strong>
                                 </label>
                                 <select
+                                    value={dadosBasicos.natureza || ""}
                                     name="natureza"
                                     {...register("natureza", { required: false })}
                                     id="natureza"
@@ -254,13 +303,14 @@ function Formulario() {
                                     id="documento"
                                     placeholder=""
                                     onChange={(e) => setDadosBasicos({ ...dadosBasicos, documento: e.target.value })}
+                                    value={dadosBasicos.documento || ""}
                                 />
                                 {errors['documento'] && <ErrorCard message="O campo CPF/CNPJ deve ser preenchido." />}
                             </div>
                             <div className="col">
                                 <label htmlFor="inscMunicipal" className="form-label"><strong>Inscrição Municipal</strong></label>
                                 <input name='incMunincipal' {...register("incMunincipal", { required: false })} type="text" className="form-control" id="inscMunicipal" placeholder=""
-                                    onChange={(e) => setDadosBasicos({ ...dadosBasicos, incMunincipal: e.target.value })}
+                                    onChange={(e) => setDadosBasicos({ ...dadosBasicos, incMunincipal: e.target.value })} value={dadosBasicos.incMunincipal || ""}
                                 />
                             </div>
                         </div>
@@ -268,6 +318,7 @@ function Formulario() {
                             <div className="col mb-2">
                                 <label htmlFor="nome" className="form-label"><strong>* Nome/Razão Social</strong></label>
                                 <input
+                                    value={dadosBasicos.nome || ""}
                                     name='nome'
                                     {...register("nome/razao-social", { required: true })}
                                     type="text"
@@ -276,12 +327,12 @@ function Formulario() {
                                     placeholder=""
                                     onChange={(e) => setDadosBasicos({ ...dadosBasicos, nome: e.target.value })}
                                 />
-                                {errors['nome/razao-social'] && <ErrorCard message="O campo Nome/Razão Social deve ser preenchido." />}
+                                {errors['nome/razao-social'] && <ErrorCard className="cardErro" message="O campo Nome/Razão Social deve ser preenchido." />}
                             </div>
                             <div className="col">
                                 <label htmlFor="nomeFantasia" className="form-label"><strong>Nome Fantasia</strong></label>
                                 <input name='nomeFantasia' {...register("nomeFantasia", { required: false })} type="text" className="form-control" id="nomeFantasia" placeholder=""
-                                    onChange={(e) => setDadosBasicos({ ...dadosBasicos, nomeFantasia: e.target.value })}
+                                    onChange={(e) => setDadosBasicos({ ...dadosBasicos, nomeFantasia: e.target.value })} value={dadosBasicos.nomeFantasia || ""}
                                 />
                             </div>
                         </div>
@@ -289,13 +340,13 @@ function Formulario() {
                             <div className="col mb-2">
                                 <label htmlFor="endereco" className="form-label"><strong>Endereço</strong></label>
                                 <input name='endereco' {...register("endereco", { required: false })} type="text" className="form-control" id="endereco" placeholder=""
-                                    onChange={(e) => setDadosBasicos({ ...dadosBasicos, endereco: e.target.value })}
+                                    onChange={(e) => setDadosBasicos({ ...dadosBasicos, endereco: e.target.value })} value={dadosBasicos.endereco || ""}
                                 />
                             </div>
                             <div className="col">
                                 <label htmlFor="bairro" className="form-label"><strong>Bairro</strong></label>
                                 <input name='bairro' {...register("bairro", { required: false })} type="text" className="form-control" id="bairro" placeholder=""
-                                    onChange={(e) => setDadosBasicos({ ...dadosBasicos, bairro: e.target.value })}
+                                    onChange={(e) => setDadosBasicos({ ...dadosBasicos, bairro: e.target.value })} value={dadosBasicos.bairro || ""}
                                 />
                             </div>
                         </div>
@@ -303,12 +354,12 @@ function Formulario() {
                             <div className="col">
                                 <label htmlFor="cidade" className="form-label"><strong>Cidade</strong></label>
                                 <input name='cidade' {...register("cidade", { required: false })} type="text" className="form-control" id="cidade" placeholder=""
-                                    onChange={(e) => setDadosBasicos({ ...dadosBasicos, cidade: e.target.value })}
+                                    onChange={(e) => setDadosBasicos({ ...dadosBasicos, cidade: e.target.value })} value={dadosBasicos.cidade || ""}
                                 />
                             </div>
                             <div className="col">
                                 <label htmlFor="uf" className="form-label"><strong>Uf</strong></label>
-                                <select name='uf' {...register("uf", { required: false })} id="uf" className="form-select" aria-label=".form-select example" onChange={(e) => setDadosBasicos({ ...dadosBasicos, uf: e.target.value })}>
+                                <select value={dadosBasicos.uf || ""} name='uf' {...register("uf", { required: false })} id="uf" className="form-select" aria-label=".form-select example" onChange={(e) => setDadosBasicos({ ...dadosBasicos, uf: e.target.value })}>
                                     <option defaultValue={"AC"} value="AC">AC</option>
                                     <option value="AL">AL</option>
                                     <option value="AM">AM</option>
@@ -351,6 +402,7 @@ function Formulario() {
                                     className="form-control"
                                     id="cep"
                                     placeholder=""
+                                    value={dadosBasicos.cep || ""}
                                     onChange={(e) => setDadosBasicos({ ...dadosBasicos, cep: e.target.value })}
                                 />
                             </div>
@@ -359,7 +411,7 @@ function Formulario() {
                         <div className="row mt-2">
                             <div className="col-lg ">
                                 <label htmlFor="observacao" className="form-label"><strong>Observações</strong></label>
-                                <input {...register("observacao", { required: false })} className="form-control" id="observacao" rows="3" onChange={(e) => setDadosBasicos({ ...dadosBasicos, observacao: e.target.value })} />
+                                <input {...register("observacao", { required: false })} className="form-control" id="observacao" rows="3" onChange={(e) => setDadosBasicos({ ...dadosBasicos, observacao: e.target.value })} value={dadosBasicos.observacao || ""} />
                             </div>
 
                         </div>
@@ -370,7 +422,7 @@ function Formulario() {
                         <hr />
                         <div className="container justify-content-center">
                             <h2 className='txt'>2 - Contatos </h2>
-                            {dadosBasicos.contatos.map((contato, index) => (
+                            {dadosBasicos.contatos && dadosBasicos.contatos.map((contato, index) => (
                                 <div className="row" key={index}>
                                     <div className="col mb-2">
                                         <label htmlFor={`nome${index}`} className="form-label"><strong>Nome</strong></label>
@@ -495,7 +547,7 @@ function Formulario() {
                             <h2 className='txt'>3 - Setorização</h2>
 
 
-                            {dadosBasicos.setores.map((setor, index) => (
+                            {dadosBasicos.setores && dadosBasicos.setores.map((setor, index) => (
                                 <div key={index} className="row">
                                     <div className="col-3 mb-1">
                                         <label htmlFor={`setor${index}`} className="form-label"><strong>Setor</strong></label>
@@ -549,7 +601,7 @@ function Formulario() {
 
                             <h2 className='txt'>4 - Viagens </h2>
 
-                            {dadosBasicos.viagens.map((viagem, index) => (
+                            {dadosBasicos.setores && dadosBasicos.viagens.map((viagem, index) => (
                                 <div key={index} className="row">
                                     <div className="col mb-2">
                                         <label htmlFor={`nomeSaida${index}`} className="form-label"><strong>Nome - Notificação Saida</strong></label>
