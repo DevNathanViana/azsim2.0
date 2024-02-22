@@ -12,6 +12,8 @@ import { useParams } from 'react-router-dom';
 
 function Formulario() {
 
+
+
     const { register, handleSubmit, formState: { errors }, setError } = useForm({});
     const [natureza, setNatureza] = useState("FISICA");
     const [idCliente, setIdCliente] = useState(null);
@@ -238,8 +240,8 @@ function Formulario() {
 
                     <h2 className='txtDados ms-3'>1 - Dados Básicos</h2>
 
-                    <Form method="POST" className="text-start justify-content-center p-3">
-
+                    <Form method="POST"
+                        className="text-start justify-content-center p-3">
                         <div className="row">
                             <div className="col mb-2">
                                 <label htmlFor="unidade" className="form-label"><strong>* Unidade</strong></label>
@@ -269,7 +271,6 @@ function Formulario() {
                                 />
                             </div>
                         </div>
-
                         <div className="row mb-2">
                             <div className="col">
                                 <label htmlFor="natureza" className="form-label">
@@ -282,15 +283,14 @@ function Formulario() {
                                     id="natureza"
                                     className="form-select"
                                     aria-label=".form-select example"
-                                    onChange={(e) => setNatureza(e.target.value)}>
-
+                                    onChange={(e) => setNatureza(e.target.value)}
+                                >
                                     <option defaultValue={"FISICA"} value="FISICA">
                                         FISICA
                                     </option>
                                     <option value="JURIDICA">JURIDICA</option>
                                 </select>
                             </div>
-
                             <div className="col">
                                 <label htmlFor="documento" className="form-label">    <strong>* {natureza === "FISICA" ? "CPF" : "CNPJ"}</strong></label>
                                 <InputMask
@@ -314,7 +314,6 @@ function Formulario() {
                                 />
                             </div>
                         </div>
-
                         <div className="row">
                             <div className="col mb-2">
                                 <label htmlFor="nome" className="form-label"><strong>* Nome/Razão Social</strong></label>
@@ -387,6 +386,7 @@ function Formulario() {
                                     <option value="SP">SP</option>
                                     <option value="SE">SE</option>
                                     <option value="TO">TO</option>
+
                                 </select>
                             </div>
 
@@ -413,11 +413,13 @@ function Formulario() {
                                 <label htmlFor="observacao" className="form-label"><strong>Observações</strong></label>
                                 <input {...register("observacao", { required: false })} className="form-control" id="observacao" rows="3" onChange={(e) => setDadosBasicos({ ...dadosBasicos, observacao: e.target.value })} value={dadosBasicos.observacao || ""} />
                             </div>
+
                         </div>
 
 
-                        <hr />
 
+
+                        <hr />
                         <div className="container justify-content-center">
                             <h2 className='txt'>2 - Contatos </h2>
                             {dadosBasicos.contatos && dadosBasicos.contatos.map((contato, index) => (
@@ -460,7 +462,6 @@ function Formulario() {
                                             })}
                                         />
                                     </div>
-
                                     <div className="col mb-2">
                                         <label htmlFor={`senha${index}`} className="form-label"><strong>Senha</strong></label>
                                         <input
@@ -476,6 +477,7 @@ function Formulario() {
                                             })}
                                         />
                                     </div>
+
 
                                     <div className="col mb-2">
                                         <label htmlFor={`contraSenha${index}`} className="form-label"><strong>Contra-Senha</strong></label>
@@ -493,6 +495,37 @@ function Formulario() {
                                         />
                                     </div>
 
+                                    <div className="col mb-2">
+                                        <label htmlFor={`dataNascimento${index}`} className="form-label"><strong>Data de Nascimento</strong></label>
+                                        <input
+                                            {...register(`dataNascimento${index}`, { required: false })}
+                                            type="date"
+                                            className="form-control"
+                                            id={`dataNascimento${index}`}
+                                            value={contato.dataNascimento}
+                                            onChange={(e) => setDadosBasicos({
+                                                ...dadosBasicos,
+                                                contatos: dadosBasicos.contatos.map((c, i) => (i === index ? { ...c, dataNascimento: e.target.value } : c)),
+                                            })}
+                                        />
+                                    </div>
+
+                                    <div className="col mb-2">
+                                        <label htmlFor={`observacoesctt${index}`} className="form-label"><strong>Observações</strong></label>
+                                        <textarea
+                                            {...register(`contatos[${index}].observacoes`, { required: false })}
+                                            className="form-control"
+                                            id={`observacoesctt${index}`}
+                                            rows="1"
+                                            value={contato.observacoes}
+                                            onChange={(e) => setDadosBasicos({
+                                                ...dadosBasicos,
+                                                contatos: dadosBasicos.contatos.map((c, i) => (i === index ? { ...c, observacao: e.target.value } : c)),
+                                            })}
+                                        ></textarea>
+                                    </div>
+
+
                                     <div className="col-1">
                                         <button
                                             type="button"
@@ -502,49 +535,12 @@ function Formulario() {
                                             X
                                         </button>
                                     </div>
-
-                                    <div className="row">
-
-                                        <div className="col mb-2">
-                                            <label htmlFor={`dataNascimento${index}`} className="form-label"><strong>Data de Nascimento</strong></label>
-                                            <input
-                                                {...register(`dataNascimento${index}`, { required: false })}
-                                                type="date"
-                                                className="form-control"
-                                                id={`dataNascimento${index}`}
-                                                value={contato.dataNascimento}
-                                                onChange={(e) => setDadosBasicos({
-                                                    ...dadosBasicos,
-                                                    contatos: dadosBasicos.contatos.map((c, i) => (i === index ? { ...c, dataNascimento: e.target.value } : c)),
-                                                })}
-                                            />
-                                        </div>
-
-                                        <div className="col mb-2">
-                                            <label htmlFor={`observacoesctt${index}`} className="form-label"><strong>Observações</strong></label>
-                                            <textarea
-                                                {...register(`contatos[${index}].observacoes`, { required: false })}
-                                                className="form-control"
-                                                id={`observacoesctt${index}`}
-                                                rows="1"
-                                                value={contato.observacoes}
-                                                onChange={(e) => setDadosBasicos({
-                                                    ...dadosBasicos,
-                                                    contatos: dadosBasicos.contatos.map((c, i) => (i === index ? { ...c, observacao: e.target.value } : c)),
-                                                })}
-                                            ></textarea>
-                                        </div>
-
-                                    </div>
-
                                 </div>
                             ))}
-
-
-                            <hr />
-
-                            <button type="button" className="btn btn-primary" onClick={duplicateContato}>...</button>
+                            <button type="button" className="btn btn-primary" onClick={duplicateContato}>Adicionar Contato</button>
                         </div>
+
+                        <hr />
 
                         <div className="container justify-content-center">
 
@@ -553,7 +549,7 @@ function Formulario() {
 
                             {dadosBasicos.setores && dadosBasicos.setores.map((setor, index) => (
                                 <div key={index} className="row">
-                                    <div className="col-1 mb-1">
+                                    <div className="col-3 mb-1">
                                         <label htmlFor={`setor${index}`} className="form-label"><strong>Setor</strong></label>
                                         <input value={setor.setor} {...register(`setor${index}`, { required: false })} type="number" className="form-control" id={`setor${index}`} placeholder="" onChange={(e) => setDadosBasicos({
                                             ...dadosBasicos,
@@ -561,7 +557,7 @@ function Formulario() {
                                         })} />
                                     </div>
 
-                                    <div className="col-5 mb-1">
+                                    <div className="col-4 mb-1">
                                         <label htmlFor={`localInstalacao${index}`} className="form-label"><strong>Local da
                                             Instalação</strong></label>
                                         <input value={setor.localInstalacao} {...register(`localInstalacao${index}`, { required: false })} type="text" className="form-control" id={`localInstalacao${index}`}
@@ -572,7 +568,8 @@ function Formulario() {
                                         />
                                     </div>
 
-                                    <div className=" col-5 mb-1">
+
+                                    <div className=" col-4 mb-1">
                                         <label htmlFor={`observacoes${index}`}
                                             className="form-label"><strong>Observações</strong></label>
                                         <textarea value={setor.observacao} {...register(`observacoes${index}`, { required: false })} className="form-control" id={`observacoes${index}`} onChange={(e) => setDadosBasicos({
@@ -590,15 +587,15 @@ function Formulario() {
                                             X
                                         </button>
                                     </div>
-
                                 </div>
                             ))}
-
-                            <hr />
-
-                            <button type="button" className="btn btn-primary" onClick={duplicateSetor}>...</button>
+                            <button type="button" className="btn btn-primary" onClick={duplicateSetor}>Adicionar Setor</button>
 
                         </div>
+
+                        <hr />
+
+
 
                         <div className="container justify-content-center">
 
@@ -606,7 +603,7 @@ function Formulario() {
 
                             {dadosBasicos.setores && dadosBasicos.viagens.map((viagem, index) => (
                                 <div key={index} className="row">
-                                    <div className="col mb-4">
+                                    <div className="col mb-2">
                                         <label htmlFor={`nomeSaida${index}`} className="form-label"><strong>Nome - Notificação Saida</strong></label>
                                         <input value={viagem.nomeSaida} {...register(`nomeSaida${index}`, { required: false })} type="text" className="form-control" id={`nomeSaida${index}`} placeholder=""
                                             onChange={(e) => setDadosBasicos({
@@ -616,7 +613,7 @@ function Formulario() {
                                         />
                                     </div>
 
-                                    <div className="col mb-3">
+                                    <div className="col mb-2">
                                         <label htmlFor={`nomeVolta${index}`} className="form-label"><strong>Nome - Notificação Volta</strong></label>
                                         <input value={viagem.nomeVolta} {...register(`nomeVolta${index}`, { required: false })} type="text" className="form-control" id={`nomeVolta${index}`} placeholder=""
                                             onChange={(e) => setDadosBasicos({
@@ -626,6 +623,14 @@ function Formulario() {
                                         />
                                     </div>
 
+                                    <div className=" col mb-3">
+                                        <label htmlFor={`observacao${index}`} className="form-label"><strong>Observações</strong></label>
+                                        <textarea value={viagem.observacao} {...register(`observacao${index}`, { required: false })} className="form-control" id={`observacao${index}`} rows="1" onChange={(e) => setDadosBasicos({
+                                            ...dadosBasicos,
+                                            viagens: dadosBasicos.viagens.map((c, i) => (i === index ? { ...c, observacao: e.target.value } : c)),
+                                        })}></textarea>
+
+                                    </div>
 
                                     <div className="col mb-2">
                                         <label htmlFor={`dataSaida${index}`} className="form-label"><strong>Data de Saída</strong></label>
@@ -645,51 +650,32 @@ function Formulario() {
                                         />
                                     </div>
 
-                                    <div className="col-1 btn-excluir">
+                                    <div className="col mb-3">
+                                        <label htmlFor={`procedimentos${index}`} className="form-label"><strong>Procedimentos</strong></label>
+                                        <textarea value={viagem.procedimentos} {...register(`procedimentos${index}`, { required: false })} className="form-control" id={`procedimentos${index}`} rows="1" onChange={(e) => setDadosBasicos({
+                                            ...dadosBasicos,
+                                            viagens: dadosBasicos.viagens.map((c, i) => (i === index ? { ...c, procedimentos: e.target.value } : c)),
+                                        })}></textarea>
+                                    </div>
+                                    <div className=" col-1 btn-excluir">
                                         <button
                                             type="button"
                                             className="btn btn-danger btn-excluir"
-                                            onClick={() => deleteItem('viagens', index)}>
+                                            onClick={() => deleteItem('viagens', index)}
+                                        >
                                             X
                                         </button>
                                     </div>
-
-                                    <div className="row">
-
-                                        <div className=" col mb-11">
-                                            <label htmlFor={`observacao${index}`} className="form-label"><strong>Observações</strong></label>
-                                            <textarea value={viagem.observacao} {...register(`observacao${index}`, { required: false })} className="form-control" id={`observacao${index}`} rows="5" onChange={(e) => setDadosBasicos({
-                                                ...dadosBasicos,
-                                                viagens: dadosBasicos.viagens.map((c, i) => (i === index ? { ...c, observacao: e.target.value } : c)),
-                                            })}></textarea>
-
-                                        </div>
-
-                                    </div>
-
-                                    <div className="row">
-
-                                        <div className="col mb-11">
-                                            <label htmlFor={`procedimentos${index}`} className="form-label"><strong>Procedimentos</strong></label>
-                                            <textarea value={viagem.procedimentos} {...register(`procedimentos${index}`, { required: false })} className="form-control" id={`procedimentos${index}`} rows="5" onChange={(e) => setDadosBasicos({
-                                                ...dadosBasicos,
-                                                viagens: dadosBasicos.viagens.map((c, i) => (i === index ? { ...c, procedimentos: e.target.value } : c)),
-                                            })}></textarea>
-                                        </div>
-
-                                    </div>
-
                                 </div>
 
                             ))}
 
-                            <hr />
-
-                            <button type="button" className="btn btn-primary" onClick={duplicateViagem}>...</button>
+                            <button type="button" className="btn btn-primary" onClick={duplicateViagem}>Adicionar Viagem</button>
 
 
                         </div>
                     </Form>
+
 
                 </div>
 

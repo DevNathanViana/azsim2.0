@@ -101,3 +101,7 @@ table {
     height: 20px;
     cursor: pointer;
 }
+
+#tdAcoes {
+    cursor: default;
+}
