@@ -91,12 +91,13 @@ function ConsultaCliente() {
 
   const handleDeleteCliente = async (id) => {
     try {
-      await axios.delete(`http://localhost:8080/api/cliente/${id}`);
-      // Atualize o estado de clientes removendo o cliente
-      const novosClientes = clientes.filter(cliente => cliente.id !== id);
-      setClientes(novosClientes);
+      const resposta = await axios.delete(`http://localhost:8080/api/cliente/${id}`);
+
+      if (resposta.status === 204) {
+        console.log('Cliente desativado com sucesso.');
+      }
     } catch (error) {
-      console.error('Erro ao excluir cliente:', error);
+      console.error('Erro ao desativar o cliente:', error);
     }
   };
 
@@ -214,13 +215,13 @@ function ConsultaCliente() {
 
           <tbody>
             {clientesParaExibir.map((cliente) => (
-              <tr onClick={toggleModal} id='linhaInfoUsuario' key={cliente.id}>
-                <td className="col-1">{cliente.codificador}</td>
-                <td className="col-2">{cliente.nome}</td>
-                <td className="col-3">
+              <tr id='linhaInfoUsuario' key={cliente.id}>
+                <td onClick={toggleModal} className="col-1">{cliente.codificador}</td>
+                <td onClick={toggleModal} className="col-2">{cliente.nome}</td>
+                <td onClick={toggleModal} className="col-3">
                   <p>{cliente.cidade}</p>
                 </td>
-                <td className="col-3">
+                <td onClick={toggleModal} className="col-3">
                   <p>{cliente.endereco}</p>
                 </td>
                 <td className="col-2">
