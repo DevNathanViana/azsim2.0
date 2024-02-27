@@ -12,9 +12,6 @@ function ConsultaCliente() {
   const [clientes, setClientes] = useState([]);
   const [clienteSelecionado, setClienteSelecionado] = useState(null);
   const [modal, setModal] = useState(false);
-  const [ordenacao, setOrdenacao] = useState('');
-  const [dataInicio, setDataInicio] = useState('');
-  const [dataFim, setDataFim] = useState('');
   const [dadosBasicos, setDadosBasicos] = useState({})
 
 
@@ -89,18 +86,6 @@ function ConsultaCliente() {
   };
 
 
-  const handleDeleteCliente = async (id) => {
-    try {
-      const resposta = await axios.delete(`http://localhost:8080/api/cliente/${id}`);
-
-      if (resposta.status === 204) {
-        console.log('Cliente desativado com sucesso.');
-      }
-    } catch (error) {
-      console.error('Erro ao desativar o cliente:', error);
-    }
-  };
-
   const handleBuscarClientes = async () => {
     // Carrega todos os clientes
     await buscarClientes();
@@ -111,28 +96,6 @@ function ConsultaCliente() {
         valor.toString().toLowerCase().includes(filtro.toLowerCase())
       )
     );
-
-    // Aplica o filtro de data
-    if (dataInicio) {
-      resultadosFiltrados = resultadosFiltrados.filter(cliente =>
-        new Date(cliente.data) >= new Date(dataInicio)
-      );
-    }
-    if (dataFim) {
-      resultadosFiltrados = resultadosFiltrados.filter(cliente =>
-        new Date(cliente.data) <= new Date(dataFim)
-      );
-    }
-
-    // Aplica a ordenação
-    if (ordenacao === '1') {
-      resultadosFiltrados.sort((a, b) => new Date(a.data) - new Date(b.data));
-    } else if (ordenacao === '2') {
-      resultadosFiltrados.sort((a, b) => a.nome.localeCompare(b.nome));
-    } else if (ordenacao === '3') {
-      resultadosFiltrados.sort((a, b) => b.nome.localeCompare(a.nome));
-    }
-
     setClientes(resultadosFiltrados);
   };
 
@@ -150,24 +113,7 @@ function ConsultaCliente() {
     <>
 
       <div className="filtros">
-        <div id='filtrosgroup' className="input-group me-3 w-50 mb-3">
-          <label className="input-group-text" htmlFor="inputGroupSelect01">Ordenar</label>
-          <select className="form-select" id="inputGroupSelect01" value={ordenacao} onChange={(e) => setOrdenacao(e.target.value)}>
-            <option value="">Mais novos</option>
-            <option value="1">Mais antigos</option>
-            <option value="2">A-Z</option>
-            <option value="3">Z-A</option>
-          </select>
-        </div>
-
-
-        <div id='filtrosgroup2' className="input-group me-3 w-50 mb-3">
-          <input className="form-control" type="date" value={dataInicio} onChange={(e) => setDataInicio(e.target.value)} />
-          <input className="form-control" type="date" value={dataFim} onChange={(e) => setDataFim(e.target.value)} />
-        </div>
-
-
-        <div className="input-group w-50 mb-3">
+        <div className="input-group w-100 mb-3">
           <input
             type="text"
             className="form-control"
@@ -207,7 +153,7 @@ function ConsultaCliente() {
                 <strong>Endereço</strong>
               </td>
               <td className="col-2">
-                <strong>Editar/Excluir</strong>
+                <strong>Editar</strong>
               </td>
 
             </tr>
@@ -226,7 +172,7 @@ function ConsultaCliente() {
                 </td>
                 <td className="col-2">
                   <Button className='btnEdit' onClick={() => handleEditCliente(cliente.id)}><i className="bi bi-pencil-square" /></Button>
-                  <Button className='btnTrash' onClick={() => handleDeleteCliente(cliente.id)}><i className="bi bi-trash3"></i></Button>
+                  {/* <Button className='btnTrash' onClick={() => handleDeleteCliente(cliente.id)}><i className="bi bi-trash3"></i></Button> */}
                 </td>
 
               </tr>
