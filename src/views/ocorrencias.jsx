@@ -117,11 +117,9 @@ function Ocorrencias() {
 `;
 
 
-  // Função para renderizar um card com os dados recebidos
   const renderEventCard = (data, index) => {
 
     if (data.id) {
-      // Se dataOcorrencia.dataOcorrencia for undefined, retorne null para evitar a renderização do card
       return null;
     }
 
@@ -178,11 +176,9 @@ function Ocorrencias() {
   const renderOcorrenciaCard = (dataOcorrencia, index) => {
 
     if (!dataOcorrencia.id) {
-      // Se dataOcorrencia.dataOcorrencia for undefined, retorne null para evitar a renderização do card
       return null;
     }
 
-    // Determina a classe de estilo com base na gravidade
     const gravidadeClass = dataOcorrencia.gravidade === 'normal' ? 'normal-gravidade' :
       dataOcorrencia.gravidade === 'moderada' ? 'moderada-gravidade' :
         'grave-gravidade';

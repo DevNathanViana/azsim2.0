@@ -40,6 +40,7 @@ table {
 }
 
 .divTabela {
+    text-align: start;
     overflow: auto;
     position: fixed;
     margin-top: 10%;
@@ -103,4 +104,48 @@ table {
 
 #tdAcoes {
     cursor: default;
+}
+
+.modalDadosBasicos {
+    font-size: 20px;
+    font-family: 'Questrial', sans-serif;
+
+}
+
+.divModalDados {
+    border: 1px solid black;
+    flex-wrap: wrap;
+}
+
+
+.divTabela3 {
+    flex-wrap: wrap;
+    position: relative;
+    width: 90%;
+    margin-left: 5%;
+    margin-top: 30px;
+    padding: 20px;
+    border-radius: 2px;
+    border: 0.2px solid rgb(236, 236, 236);
+    max-height: 75%;
+    background-color: rgb(219, 219, 219);
+
+}
+
+.divTabela2 {
+    flex-wrap: wrap;
+    position: relative;
+    width: 90%;
+    margin-left: 5%;
+    margin-top: 90px;
+    padding: 20px;
+    border-radius: 2px;
+    border: 0.2px solid rgb(236, 236, 236);
+    max-height: 75%;
+    background-color: rgb(219, 219, 219);
+
+}
+
+#dados-tab {
+    color: black;
 }
