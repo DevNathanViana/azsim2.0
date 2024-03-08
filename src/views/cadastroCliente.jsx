@@ -31,9 +31,12 @@ function Formulario() {
             if (id) {
                 const response = await axios.get(`http://localhost:8080/api/cliente/${id}`);
                 const clienteParaEdicao = response.data;
+
+                // Use o setValue para preencher os campos do formulário
                 Object.entries(clienteParaEdicao).forEach(([campo, valor]) => {
                     setValue(campo, valor);
                 });
+
                 setDadosBasicos({
                     unidade: clienteParaEdicao.unidade,
                     codHabil: clienteParaEdicao.codHabil,
@@ -53,7 +56,27 @@ function Formulario() {
                     contatos: clienteParaEdicao.contatos,
                     setores: clienteParaEdicao.setores,
                     viagens: clienteParaEdicao.viagens,
-
+                });
+            } else {
+                setDadosBasicos({
+                    unidade: 'Montenegro',
+                    codHabil: '',
+                    codCondor: '',
+                    natureza: 'FISICA',
+                    documento: '',
+                    inscMunicipal: '',
+                    nome: '',
+                    nomeFantasia: '',
+                    endereco: '',
+                    bairro: '',
+                    cidade: '',
+                    uf: 'AC',
+                    cep: '',
+                    observacao: '',
+                    codificador: '',
+                    contatos: [{ nome: '', telefone: '', senha: '', contraSenha: '', dataNascimento: '', observacao: '' }],
+                    setores: [{ setor: '', localizacao: '', observacao: '' }],
+                    viagens: [{ nomeContatoNotificacaoSaida: '', nomeContatoNotificacaoVolta: '', observacao: '', dataSaida: '', dataVolta: '', procedimentos: '' }],
                 });
             }
         } catch (error) {

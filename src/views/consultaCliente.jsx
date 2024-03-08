@@ -17,19 +17,15 @@ function ConsultaCliente() {
   const [dadosBasicos, setDadosBasicos] = useState({})
 
 
-  // Mova a declaração da função para fora do useEffect
   const buscarClientes = async () => {
     try {
-      const response = await axios.get('http://localhost:8080/api/cliente');
+      let response;
 
-      /* , {
-      //   // params: {
-      //   //   filtro, // filtro de texto
-      //   //   dataInicio,
-      //   //   dataFim,
-      //   //   ordenacao
-      //   // }
-      }*/
+      if (filtro) {
+        response = await axios.get(`http://localhost:8080/api/cliente?nome=${filtro}`);
+      } else {
+        response = await axios.get('http://localhost:8080/api/cliente');
+      }
 
       setClientes(response.data);
     } catch (error) {
@@ -88,7 +84,7 @@ function ConsultaCliente() {
         });
       }
       // Redirecionar para a página de edição, passando os detalhes do cliente como parâmetros na URL
-      navigate(`/cadastroCliente/${id}`);
+      navigate(`/edicaoCliente/${id}`);
     } catch (error) {
       console.error('Erro ao obter detalhes do cliente:', error);
     }
@@ -114,9 +110,7 @@ function ConsultaCliente() {
   };
 
   const clientesFiltrados = clientes.filter((cliente) =>
-    Object.values(cliente).some((valor) =>
-      valor.toString().toLowerCase().includes(filtro.toLowerCase())
-    )
+    cliente.nome.toLowerCase().includes(filtro.toLowerCase())
   );
 
   const clientesParaExibir = filtro ? clientesFiltrados : clientes.slice(-20);
@@ -156,7 +150,7 @@ function ConsultaCliente() {
                 <strong>Nome</strong>
               </td>
               <td className="col">
-                <strong>Cidade</strong>
+                <strong>Unidade</strong>
               </td>
               <td className="col-6">
                 <strong>Endereço</strong>
@@ -173,7 +167,7 @@ function ConsultaCliente() {
               <tr id='linhaInfoUsuario' key={cliente.id} onClick={() => handleDetalhesCliente(cliente)}>
                 <td onClick={toggleModal} className="col-2">{cliente.nome}</td>
                 <td onClick={toggleModal} className="col-3">
-                  <p>{cliente.cidade}</p>
+                  <p>{cliente.unidade}</p>
                 </td>
                 <td onClick={toggleModal} className="col-3">
                   <p>{cliente.endereco}</p>

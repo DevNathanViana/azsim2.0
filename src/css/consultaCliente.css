@@ -149,3 +149,7 @@ table {
 #dados-tab {
     color: black;
 }
+
+td {
+    font-size: 20px;
+}

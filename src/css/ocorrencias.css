@@ -613,3 +613,18 @@ h3 {
     font-size: 13px;
     float: left;
 }
+
+.btnAtalho {
+    padding: 10px;
+    background-color: rgba(4, 113, 209, 0.349);
+    border: 1px solid black;
+    color: #ffffff;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#form,
+#ocorrencias,
+#consultaCliente {
+    font-size: 20px;
+}
