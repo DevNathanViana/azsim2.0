@@ -17,9 +17,7 @@ function Ocorrencias() {
   const [ocorrenciaModal, setOCorrenciaModal] = useState();
   const { register, handleSubmit } = useForm({});
   const [selectedValue, setSelectedValue] = useState("sim");
-  const [horas, setHoras] = useState('00');
-  const [minutos, setMinutos] = useState('00');
-  const [segundos, setSegundos] = useState('00');
+
   const [filtroNomeEventos, setFiltroNomeEventos] = useState('');
 
   const handleFiltroNomeChangeEvento = (event) => {
@@ -37,29 +35,6 @@ function Ocorrencias() {
       console.error('Erro ao filtrar dados:', error);
     }
   };
-
-  useEffect(() => {
-    const relogio = setInterval(() => {
-      const dateToday = new Date();
-      let hr = dateToday.getHours();
-      let min = dateToday.getMinutes();
-      let s = dateToday.getSeconds();
-
-      if (hr < 10) hr = '0' + hr;
-      if (min < 10) min = '0' + min;
-      if (s < 10) s = '0' + s;
-
-      setHoras(hr);
-      setMinutos(min);
-      setSegundos(s);
-    }, 1000);
-
-    return () => {
-      clearInterval(relogio);
-    };
-  }, []);
-
-
 
   const handleSelectChange = (event) => {
     setSelectedValue(event.target.value);
@@ -79,26 +54,26 @@ function Ocorrencias() {
 
   };
 
-  // useEffect(() => {
-  //   const ws = new WebSocket('ws://localhost:8080');
+  useEffect(() => {
+    const ws = new WebSocket('ws://localhost:8080');
 
-  //   ws.onmessage = (event) => {
-  //     const dadosRecebidos = JSON.parse(event.data);
-  //     const dadosEmCache = JSON.parse(localStorage.getItem('cachedData') || '[]');
-  //     dadosEmCache.unshift(dadosRecebidos);
-  //     const limiteLista = 20;
-  //     const dadosLimitados = dadosEmCache.slice(0, limiteLista);
-  //     localStorage.setItem('cachedData', JSON.stringify(dadosLimitados));
-  //     if (dadosRecebidos.type === 'evento') {
-  //       setColocaEventosNaTela((dadosAntigosDaListaEventos) => [dadosRecebidos, ...dadosAntigosDaListaEventos]);
-  //     } else if (dadosRecebidos.type === 'ocorrencia') {
-  //       setColocaOcorrenciasNaTela((dadosAntigosDaListaOcorrencias) => [dadosRecebidos, ...dadosAntigosDaListaOcorrencias]);
-  //     }
-  //   };
-  //   return () => {
-  //     ws.close();
-  //   };
-  // }, []);
+    ws.onmessage = (event) => {
+      const dadosRecebidos = JSON.parse(event.data);
+      const dadosEmCache = JSON.parse(localStorage.getItem('cachedData') || '[]');
+      dadosEmCache.unshift(dadosRecebidos);
+      const limiteLista = 20;
+      const dadosLimitados = dadosEmCache.slice(0, limiteLista);
+      localStorage.setItem('cachedData', JSON.stringify(dadosLimitados));
+      if (dadosRecebidos.type === 'evento') {
+        setColocaEventosNaTela((dadosAntigosDaListaEventos) => [dadosRecebidos, ...dadosAntigosDaListaEventos]);
+      } else if (dadosRecebidos.type === 'ocorrencia') {
+        setColocaOcorrenciasNaTela((dadosAntigosDaListaOcorrencias) => [dadosRecebidos, ...dadosAntigosDaListaOcorrencias]);
+      }
+    };
+    return () => {
+      ws.close();
+    };
+  }, []);
 
 
 
@@ -211,22 +186,6 @@ function Ocorrencias() {
   return (
     <>
 
-      <div className="infobtn">
-        <div className="relogio">
-          <div className='me-2 p-3'>
-            <span id="Horas">{horas}</span>
-            <span id="tempo"><h6>Horas</h6></span>
-          </div>
-          <div className='me-2 p-3'>
-            <span id="Minutos">{minutos}</span>
-            <span id="tempo"><h6>Minutos</h6>   </span>
-          </div>
-          <div className='me-2 p-3'>
-            <span id="Segundos">{segundos}</span>
-            <span id="tempo"><h6>Segundos</h6></span>
-          </div>
-        </div>
-      </div>
 
       <div className="utilitarios">
         <div className="fitro ">

@@ -15,7 +15,6 @@ body {
 .navbar,
 #offcanvasDarkNavbar {
     background: linear-gradient(to bottom right, #02005e, #001e52);
-    color: #fff;
 }
 
 #offcanvasDarkNavbar {
@@ -621,10 +620,14 @@ h3 {
     color: #ffffff;
     border-radius: 5px;
     cursor: pointer;
+    text-decoration: none;
 }
 
-#form,
-#ocorrencias,
-#consultaCliente {
+.atalhos {
+    margin-right: 65%;
+}
+
+#titulo,
+#offcanvasDarkNavbarLabel {
     font-size: 20px;
 }
