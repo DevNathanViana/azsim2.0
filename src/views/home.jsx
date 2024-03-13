@@ -3,7 +3,9 @@ import Navbar from '../fragments/sidebar';
 import Formulario from './cadastroCliente';
 import Ocorrencias from './ocorrencias';
 import ConsultaCliente from './consultaCliente';
+
 function Home() {
+
   return (
     <div>
       <Navbar />
