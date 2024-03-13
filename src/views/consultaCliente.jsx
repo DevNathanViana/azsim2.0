@@ -165,14 +165,14 @@ function ConsultaCliente() {
           <tbody>
             {clientesParaExibir.map((cliente) => (
               <tr id='linhaInfoUsuario' key={cliente.id} onClick={() => handleDetalhesCliente(cliente)}>
-                <td onClick={toggleModal} className="col-2">{cliente.nome}</td>
-                <td onClick={toggleModal} className="col-3">
+                <td onClick={toggleModal} className="col-2 tdTabela">{cliente.nome}</td>
+                <td onClick={toggleModal} className="col-3 tdTabela">
                   <p>{cliente.unidade}</p>
                 </td>
-                <td onClick={toggleModal} className="col-3">
+                <td onClick={toggleModal} className="col-3 tdTabela">
                   <p>{cliente.endereco}</p>
                 </td>
-                <td className="col-2">
+                <td className="col-2 tdTabela">
                   <Button className='btnEdit' onClick={() => handleEditCliente(cliente.id)}><i className="bi bi-pencil-square" /></Button>
                   {/* <Button className='btnTrash' onClick={() => handleDeleteCliente(cliente.id)}><i className="bi bi-trash3"></i></Button> */}
                 </td>

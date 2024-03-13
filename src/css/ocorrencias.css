@@ -631,3 +631,7 @@ h3 {
 #offcanvasDarkNavbarLabel {
     font-size: 20px;
 }
+
+.btnAtalho:hover {
+    color: #000000;
+}
