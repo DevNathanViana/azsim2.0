@@ -99,8 +99,8 @@ function Formulario() {
         unidade: 'Montenegro',
         codHabil: '',
         codCondor: '',
-        natureza: 'FISICA',
-        documento: '',
+        natureza: '',
+        documento: 'FISICA',
         inscMunicipal: '',
         nome: '',
         nomeFantasia: '',
@@ -150,29 +150,38 @@ function Formulario() {
             }
         });
         try {
-            const contatos = dadosBasicos.contatos.map((contato) => ({
-                nome: contato.nome,
-                telefone: contato.telefone,
-                senha: contato.senha,
-                contraSenha: contato.contraSenha,
-                dataNascimento: contato.dataNascimento,
-                observacao: contato.observacao,
-            }));
+            let contatos = [];
+            if (dadosBasicos.contatos && Array.isArray(dadosBasicos.contatos)) {
+                contatos = dadosBasicos.contatos.map((contato) => ({
+                    nome: contato.nome,
+                    telefone: contato.telefone,
+                    senha: contato.senha,
+                    contraSenha: contato.contraSenha,
+                    dataNascimento: contato.dataNascimento,
+                    observacao: contato.observacao,
+                }))
+            }
 
-            const setores = dadosBasicos.setores.map((setor) => ({
-                setor: setor.setor,
-                localizacao: setor.localizacao,
-                observacao: setor.observacao,
-            }));
+            let setores = [];
+            if (dadosBasicos.setores && Array.isArray(dadosBasicos.setores)) {
+                setores = dadosBasicos.setores.map((setor) => ({
+                    setor: setor.setor,
+                    localizacao: setor.localizacao,
+                    observacao: setor.observacao,
+                }))
+            }
 
-            const viagens = dadosBasicos.viagens.map((viagem) => ({
-                nomeContatoNotificacaoSaida: viagem.nomeContatoNotificacaoSaida,
-                nomeContatoNotificacaoVolta: viagem.nomeContatoNotificacaoVolta,
-                observacao: viagem.observacao,
-                dataSaida: viagem.dataSaida,
-                dataVolta: viagem.dataVolta,
-                procedimento: viagem.procedimentos,
-            }));
+            let viagens = [];
+            if (dadosBasicos.viagens && Array.isArray(dadosBasicos.viagens)) {
+                viagens = dadosBasicos.viagens.map((viagem) => ({
+                    nomeContatoNotificacaoSaida: viagem.nomeContatoNotificacaoSaida,
+                    nomeContatoNotificacaoVolta: viagem.nomeContatoNotificacaoVolta,
+                    observacao: viagem.observacao,
+                    dataSaida: viagem.dataSaida,
+                    dataVolta: viagem.dataVolta,
+                    procedimento: viagem.procedimentos,
+                }))
+            }
 
             // Construa o objeto de dados para a requisição
             const dadosRequisicao = {
@@ -255,6 +264,12 @@ function Formulario() {
                 break;
         }
     };
+
+    const handleChangeNatureza = (e) => {
+        const selectedNatureza = e.target.value;
+        setNatureza(selectedNatureza);
+    };
+
     return (
 
         <body className='DivOfAll'>
@@ -299,15 +314,16 @@ function Formulario() {
                                     <strong>* Natureza</strong>
                                 </label>
                                 <select
-                                    value={dadosBasicos.natureza || ""}
+                                    value={natureza}
                                     name="natureza"
-                                    {...register("natureza", { required: false })}
+                                    {...register("natureza", { required: true })}
                                     id="natureza"
                                     className="form-select"
                                     aria-label=".form-select example"
-                                    onChange={(e) => setNatureza(e.target.value)}
+                                    onChange={handleChangeNatureza}
                                 >
-                                    <option defaultValue={"FISICA"} value="FISICA">
+
+                                    <option value="FISICA">
                                         FISICA
                                     </option>
                                     <option value="JURIDICA">JURIDICA</option>
@@ -586,7 +602,7 @@ function Formulario() {
                                     <div className="row">
                                         <div className="col-5 mb-1">
                                             <label htmlFor={`setor${index}`} className="form-label"><strong>Setor</strong></label>
-                                            <input value={setor.setor} {...register(`setor${index}`, { required: false })} type="number" className="form-control" id={`setor${index}`} placeholder="" onChange={(e) => setDadosBasicos({
+                                            <input value={setor.setor} {...register(`setor${index}`, { required: false })} type="string" className="form-control" id={`setor${index}`} placeholder="" onChange={(e) => setDadosBasicos({
                                                 ...dadosBasicos,
                                                 setores: dadosBasicos.setores.map((c, i) => (i === index ? { ...c, setor: e.target.value } : c)),
                                             })} />

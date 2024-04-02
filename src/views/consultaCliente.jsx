@@ -113,12 +113,12 @@ function ConsultaCliente() {
     cliente.nome.toLowerCase().includes(filtro.toLowerCase())
   );
 
-  const clientesParaExibir = filtro ? clientesFiltrados : clientes.slice(-20);
+  const clientesParaExibir = filtro ? clientesFiltrados : clientes.slice(-90);
 
   return (
     <>
 
-      <div className="filtros">
+      <div className="filtros d-flex justify-content-between align-items-center">
         <div className="input-group w-100 mb-3">
           <input
             type="text"
@@ -130,58 +130,73 @@ function ConsultaCliente() {
             onChange={(e) => setFiltro(e.target.value)}
           />
           <button
-            className="btn btn-outline-secondary"
+            className="btn btn-primary"
             type="button"
             id="button-addon2"
-            onClick={handleBuscarClientes} // Adiciona a chamada da função de busca ao clicar no botão
           >
             Buscar
           </button>
         </div>
       </div>
-
-
-
-      <div className="divTabela">
-        <table className="tabela-clientes  table table-bordered table-striped table-hover">
-          <thead className="table-light">
-            <tr>
-              <td className="col-5">
-                <strong>Nome</strong>
-              </td>
-              <td className="col">
-                <strong>Unidade</strong>
-              </td>
-              <td className="col-6">
-                <strong>Endereço</strong>
-              </td>
-              <td className="col-1">
-                <strong>Editar</strong>
-              </td>
-
-            </tr>
-          </thead>
-
-          <tbody>
-            {clientesParaExibir.map((cliente) => (
-              <tr id='linhaInfoUsuario' key={cliente.id} onClick={() => handleDetalhesCliente(cliente)}>
-                <td onClick={toggleModal} className="col-2 tdTabela">{cliente.nome}</td>
-                <td onClick={toggleModal} className="col-3 tdTabela">
-                  <p>{cliente.unidade}</p>
-                </td>
-                <td onClick={toggleModal} className="col-3 tdTabela">
-                  <p>{cliente.endereco}</p>
-                </td>
-                <td className="col-2 tdTabela">
-                  <Button className='btnEdit' onClick={() => handleEditCliente(cliente.id)}><i className="bi bi-pencil-square" /></Button>
-                  {/* <Button className='btnTrash' onClick={() => handleDeleteCliente(cliente.id)}><i className="bi bi-trash3"></i></Button> */}
-                </td>
-
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      <div className='divBtnAdd'>
+        <button
+          className="btnAddcliente t-center btn btn-primary"
+        >
+          Adicionar Cliente +
+        </button>
       </div>
+
+
+      {filtro && clientesParaExibir.length > 0 ? (
+        <div className="divTabela">
+          <table className="tabela-clientes  table table-bordered table-striped table-hover">
+            {/* Cabeçalho da tabela */}
+            <thead className="table-light">
+              <tr>
+                <td className="col-5">
+                  <strong>Nome</strong>
+                </td>
+                <td className="col">
+                  <strong>Unidade</strong>
+                </td>
+                <td className="col-6">
+                  <strong>Endereço</strong>
+                </td>
+                <td className="col-1">
+                  <strong>Editar</strong>
+                </td>
+              </tr>
+            </thead>
+
+            {/* Corpo da tabela */}
+            <tbody>
+              {clientesParaExibir.map((cliente) => (
+                <tr key={cliente.id} onClick={() => handleDetalhesCliente(cliente)}>
+                  <td className="col-2 tdTabela">{cliente.nome}</td>
+                  <td className="col-3 tdTabela">
+                    <p>{cliente.unidade}</p>
+                  </td>
+                  <td className="col-3 tdTabela">
+                    <p>{cliente.endereco}</p>
+                  </td>
+                  <td className="col-2 tdTabela">
+                    <Button className='btnEdit' onClick={() => handleEditCliente(cliente.id)}><i className="bi bi-pencil-square" /></Button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      ) : filtro && clientesParaExibir.length === 0 ? (
+        <div className="divTabela">
+          <p>Nenhum resultado encontrado. Refine sua pesquisa para obter resultados.</p>
+        </div>
+      ) : (
+        <div className="divTabela">
+          <p>Filtre para ter resultados.</p>
+        </div>
+      )}
+
 
 
       <Modal isOpen={modal} toggle={toggleModal} size="xl" className="modal-fullscreen modalCliente">
@@ -409,6 +424,7 @@ function ConsultaCliente() {
                                 name={`contato-observacao -${index}`}
                                 readOnly
                               />
+                              <br></br>
                             </div>
                           </div>
                         </div>
@@ -419,6 +435,7 @@ function ConsultaCliente() {
 
                   {/* Continue adicionando mais campos conforme necessário */}
                 </div>
+                <br></br>
               </div>
             </div>
             {/* Setorização */}
@@ -427,6 +444,7 @@ function ConsultaCliente() {
                 <div className="container justify-content-center">
                   <h2 className='txtSetorizacao ms-3'>3 - Setorização</h2>
                   <br></br>
+
 
                   <div className="row">
                     {(clienteSelecionado?.setores || []).map((setor, index) => (

@@ -17,7 +17,6 @@ function Ocorrencias() {
   const [ocorrenciaModal, setOCorrenciaModal] = useState();
   const { register, handleSubmit } = useForm({});
   const [selectedValue, setSelectedValue] = useState("sim");
-
   const [filtroNomeEventos, setFiltroNomeEventos] = useState('');
 
   const handleFiltroNomeChangeEvento = (event) => {
@@ -98,43 +97,43 @@ function Ocorrencias() {
       return null;
     }
 
+    const gravidadeClassEvento = data.gravidade === 'normal' ? 'evento-normal-gravidade' :
+      'evento-grave-gravidade';
+
     return (
 
       <Fragment key={index} >
 
-        <div className="divInformacoesEventos p-3 mt-2 mb-2">
+        <div className={`divInformacoesEventos t-start p-3 mt-2 mb-2 ${gravidadeClassEvento}`} >
           <div className="container">
 
             <div className="row mb-1">
-              <div className="col text-start">
-                <strong>DATA:</strong> {data.data}
+              <div className="col">
+                <strong>STATUS:</strong> {data.status}
               </div>
-              <div className="col text-center">
-                <strong>DESCRIÇÃO:</strong> {data.descricao}
+              <div className="col">
+                <strong>CODIFICADOR:</strong> {data.codificador}
               </div>
-              <div className="col text-end">
+              <div className="col endereco" >
+                <strong>ENDEREÇO:</strong> {data.endereco}
+              </div>
+              <div className="col">
                 <strong>STATUS:</strong> {data.status}
               </div>
             </div>
-            <div className="row mb-1">
-              <div className="col text-start">
-                <strong>CODIFICADOR:</strong> {data.codificador}
+            <div className="row">
+              <div className="col " >
+                <strong>DESCRIÇÃO:</strong> {data.descricao}
+
               </div>
-              <div className="col text-center">
+              <div className="col cliente">
                 <strong>CLIENTE:</strong> {data.cliente}
               </div>
-              <div className="col text-end">
-                <strong>COM:</strong> {data.com}
-              </div>
-            </div>
-            <div className="row text-start">
+
               <div className="col">
-                <strong>CTX:</strong> {data.ctx}
+                <strong>COM:</strong> {data.com} /   <strong>CTX:</strong> {data.ctx}
               </div>
-              <div className="col text-center">
-                <strong>ENDEREÇO:</strong> {data.endereco}
-              </div>
-              <div className="col text-end">
+              <div className="col">
                 <strong>CIDADE:</strong> {data.cidade}
               </div>
             </div>

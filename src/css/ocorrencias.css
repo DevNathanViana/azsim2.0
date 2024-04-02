@@ -234,7 +234,8 @@ tbody td.active {
 
 
 .divInformacoesEventos {
-    width: 92%;
+    text-align: start;
+    width: 90%;
     border: 1.3px solid #a5a3a3;
     border-radius: 10px;
     margin-right: 5px;
@@ -242,7 +243,7 @@ tbody td.active {
     font-size: 12px;
     margin-left: 5%;
     white-space: nowrap;
-    background: linear-gradient(to top right, #ffffff, #e4eaf3);
+    /* background: linear-gradient(to top right, #eaffef, #c1ffd0); */
     color: black;
 }
 
@@ -319,11 +320,25 @@ tbody td.active {
 
 .moderada-gravidade .card-important {
     border-left: 6px solid #ffff00;
+
     /* Cor da borda para gravidade moderada */
 }
 
 .grave-gravidade .card-important {
     border-left: 6px solid red;
+    /* Cor da borda para gravidade grave */
+}
+
+.evento-normal-gravidade {
+    background: linear-gradient(to top right, #eaffef, #96ffb1);
+    /* Cor da borda para gravidade normal */
+}
+
+
+
+.evento-grave-gravidade {
+    background: linear-gradient(to top right, #ffd7d7, #ff7272);
+
     /* Cor da borda para gravidade grave */
 }
 
@@ -358,14 +373,13 @@ tbody td.active {
 
 
 .divEventos {
-    width: 100%;
+    width: 60%;
     margin-top: 225px;
     padding-top: 10px;
-    width: 74%;
     max-height: 800px;
     display: inline-block;
     overflow: auto;
-    margin-left: 15px;
+    margin-left: 55px;
     margin-bottom: 35px;
     margin-right: 0;
     text-align: justify;
@@ -376,7 +390,7 @@ tbody td.active {
 
 
 .divOcorrencias {
-    margin-right: 15px;
+    margin-right: 100px;
     margin-top: 225px;
     width: 23%;
     max-height: 800px;
@@ -539,31 +553,6 @@ h3 {
     display: flex;
 }
 
-.relogio {
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-    height: 20px;
-    width: 100px;
-    background: transparent;
-    border-radius: 3px;
-}
-
-.relogio div {
-    height: 100px;
-    width: 120px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-size: 25px;
-    color: #ffffff;
-    background: linear-gradient(to top right, #a3a3a3, rgb(150, 150, 150), #686868);
-    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.795);
-    border-radius: 7px;
-    letter-spacing: 3px;
-}
-
 #card {
     float: right;
     margin-top: 120px;
@@ -634,4 +623,13 @@ h3 {
 
 .btnAtalho:hover {
     color: #000000;
+}
+
+.endereco,
+.cliente {
+    overflow-x: hidden;
+}
+
+.endereco :hover {
+    overflow-x: visible;
 }
