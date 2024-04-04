@@ -3,6 +3,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.min.js';
 import PropTypes from 'prop-types';
 import { useForm } from 'react-hook-form';
+import { Button, ModalFooter } from 'reactstrap';
+
 
 // import Modal from '../fragments/modal';
 // import { Form } from 'reactstrap'
@@ -22,25 +24,24 @@ function ModalOcorrencia({ dataOcorrencia, onSubmit, selectedValue, handleSelect
                     <nav className=" navbar navbar-dark bg-primary fixed-top mb-5 navbar text-center justify-content-center"
                         id="navbar">
                         <div className="btn-fechaModal">
-                            <button onClick={() => handleSubmit((formData) => onSubmit(formData, dataOcorrencia.id))()} type="button" className="btn-close ms-4" aria-label="Close" data-bs-dismiss="modal"><h3 className="">Finalizar</h3></button>
                         </div>
-                        <div className="container  justify-content-center titleClienteName"><h2 className="mt-1">{dataOcorrencia.descricaoDaOcorrencia}</h2>
+                        <div className="txtDescricao"><h2 className="mt-1">{dataOcorrencia.descricaoDaOcorrencia}</h2>
                         </div>
                     </nav>
                 </div>
                 <header className="headerModalInfo mt-3">
                     <div className="divInfosModal row">
                         <div className="col-8 mb-2ms-4">
-                            <div className="mt-3"><strong>Cliente:  </strong>{dataOcorrencia.nomeOcorrencia}</div>
-                            <div><strong>Endereço: </strong>{dataOcorrencia.enderecoOcorrencia}&nbsp;&nbsp;<strong>Bairro: </strong> {dataOcorrencia.bairroOcorrencia}
+                            <div className="mt-4 ms-3"><strong>Cliente:  </strong>{dataOcorrencia.nomeOcorrencia}</div>
+                            <div className=' ms-3'><strong>Endereço: </strong>{dataOcorrencia.enderecoOcorrencia}&nbsp;&nbsp;<strong>Bairro: </strong> {dataOcorrencia.bairroOcorrencia}
                                 &nbsp; <strong>Cidade: </strong> {dataOcorrencia.cidadeOcorrencia}
                             </div>
-                            <div><strong>Ponto de Referência:   </strong>{dataOcorrencia.referenciaOcorrencia}</div>
+                            <div className=' ms-3'><strong>Ponto de Referência:   </strong>{dataOcorrencia.referenciaOcorrencia}</div>
                         </div>
 
 
                         <div className="col text-end me-4">
-                            <div className="mt-3"><strong>Data: </strong>{dataOcorrencia.dataDaOcorrencia}</div>
+                            <div className="mt-4"><strong>Data: </strong>{dataOcorrencia.dataDaOcorrencia}</div>
                             <div><strong>Hora: </strong>{dataOcorrencia.horaOcorrencia}</div>
                         </div>
                     </div>
@@ -366,6 +367,10 @@ function ModalOcorrencia({ dataOcorrencia, onSubmit, selectedValue, handleSelect
 
                     </div>
                 </div>
+                <ModalFooter>
+                    <Button color="secondary" >Fechar</Button>
+                    <Button onClick={() => handleSubmit((formData) => onSubmit(formData, dataOcorrencia.id))()} aria-label="Close" data-bs-dismiss="modal" color="success" >Fechar e Encerrar</Button>
+                </ModalFooter>
             </div>
         </div>
     </div >;

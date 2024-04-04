@@ -193,6 +193,7 @@ tbody td.active {
 
 .divInfosModal {
     margin: 10px;
+    font-size: 25px;
 }
 
 .div1 {
@@ -632,4 +633,9 @@ h3 {
 
 .endereco :hover {
     overflow-x: visible;
+}
+
+.txtDescricao {
+    text-align: center;
+    text-transform: uppercase;
 }

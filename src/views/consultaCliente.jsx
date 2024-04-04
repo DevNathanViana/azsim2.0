@@ -91,19 +91,6 @@ function ConsultaCliente() {
   };
 
 
-  const handleBuscarClientes = async () => {
-    // Carrega todos os clientes
-    await buscarClientes();
-
-    // Aplica o filtro de texto
-    let resultadosFiltrados = clientes.filter(cliente =>
-      Object.values(cliente).some(valor =>
-        valor.toString().toLowerCase().includes(filtro.toLowerCase())
-      )
-    );
-    setClientes(resultadosFiltrados);
-  };
-
   const handleDetalhesCliente = (cliente) => {
     setClienteSelecionado(cliente);
     setModal(true);
