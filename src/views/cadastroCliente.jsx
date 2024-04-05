@@ -80,14 +80,19 @@ function Formulario() {
                 });
             }
         } catch (error) {
-            console.error('Erro ao obter detalhes do cliente:', error);
+            setErrorMessage('Erro ao carregar dados do cliente. Por favor, tente novamente mais tarde.');
+            console.error('Erro ao carregar dados do cliente:', error);
         }
     };
 
     useEffect(() => {
-        carregarDadosCliente(id);
+        try {
+            carregarDadosCliente(id);
+        } catch (error) {
+            setErrorMessage('Erro ao carregar dados do cliente durante o efeito. Por favor, tente novamente.');
+            console.error('Erro ao carregar dados do cliente durante o efeito:', error);
+        }
     }, [id]);
-
 
     const clearMessages = () => {
         setErrorMessage('');
@@ -117,24 +122,39 @@ function Formulario() {
     });
 
     const duplicateContato = () => {
-        setDadosBasicos({
-            ...dadosBasicos,
-            contatos: [...dadosBasicos.contatos, { nomectt: '', telefone: '', senha: '', contraSenha: '', dataNascimento: '', observacao: '' }],
-        });
+        try {
+            setDadosBasicos({
+                ...dadosBasicos,
+                contatos: [...dadosBasicos.contatos, { nome: '', telefone: '', senha: '', contraSenha: '', dataNascimento: '', observacao: '' }],
+            });
+        } catch (error) {
+            setErrorMessage('Erro ao duplicar contato. Por favor, tente novamente.');
+            console.error('Erro ao duplicar contato:', error);
+        }
     };
 
     const duplicateSetor = () => {
-        setDadosBasicos({
-            ...dadosBasicos,
-            setores: [...dadosBasicos.setores, { setor: '', localizacao: '', observacao: '' }],
-        });
+        try {
+            setDadosBasicos({
+                ...dadosBasicos,
+                setores: [...dadosBasicos.setores, { setor: '', localizacao: '', observacao: '' }],
+            });
+        } catch (error) {
+            setErrorMessage('Erro ao duplicar setor. Por favor, tente novamente.');
+            console.error('Erro ao duplicar setor:', error);
+        }
     };
 
     const duplicateViagem = () => {
-        setDadosBasicos({
-            ...dadosBasicos,
-            viagens: [...dadosBasicos.viagens, { nomeContatoNotificacaoSaida: '', nomeContatoNotificacaoVolta: '', observacao: '', dataSaida: '', dataVolta: '', procedimentos: '' }],
-        });
+        try {
+            setDadosBasicos({
+                ...dadosBasicos,
+                viagens: [...dadosBasicos.viagens, { nomeContatoNotificacaoSaida: '', nomeContatoNotificacaoVolta: '', observacao: '', dataSaida: '', dataVolta: '', procedimentos: '' }],
+            });
+        } catch (error) {
+            setErrorMessage('Erro ao duplicar viagem. Por favor, tente novamente.');
+            console.error('Erro ao duplicar viagem:', error);
+        }
     };
 
 
@@ -217,7 +237,9 @@ function Formulario() {
                 setTimeout(clearMessages, 5000);
             }
         } catch (error) {
-            console.error('Erro ao salvar o cadastro:', error);
+            setErrorMessage('Erro ao submeter o formulário. Por favor, verifique os dados e tente novamente.');
+            console.error('Erro ao submeter o formulário:', error);
+
 
             if (error.response) {
                 if (error.response.status === 500) {
@@ -241,33 +263,43 @@ function Formulario() {
     };
 
     const deleteItem = (type, index) => {
-        switch (type) {
-            case 'contatos':
-                setDadosBasicos({
-                    ...dadosBasicos,
-                    contatos: dadosBasicos.contatos.filter((_, i) => i !== index),
-                });
-                break;
-            case 'setores':
-                setDadosBasicos({
-                    ...dadosBasicos,
-                    setores: dadosBasicos.setores.filter((_, i) => i !== index),
-                });
-                break;
-            case 'viagens':
-                setDadosBasicos({
-                    ...dadosBasicos,
-                    viagens: dadosBasicos.viagens.filter((_, i) => i !== index),
-                });
-                break;
-            default:
-                break;
+        try {
+            switch (type) {
+                case 'contatos':
+                    setDadosBasicos({
+                        ...dadosBasicos,
+                        contatos: dadosBasicos.contatos.filter((_, i) => i !== index),
+                    });
+                    break;
+                case 'setores':
+                    setDadosBasicos({
+                        ...dadosBasicos,
+                        setores: dadosBasicos.setores.filter((_, i) => i !== index),
+                    });
+                    break;
+                case 'viagens':
+                    setDadosBasicos({
+                        ...dadosBasicos,
+                        viagens: dadosBasicos.viagens.filter((_, i) => i !== index),
+                    });
+                    break;
+                default:
+                    break;
+            }
+        } catch (error) {
+            setErrorMessage('Erro ao deletar item. Por favor, tente novamente.');
+            console.error('Erro ao deletar item:', error);
         }
     };
 
     const handleChangeNatureza = (e) => {
-        const selectedNatureza = e.target.value;
-        setNatureza(selectedNatureza);
+        try {
+            const selectedNatureza = e.target.value;
+            setNatureza(selectedNatureza);
+        } catch (error) {
+            setErrorMessage('Erro ao lidar com a mudança de natureza. Por favor, tente novamente.');
+            console.error('Erro ao lidar com a mudança de natureza:', error);
+        }
     };
 
     return (

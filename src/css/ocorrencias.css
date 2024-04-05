@@ -614,7 +614,9 @@ h3 {
 }
 
 .atalhos {
-    margin-right: 65%;
+    margin-right: 63%;
+    flex-wrap: nowrap;
+    position: relative;
 }
 
 #titulo,
