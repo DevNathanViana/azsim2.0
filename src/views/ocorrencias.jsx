@@ -1,3 +1,4 @@
+import "../fragments/init"
 import '../css/ocorrencias.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.min.js';
@@ -6,10 +7,8 @@ import { useForm } from 'react-hook-form';
 import ModalOcorrencia from '../fragments/ocorrenciaModal';
 import styled from 'styled-components';
 import axios from 'axios';
-// import axios from 'axios';
-// import { Button } from 'reactstrap';
-// import Modal from '../fragments/modal';
-// import { Form } from 'reactstrap'
+import SockJS from 'sockjs-client';
+import Stomp from 'stompjs';
 
 function Ocorrencias() {
   const [colocaEventosNaTela, setColocaEventosNaTela] = useState([]);
@@ -19,6 +18,8 @@ function Ocorrencias() {
   const [selectedValue, setSelectedValue] = useState("sim");
   const [filtroNomeEventos, setFiltroNomeEventos] = useState('');
 
+
+
   const handleFiltroNomeChangeEvento = (event) => {
     setFiltroNomeEventos(event.target.value);
   };
@@ -27,9 +28,6 @@ function Ocorrencias() {
     try {
       const respostaEventosFiltrados = await axios.get(`http://seu-endpoint-api/eventos?nome=${filtroNomeEventos}`);
       setColocaEventosNaTela(respostaEventosFiltrados.data);
-
-      // const respostaOcorrenciasFiltradas = await axios.get(`http://seu-endpoint-api/ocorrencias?nome=${filtroNomeOcorrencias}`);
-      // setColocaOcorrenciasNaTela(respostaOcorrenciasFiltradas.data);
     } catch (error) {
       console.error('Erro ao filtrar dados:', error);
     }
@@ -39,51 +37,63 @@ function Ocorrencias() {
     setSelectedValue(event.target.value);
   };
 
-
   const onSubmit = (formData, dataId) => {
-
     const dataJson = JSON.stringify(formData);
     console.log(dataJson);
-    alert('Formulário enviado com sucesso!')
+    alert('Formulário enviado com sucesso!');
 
     setColocaOcorrenciasNaTela((ocorrenciasAntigas) => {
       const novasOcorrencias = ocorrenciasAntigas.filter((ocorrencia) => ocorrencia.id !== dataId);
       return novasOcorrencias;
-    })
-
+    });
   };
 
-  useEffect(() => {
-    const ws = new WebSocket('ws://localhost:8080');
 
-    ws.onmessage = (event) => {
-      const dadosRecebidos = JSON.parse(event.data);
-      const dadosEmCache = JSON.parse(localStorage.getItem('cachedData') || '[]');
-      dadosEmCache.unshift(dadosRecebidos);
-      const limiteLista = 20;
-      const dadosLimitados = dadosEmCache.slice(0, limiteLista);
-      localStorage.setItem('cachedData', JSON.stringify(dadosLimitados));
-      if (dadosRecebidos.type === 'evento') {
-        setColocaEventosNaTela((dadosAntigosDaListaEventos) => [dadosRecebidos, ...dadosAntigosDaListaEventos]);
-      } else if (dadosRecebidos.type === 'ocorrencia') {
-        setColocaOcorrenciasNaTela((dadosAntigosDaListaOcorrencias) => [dadosRecebidos, ...dadosAntigosDaListaOcorrencias]);
+
+  useEffect(() => {
+    const socket = new SockJS('http://localhost:8080/monitor-websocket');
+    const stompClient = Stomp.over(socket);
+
+    const connectCallBack = () => {
+      console.log('Conexão WebSocket estabelecida com sucesso!');
+    };
+
+    const errorCallback = (error) => {
+      console.error('Erro na conexão WebSocket:', error);
+    };
+
+    socket.onclose = () => {
+      console.log('Conexão encerrada');
+      reconnect();
+    };
+
+    const reconnect = () => {
+      console.log("Reconectando...");
+      if (stompClient !== null) {
+        stompClient.disconnect();
+      }
+      connect();
+    };
+
+    const connect = () => {
+      stompClient.connect({}, connectCallBack, errorCallback);
+    };
+
+    connect();
+
+    return () => {
+      if (stompClient !== null) {
+        stompClient.disconnect();
       }
     };
-    return () => {
-      ws.close();
-    };
   }, []);
-
-
-
-
 
   useEffect(() => {
     const cachedData = JSON.parse(localStorage.getItem('cachedData') || '[]');
     setColocaEventosNaTela(cachedData);
     setColocaOcorrenciasNaTela(cachedData);
-
   }, []);
+
 
   const ScrollContainer = styled.div`
   overflow: hidden;
@@ -229,5 +239,3 @@ function Ocorrencias() {
 }
 
 export default Ocorrencias
-
-
