@@ -53,6 +53,22 @@ table {
 
 }
 
+@media (max-width: 1390px) {
+    .divTabela {
+        text-align: start;
+        overflow: auto;
+        position: fixed;
+        margin-top: 15%;
+        margin-left: 5%;
+        width: 90%;
+        padding: 20px;
+        border-radius: 2px;
+        border: 0.2px solid rgb(236, 236, 236);
+        max-height: 75%;
+
+    }
+}
+
 .filtros {
     left: 50%;
     transform: translate(-50%);

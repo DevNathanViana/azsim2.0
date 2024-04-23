@@ -49,18 +49,33 @@ function Ocorrencias() {
   };
 
 
-
   useEffect(() => {
-    const socket = new SockJS('http://localhost:8080/monitor-websocket');
+    // localStorage.clear();
+
+    const socket = new SockJS('http://127.0.0.1:8080/api/monitor-websocket');
     const stompClient = Stomp.over(socket);
 
     const connectCallBack = () => {
       console.log('Conexão WebSocket estabelecida com sucesso!');
+      stompClient.subscribe('/topic/eventos', (message) => {
+        const dadosRecebidos = JSON.parse(message.body);
+        console.log(dadosRecebidos)
+        const dadosEmCache = JSON.parse(localStorage.getItem('cachedData') || '[]');
+        dadosEmCache.unshift(dadosRecebidos);
+        const limiteLista = 20;
+        const dadosLimitados = dadosEmCache.slice(0, limiteLista);
+        localStorage.setItem('cachedData', JSON.stringify(dadosLimitados));
+        if (dadosRecebidos.type === 'evento') {
+          setColocaEventosNaTela((dadosAntigosDaListaEventos) => [dadosRecebidos, ...dadosAntigosDaListaEventos]);
+        } else {
+          setColocaOcorrenciasNaTela((dadosAntigosDaListaOcorrencias) => [dadosRecebidos, ...dadosAntigosDaListaOcorrencias]);
+          setColocaEventosNaTela((dadosAntigosDaListaEventos) => [dadosRecebidos, ...dadosAntigosDaListaEventos]);
+
+        }
+      });
     };
 
-    const errorCallback = (error) => {
-      console.error('Erro na conexão WebSocket:', error);
-    };
+
 
     socket.onclose = () => {
       console.log('Conexão encerrada');
@@ -76,17 +91,20 @@ function Ocorrencias() {
     };
 
     const connect = () => {
-      stompClient.connect({}, connectCallBack, errorCallback);
+      stompClient.connect({}, connectCallBack);
     };
 
     connect();
 
+
     return () => {
-      if (stompClient !== null) {
-        stompClient.disconnect();
-      }
+      socket.close();
     };
   }, []);
+
+
+
+
 
   useEffect(() => {
     const cachedData = JSON.parse(localStorage.getItem('cachedData') || '[]');
@@ -101,57 +119,49 @@ function Ocorrencias() {
 `;
 
 
+
   const renderEventCard = (data, index) => {
 
     if (data.id) {
       return null;
     }
 
-    const gravidadeClassEvento = data.gravidade === 'normal' ? 'evento-normal-gravidade' :
+    const gravidadeClassEvento = data.gravidade === '' ? 'evento-normal-gravidade' :
       'evento-grave-gravidade';
 
     return (
 
+
       <Fragment key={index} >
-
         <div className={`divInformacoesEventos t-start p-3 mt-2 mb-2 ${gravidadeClassEvento}`} >
-          <div className="container">
+          <div className="container divInformacoesDeDentro">
+            <div className=" row mb-1">
 
-            <div className="row mb-1">
-              <div className="col">
-                <strong>STATUS:</strong> {data.status}
+              <div className="col-1 divDaBola">
+                <div className="bola"></div>
               </div>
               <div className="col">
-                <strong>CODIFICADOR:</strong> {data.codificador}
+                <strong>
+                  {data.dataevento ? new Date(data.dataevento).toLocaleString('pt-BR') : 'não disponível'}
+                </strong>
               </div>
-              <div className="col endereco" >
-                <strong>ENDEREÇO:</strong> {data.endereco}
+              <div className="col eventoEReferencia">
+                <strong>{data.status ? data.status.slice(0, 40) : 'não disponível'}</strong> . <strong>{data.referencia ? data.referencia.slice(0, 40) : 'não disponível'}</strong>
               </div>
-              <div className="col">
-                <strong>STATUS:</strong> {data.status}
-              </div>
-            </div>
-            <div className="row">
-              <div className="col " >
-                <strong>DESCRIÇÃO:</strong> {data.descricao}
-
-              </div>
-              <div className="col cliente">
-                <strong>CLIENTE:</strong> {data.cliente}
-              </div>
-
-              <div className="col">
-                <strong>COM:</strong> {data.com} /   <strong>CTX:</strong> {data.ctx}
+              <div className="col descricaoEvento" >
+                <strong>{data.destatus ? data.destatus.slice(0, 40) : 'não disponível'}</strong>
               </div>
               <div className="col">
-                <strong>CIDADE:</strong> {data.cidade}
+                <strong>{data.nmcliente ? data.nmcliente.slice(0, 40) : 'não disponível'}</strong>
+              </div>
+              <div className="col text-end">
+                <strong>{data.cidade ? data.cidade.slice(0, 40) : 'não disponível'}</strong>
               </div>
             </div>
           </div>
         </div>
-
-
       </Fragment>
+
 
 
     )
@@ -215,6 +225,31 @@ function Ocorrencias() {
       </div>
 
       <div className='divEventos'>
+        <div className="cabecalho ">
+          <div className="">
+            <div className="row mb-1">
+              <div className="col text-start">
+                <strong></strong>
+              </div>
+              <div className="col data">
+                <strong>Data</strong>
+              </div>
+              <div className="col evento">
+                <strong>Evento</strong>
+              </div>
+              <div className="col descricao">
+                <strong>Descrição</strong>
+              </div>
+              <div className="col cliente">
+                <strong>Cliente</strong>
+              </div>
+              <div className="col text-end">
+                <strong>Cidade</strong>
+              </div>
+
+            </div>
+          </div>
+        </div>
         {colocaEventosNaTela.map((data, index) => { return renderEventCard(data, index) })}
       </div>
       <div className="divOcorrencias">
