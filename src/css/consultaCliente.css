@@ -69,6 +69,40 @@ table {
     }
 }
 
+@media (max-width: 1850px) {
+    .divTabela {
+        margin-top: 11%;
+    }
+}
+
+@media (max-width: 1660px) {
+    .divTabela {
+        margin-top: 13%;
+    }
+}
+
+@media (max-width: 1428px) {
+    .divTabela {
+        margin-top: 15%;
+
+    }
+}
+
+@media (max-width: 1200px) {
+    .divTabela {
+        margin-top: 16%;
+
+    }
+}
+
+@media (max-width: 1150px) {
+    .divTabela {
+        margin-top: 18%;
+
+    }
+}
+
+
 .filtros {
     left: 50%;
     transform: translate(-50%);

@@ -704,23 +704,75 @@ h3 {
     position: relative;
 }
 
+@media (max-width: 1890px) {
+    .atalhos {
+        margin-right: 62%;
+    }
+}
+
+@media (max-width: 1848px) {
+    .atalhos {
+        margin-right: 60%;
+    }
+}
+
+@media (max-width: 1765px) {
+    .atalhos {
+        margin-right: 57%;
+    }
+}
+
 @media (max-width: 1690px) {
     .atalhos {
         margin-right: 55%;
     }
 }
 
-@media (max-width: 1765px) {
+@media (max-width: 1556px) {
     .atalhos {
-        margin-right: 55%;
+        margin-right: 53%;
     }
 }
 
-@media (max-width: 1390px) {
+
+
+@media (max-width: 1490px) {
+    .atalhos {
+        margin-right: 51%;
+    }
+}
+
+@media (max-width: 1428px) {
     .atalhos {
         margin-right: 47%;
     }
 }
+
+@media (max-width: 1349px) {
+    .atalhos {
+        margin-right: 45%;
+    }
+}
+
+@media (max-width: 1289px) {
+    .atalhos {
+        margin-right: 43%;
+    }
+}
+
+@media (max-width: 1249px) {
+    .atalhos {
+        margin-right: 41%;
+    }
+}
+
+@media (max-width: 1209px) {
+    .atalhos {
+        margin-right: 39%;
+    }
+}
+
+
 
 
 #titulo,

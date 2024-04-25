@@ -1,8 +1,23 @@
 import { Link } from "react-router-dom"
+import { useState, useEffect } from "react";
 import '../css/ocorrencias.css'
 
 function Navbar() {
 
+
+    const [showShortcuts, setShowShortcuts] = useState(window.innerWidth >= 1200);
+
+    useEffect(() => {
+        const handleResize = () => {
+            setShowShortcuts(window.innerWidth >= 1150);
+        };
+
+        window.addEventListener("resize", handleResize);
+
+        return () => {
+            window.removeEventListener("resize", handleResize);
+        };
+    }, []);
 
     return (
         <>
@@ -12,11 +27,19 @@ function Navbar() {
                 >
                     <span className="navbar-toggler-icon"></span>
                 </button>
-                <div className="atalhos">
-                    <Link className="btnAtalho me-3" to="/ocorrencias"><i className="bi bi-display"> Monitor de Eventos</i></Link>
-                    <Link className="btnAtalho me-3" to="/cadastroCliente"><i className="bi bi-person-fill-add"> Cadastro de Clientes</i></Link>
-                    <Link className="btnAtalho me-3" to="/consultaCliente"><i className="bi bi-search"> Atendimentos</i></Link>
-                </div>
+                {showShortcuts && (
+                    <div className="atalhos">
+                        <Link className="btnAtalho me-3" to="/ocorrencias">
+                            <i className="bi bi-display"> Monitor de Eventos</i>
+                        </Link>
+                        <Link className="btnAtalho me-3" to="/cadastroCliente">
+                            <i className="bi bi-person-fill-add"> Cadastro de Clientes</i>
+                        </Link>
+                        <Link className="btnAtalho me-3" to="/consultaCliente">
+                            <i className="bi bi-search"> Atendimentos</i>
+                        </Link>
+                    </div>
+                )}
                 <div className=" offcanvas offcanvas-start text-bg-primary" data-bs-backdrop="false" tabIndex="-1" id="offcanvasDarkNavbar"
                     aria-labelledby="offcanvasDarkNavbarLabel">
                     <div className="offcanvas-header">
