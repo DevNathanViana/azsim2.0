@@ -4,7 +4,7 @@ import 'bootstrap/dist/js/bootstrap.min.js';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 function ConsultaCliente() {
 
@@ -126,11 +126,10 @@ function ConsultaCliente() {
         </div>
       </div>
       <div className='divBtnAdd'>
-        <button
-          className="btnAddcliente t-center btn btn-primary"
-        >
-          Adicionar Cliente +
-        </button>
+        <Link className="btnAddcliente t-center btn btn-primary"
+          to="/cadastroCliente">
+          <i className="bi bi-person-fill-add"> Adicionar Cliente +</i>
+        </Link>
       </div>
 
 
