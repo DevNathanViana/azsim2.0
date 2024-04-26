@@ -13,9 +13,8 @@ function ConsultaCliente() {
   const [clienteSelecionado, setClienteSelecionado] = useState(null);
   const [modal, setModal] = useState(false);
   const [activeTab, setActiveTab] = useState('dados'); // Estado para controlar a aba ativa
-
-  const [dadosBasicos, setDadosBasicos] = useState({})
-
+  const [dadosBasicos, setDadosBasicos] = useState({});
+  const [erro, setErro] = useState(null); // Estado para armazenar mensagens de erro
 
   const buscarClientes = async () => {
     try {
@@ -28,16 +27,29 @@ function ConsultaCliente() {
       }
 
       setClientes(response.data);
+      setErro(null);
     } catch (error) {
-      console.error('Erro ao buscar clientes:', error);
+      if (error.response) {
+        setErro('Erro ao buscar clientes: ' + error.response.status);
+      } else if (error.request) {
+        setErro('Falha na conexão com o servidor. Por favor, verifique sua conexão de rede e tente novamente.');
+      } else {
+        setErro('Erro ao realizar a solicitação. Por favor, tente novamente mais tarde.');
+      }
     }
   };
 
   useEffect(() => {
+    const timer = setTimeout(() => {
+      setErro(null);
+    }, 8000);
+
+    return () => clearTimeout(timer);
+  }, [erro]);
+
+  useEffect(() => {
     buscarClientes();
-  },);
-
-
+  }, [filtro]);
 
   const toggleTab = (tab) => {
     if (activeTab !== tab) {
@@ -176,11 +188,16 @@ function ConsultaCliente() {
       ) : filtro && clientesParaExibir.length === 0 ? (
         <div className="divTabela">
           <p>Nenhum resultado encontrado. Refine sua pesquisa para obter resultados.</p>
+          {erro && <div className="alert alert-danger">{erro}</div>}
+
         </div>
       ) : (
         <div className="divTabela">
           <p>Filtre para ter resultados.</p>
+          {erro && <div className="alert alert-danger">{erro}</div>}
+
         </div>
+
       )}
 
 

@@ -17,20 +17,12 @@ function Ocorrencias() {
   const { register, handleSubmit } = useForm({});
   const [selectedValue, setSelectedValue] = useState("sim");
   const [filtroNomeEventos, setFiltroNomeEventos] = useState('');
-
-
+  const [erro, setErro] = useState(null);
+  const [stompClient, setStompClient] = useState(null);
+  const [mensagemUsuario, setMensagemUsuario] = useState('');
 
   const handleFiltroNomeChangeEvento = (event) => {
     setFiltroNomeEventos(event.target.value);
-  };
-
-  const filtrarDados = async () => {
-    try {
-      const respostaEventosFiltrados = await axios.get(`http://seu-endpoint-api/eventos?nome=${filtroNomeEventos}`);
-      setColocaEventosNaTela(respostaEventosFiltrados.data);
-    } catch (error) {
-      console.error('Erro ao filtrar dados:', error);
-    }
   };
 
   const handleSelectChange = (event) => {
@@ -49,15 +41,51 @@ function Ocorrencias() {
   };
 
 
-  useEffect(() => {
-    // localStorage.clear();
+  const filtrarDados = async () => {
+    try {
+      const respostaEventosFiltrados = await axios.get(`http://seu-endpoint-api/eventos?nome=${filtroNomeEventos}`);
+      setColocaEventosNaTela(respostaEventosFiltrados.data);
+      setErro(null);
+    } catch (error) {
+      console.error('Erro ao filtrar dados:', error);
+      ('Erro ao filtrar dados. Por favor, tente novamente.');
+      setTimeout(() => {
+        setErro(null);
+      }, 3000);
+    }
+  };
 
+  useEffect(() => {
+    if (erro) {
+      const timer = setTimeout(() => {
+        setErro(null);
+      }, 3000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [erro]);
+
+  useEffect(() => {
+    if (mensagemUsuario) {
+      const timer = setTimeout(() => {
+        setMensagemUsuario('');
+      }, 3000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [mensagemUsuario]);
+
+  useEffect(() => {
     const socket = new SockJS('http://127.0.0.1:8080/api/monitor-websocket');
-    const stompClient = Stomp.over(socket);
+    const client = Stomp.over(socket);
 
     const connectCallBack = () => {
+
       console.log('Conexão WebSocket estabelecida com sucesso!');
-      stompClient.subscribe('/topic/eventos', (message) => {
+      setMensagemUsuario('Conexão WebSocket estabelecida com sucesso!');
+      setErro(''); // Limpa o estado de erro
+      setStompClient(client);
+      client.subscribe('/topic/eventos', (message) => {
         const dadosRecebidos = JSON.parse(message.body);
         console.log(dadosRecebidos)
         const dadosEmCache = JSON.parse(localStorage.getItem('cachedData') || '[]');
@@ -70,16 +98,15 @@ function Ocorrencias() {
         } else {
           setColocaOcorrenciasNaTela((dadosAntigosDaListaOcorrencias) => [dadosRecebidos, ...dadosAntigosDaListaOcorrencias]);
           setColocaEventosNaTela((dadosAntigosDaListaEventos) => [dadosRecebidos, ...dadosAntigosDaListaEventos]);
-
         }
       });
     };
 
-
-
-    socket.onclose = () => {
-      console.log('Conexão encerrada');
-      reconnect();
+    const connect = () => {
+      client.connect({}, connectCallBack, (error) => {
+        console.error('Erro ao conectar:', error);
+        setErro('Erro ao conectar ao servidor WebSocket. Por favor, tente novamente.');
+      });
     };
 
     const reconnect = () => {
@@ -90,20 +117,18 @@ function Ocorrencias() {
       connect();
     };
 
-    const connect = () => {
-      stompClient.connect({}, connectCallBack);
+    socket.onclose = () => {
+      console.log('Conexão encerrada');
+      setMensagemUsuario('Conexão WebSocket encerrada. Tentando reconectar...');
+      reconnect();
     };
 
     connect();
-
 
     return () => {
       socket.close();
     };
   }, []);
-
-
-
 
 
   useEffect(() => {
@@ -112,23 +137,17 @@ function Ocorrencias() {
     setColocaOcorrenciasNaTela(cachedData);
   }, []);
 
-
   const ScrollContainer = styled.div`
-  overflow: hidden;
-  max-width: 100%;
-`;
-
-
+      overflow: hidden;
+      max-width: 100%;
+    `;
 
   const renderEventCard = (data, index) => {
-
     if (data.id) {
       return null;
     }
-
     const gravidadeClassEvento = data.gravidade === '' ? 'evento-normal-gravidade' :
       'evento-grave-gravidade';
-
     return (
 
 
@@ -205,24 +224,39 @@ function Ocorrencias() {
   return (
     <>
 
-
+      .
       <div className="utilitarios">
-        <div className="fitro ">
-          <label className='text-start' id='labelFiltro' htmlFor="filtroNome">Filtrar eventos por nome</label>
-          <div className='d-flex'>
-            <input
-              className='form-control'
-              type="text"
-              name="filtroNome"
-              id="filtroEvento"
-              placeholder='Ex: João da Silva'
-              value={filtroNomeEventos}
-              onChange={handleFiltroNomeChangeEvento}
-            />
-            <button className='btn btn-secondary ms-2' onClick={filtrarDados}>Filtrar</button>
+
+
+
+        <div className="filtroDiv">
+          <div className="fitro ">
+
+            <label className='text-start' id='labelFiltro' htmlFor="filtroNome">Filtrar eventos por nome</label>
+            <div className='d-flex'>
+              <input
+                className='form-control'
+                type="text"
+                name="filtroNome"
+                id="filtroEvento"
+                placeholder='Ex: João da Silva'
+                value={filtroNomeEventos}
+                onChange={handleFiltroNomeChangeEvento}
+              />
+              <button className='btn btn-secondary ms-2' onClick={filtrarDados}>Filtrar</button>
+
+            </div>
+
           </div>
         </div>
+
+        <div className="divMensagem">
+          {erro && <div className="alert alert-danger  mt-2 ms-4">{erro}</div>}
+          {mensagemUsuario && <div className="alert alert-success  mt-2 ms-4">{mensagemUsuario}</div>}
+        </div>
       </div>
+
+
 
       <div className='divEventos'>
         <div className="cabecalho ">
@@ -251,6 +285,7 @@ function Ocorrencias() {
           </div>
         </div>
         {colocaEventosNaTela.map((data, index) => { return renderEventCard(data, index) })}
+
       </div>
       <div className="divOcorrencias">
         {colocaOcorrenciasNaTela.map((dataOcorrencia, index) => { return renderOcorrenciaCard(dataOcorrencia, index) })}

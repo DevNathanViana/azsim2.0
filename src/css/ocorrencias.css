@@ -656,8 +656,9 @@ h3 {
     margin-right: 170px;
     text-align: center;
     position: absolute;
-    left: 30%;
+    left: 40%;
     transform: translate(-30%);
+    width: 60%;
 }
 
 .utilitarios input {
@@ -670,9 +671,10 @@ h3 {
 
 .utilitarios {
     padding: 20px;
-    background-color: #e4e4e498;
+    background-color: #ffffff98;
     border-radius: 2;
 }
+
 
 .fieldRequired {
     color: red;
@@ -822,4 +824,12 @@ h3 {
 
 .descricaoEvento {
     margin-left: -4%
+}
+
+.divMensagem {
+    margin-right: -50px;
+}
+
+.alert {
+    font-size: 15px;
 }
