@@ -254,7 +254,25 @@ tbody td.active {
     font-family: sans-serif;
 }
 
-/* 
+
+.divInformacoesEventos {
+    height: 50px;
+    width: 95%;
+    display: inline-block;
+
+    margin-left: 2.5%;
+    margin-right: 2.5%;
+    border: 1.3px solid #ffffff;
+    border-radius: 5px;
+    text-transform: uppercase;
+    font-size: 12px;
+    white-space: nowrap;
+    background: #e0e0e0c8;
+    color: black;
+    font-family: sans-serif;
+}
+
+
 @media (max-width: 1390px) {
 
     .divInformacoesEventos {
@@ -273,7 +291,7 @@ tbody td.active {
         font-family: sans-serif;
     }
 
-} */
+}
 
 
 .cabecalho div {
@@ -813,6 +831,29 @@ h3 {
     margin-left: -150px;
 }
 
+@media (max-width: 1737px) {
+    .data {
+        margin-left: -120px;
+    }
+}
+
+@media (max-width: 1403px) {
+    .data {
+        margin-left: -60px;
+    }
+}
+
+@media (max-width: 1500px) {
+    .evento {
+        margin-left: 10px;
+    }
+}
+
+@media (max-width: 1737px) {
+    .evento {
+        margin-left: -30px;
+    }
+}
 
 .descricao {
     margin-right: 30px;
@@ -832,4 +873,27 @@ h3 {
 
 .alert {
     font-size: 15px;
+}
+
+.alert {
+    animation-duration: 1.5s;
+    animation: fadeIn 2s;
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+
+
+@media (max-width: 1285px) {
+    .alert {
+        font-size: 8px;
+    }
 }

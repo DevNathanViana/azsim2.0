@@ -21,9 +21,9 @@ function ConsultaCliente() {
       let response;
 
       if (filtro) {
-        response = await axios.get(`http://localhost:8080/api/cliente?nome=${filtro}`);
+        response = await axios.get(`http://127.0.0.1:8080/api/cliente?nome=${filtro}`);
       } else {
-        response = await axios.get('http://localhost:8080/api/cliente');
+        response = await axios.get('http://127.0.0.1:8080/api/cliente');
       }
 
       setClientes(response.data);
