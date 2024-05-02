@@ -46,8 +46,9 @@ table {
     margin-top: 10%;
     margin-left: 5%;
     width: 90%;
+    background-color: #e5e5e5ba;
     padding: 20px;
-    border-radius: 2px;
+    border-radius: 10px;
     border: 0.2px solid rgb(236, 236, 236);
     max-height: 75%;
 
@@ -55,17 +56,7 @@ table {
 
 @media (max-width: 1390px) {
     .divTabela {
-        text-align: start;
-        overflow: auto;
-        position: fixed;
         margin-top: 15%;
-        margin-left: 5%;
-        width: 90%;
-        padding: 20px;
-        border-radius: 2px;
-        border: 0.2px solid rgb(236, 236, 236);
-        max-height: 75%;
-
     }
 }
 
@@ -102,6 +93,27 @@ table {
     }
 }
 
+@media (max-width: 1029px) {
+    .divTabela {
+        margin-top: 21%;
+
+    }
+}
+
+@media (max-width: 855px) {
+    .divTabela {
+        margin-top: 24%;
+
+    }
+}
+
+@media (max-width: 760px) {
+    .divTabela {
+        margin-top: 27%;
+
+    }
+}
+
 
 .filtros {
     left: 50%;
@@ -110,12 +122,12 @@ table {
     position: absolute;
     margin-top: 80px;
     display: flex;
-    background-color: #fff;
+    background-color: #e5e5e5ba;
     padding: 10px;
     padding-left: 20px;
     padding-right: 20px;
     width: 50%;
-    border-radius: 2px;
+    border-radius: 10px;
     border: 0.2px solid rgb(236, 236, 236);
 
 }
@@ -192,9 +204,31 @@ td {
     display: flex;
 }
 
+@media (max-width : 1035px) {
+    .btnAddcliente {
+        text-align: center;
+        margin-bottom: 20px;
+        position: absolute;
+        margin-top: 80px;
+        display: flex;
+        font-size: 10px;
+    }
+}
+
 .divBtnAdd {
     width: 40%;
     position: absolute;
     margin-left: 80%;
     margin-top: 25px;
+}
+
+.alert {
+    width: 100%;
+}
+
+.divMensagem {
+    position: absolute;
+    margin-left: 40px;
+    margin-top: 90px;
+    width: 350px;
 }

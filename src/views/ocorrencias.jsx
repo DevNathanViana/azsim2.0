@@ -85,6 +85,16 @@ function Ocorrencias() {
       setMensagemUsuario('Conexão WebSocket estabelecida com sucesso!');
       setErro(''); // Limpa o estado de erro
       setStompClient(client);
+      client.subscribe('/topic/ocorrencias', (message) => {
+        const dadosRecebidos = JSON.parse(message.body);
+        console.log(dadosRecebidos);
+        const dadosEmCache = JSON.parse(localStorage.getItem('cachedData') || '[]');
+        dadosEmCache.unshift(dadosRecebidos);
+        const limiteLista = 20;
+        const dadosLimitados = dadosEmCache.slice(0, limiteLista);
+        localStorage.setItem('cachedData', JSON.stringify(dadosLimitados));
+        setColocaOcorrenciasNaTela((dadosAntigosDaListaOcorrencias) => [dadosRecebidos, ...dadosAntigosDaListaOcorrencias]);
+      });
       client.subscribe('/topic/eventos', (message) => {
         const dadosRecebidos = JSON.parse(message.body);
         console.log(dadosRecebidos)
@@ -223,37 +233,32 @@ function Ocorrencias() {
 
   return (
     <>
-
+      <div className="divMensagem">
+        {erro && <div className="alert alert-danger  ms-3 ">{erro}</div>}
+        {mensagemUsuario && <div className="alert alert-success">{mensagemUsuario}</div>}
+      </div>
       .
       <div className="utilitarios">
+        <div className="fitro ">
 
-
-
-        <div className="filtroDiv">
-          <div className="fitro ">
-
-            <label className='text-start' id='labelFiltro' htmlFor="filtroNome">Filtrar eventos por nome</label>
-            <div className='d-flex'>
-              <input
-                className='form-control'
-                type="text"
-                name="filtroNome"
-                id="filtroEvento"
-                placeholder='Ex: João da Silva'
-                value={filtroNomeEventos}
-                onChange={handleFiltroNomeChangeEvento}
-              />
-              <button className='btn btn-secondary ms-2' onClick={filtrarDados}>Filtrar</button>
-
-            </div>
+          <label className='text-start' id='labelFiltro' htmlFor="filtroNome">Filtrar eventos por nome</label>
+          <div className='d-flex'>
+            <input
+              className='form-control'
+              type="text"
+              name="filtroNome"
+              id="filtroEvento"
+              placeholder='Ex: João da Silva'
+              value={filtroNomeEventos}
+              onChange={handleFiltroNomeChangeEvento}
+            />
+            <button className='btn btn-secondary ms-2' onClick={filtrarDados}>Filtrar</button>
 
           </div>
+
         </div>
 
-        <div className="divMensagem">
-          {erro && <div className="alert alert-danger  mt-2 ms-4">{erro}</div>}
-          {mensagemUsuario && <div className="alert alert-success  mt-2 ms-4">{mensagemUsuario}</div>}
-        </div>
+
       </div>
 
 

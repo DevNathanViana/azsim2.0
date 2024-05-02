@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import { Link, useNavigate } from 'react-router-dom';
+import { BarLoader } from 'react-spinners';
 
 function ConsultaCliente() {
 
@@ -15,8 +16,13 @@ function ConsultaCliente() {
   const [activeTab, setActiveTab] = useState('dados'); // Estado para controlar a aba ativa
   const [dadosBasicos, setDadosBasicos] = useState({});
   const [erro, setErro] = useState(null); // Estado para armazenar mensagens de erro
+  const [mensagemSucesso, setMensagemSucesso] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [exibiuMensagemSucesso, setExibiuMensagemSucesso] = useState(false); // Novo estado para controlar se a mensagem de sucesso foi exibida
+
 
   const buscarClientes = async () => {
+    setLoading(true);
     try {
       let response;
 
@@ -27,20 +33,32 @@ function ConsultaCliente() {
       }
 
       setClientes(response.data);
+      if (!exibiuMensagemSucesso) { // Verifica se a mensagem de sucesso já foi exibida
+        setMensagemSucesso('Conexão estabelecida com sucesso!');
+        setExibiuMensagemSucesso(true); // Define que a mensagem de sucesso foi exibida
+      }
       setErro(null);
     } catch (error) {
-      if (error.response) {
-        setErro('Erro ao buscar clientes: ' + error.response.status);
-      } else if (error.request) {
-        setErro('Falha na conexão com o servidor. Por favor, verifique sua conexão de rede e tente novamente.');
-      } else {
-        setErro('Erro ao realizar a solicitação. Por favor, tente novamente mais tarde.');
+      if (clientes.length === 0) {
+        if (error.response) {
+          setErro('Erro ao buscar clientes. Por favor, verifique sua conexão de rede e tente novamente. ');
+          setLoading(false);
+
+        } else if (error.request) {
+          setErro('Falha na conexão com o servidor. Por favor, verifique sua conexão de rede e tente novamente.');
+          setLoading(false);
+
+        } else {
+          setErro('Erro ao realizar a solicitação. Por favor, tente novamente mais tarde.');
+          setLoading(false);
+        }
       }
     }
   };
 
   useEffect(() => {
     const timer = setTimeout(() => {
+      setMensagemSucesso(null)
       setErro(null);
     }, 8000);
 
@@ -98,7 +116,7 @@ function ConsultaCliente() {
       // Redirecionar para a página de edição, passando os detalhes do cliente como parâmetros na URL
       navigate(`/edicaoCliente/${id}`);
     } catch (error) {
-      console.error('Erro ao obter detalhes do cliente:', error);
+      console.error('Erro ao obter detalhes do cliente. Verifique sua conexão e tente novamente.');
     }
   };
 
@@ -116,6 +134,11 @@ function ConsultaCliente() {
 
   return (
     <>
+
+      <div className="divMensagem">
+        {erro && <div className="alert alert-danger">{erro}</div>}
+        {mensagemSucesso && <div className="alert alert-success">{mensagemSucesso}</div>}
+      </div>
 
       <div className="filtros d-flex justify-content-between align-items-center">
         <div className="input-group w-100 mb-3">
@@ -188,13 +211,11 @@ function ConsultaCliente() {
       ) : filtro && clientesParaExibir.length === 0 ? (
         <div className="divTabela">
           <p>Nenhum resultado encontrado. Refine sua pesquisa para obter resultados.</p>
-          {erro && <div className="alert alert-danger">{erro}</div>}
-
         </div>
       ) : (
         <div className="divTabela">
           <p>Filtre para ter resultados.</p>
-          {erro && <div className="alert alert-danger">{erro}</div>}
+          {loading && <BarLoader color="#36D7B7" loading={loading} />}
 
         </div>
 
