@@ -228,7 +228,6 @@ td {
 
 .divMensagem {
     position: absolute;
-    margin-left: 40px;
-    margin-top: 90px;
-    width: 350px;
+
+    width: 450px;
 }

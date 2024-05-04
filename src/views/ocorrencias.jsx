@@ -162,10 +162,9 @@ function Ocorrencias() {
 
 
       <Fragment key={index} >
-        <div className={`divInformacoesEventos t-start p-3 mt-2 mb-2 ${gravidadeClassEvento}`} >
+        <div className={`divInformacoesEventos p-3 mt-2 mb-2 ${gravidadeClassEvento}`} >
           <div className="container divInformacoesDeDentro">
             <div className=" row mb-1">
-
               <div className="col-1 divDaBola">
                 <div className="bola"></div>
               </div>
@@ -233,22 +232,21 @@ function Ocorrencias() {
 
   return (
     <>
-      <div className="divMensagem">
+      <div className="divMensagem fixed-top">
         {erro && <div className="alert alert-danger  ms-3 ">{erro}</div>}
         {mensagemUsuario && <div className="alert alert-success">{mensagemUsuario}</div>}
       </div>
       .
       <div className="utilitarios">
-        <div className="fitro ">
+        <div className="filtro">
 
-          <label className='text-start' id='labelFiltro' htmlFor="filtroNome">Filtrar eventos por nome</label>
           <div className='d-flex'>
             <input
               className='form-control'
               type="text"
               name="filtroNome"
               id="filtroEvento"
-              placeholder='Ex: João da Silva'
+              placeholder='Digite para filtrar...'
               value={filtroNomeEventos}
               onChange={handleFiltroNomeChangeEvento}
             />
@@ -264,8 +262,8 @@ function Ocorrencias() {
 
 
       <div className='divEventos'>
-        <div className="cabecalho ">
-          <div className="">
+        <div className="cabecalho">
+          <div className="cabecalho2">
             <div className="row mb-1">
               <div className="col text-start">
                 <strong></strong>

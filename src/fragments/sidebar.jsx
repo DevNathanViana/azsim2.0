@@ -27,19 +27,7 @@ function Navbar() {
                 >
                     <span className="navbar-toggler-icon"></span>
                 </button>
-                {showShortcuts && (
-                    <div className="atalhos">
-                        <Link className="btnAtalho me-3" to="/ocorrencias">
-                            <i className="bi bi-display"> Monitor de Eventos</i>
-                        </Link>
-                        <Link className="btnAtalho me-3" to="/cadastroCliente">
-                            <i className="bi bi-person-fill-add"> Cadastro de Clientes</i>
-                        </Link>
-                        <Link className="btnAtalho me-3" to="/consultaCliente">
-                            <i className="bi bi-search"> Atendimentos</i>
-                        </Link>
-                    </div>
-                )}
+
                 <div className=" offcanvas offcanvas-start text-bg-primary" data-bs-backdrop="false" tabIndex="-1" id="offcanvasDarkNavbar"
                     aria-labelledby="offcanvasDarkNavbarLabel">
                     <div className="offcanvas-header">
@@ -74,6 +62,19 @@ function Navbar() {
                         </ul>
                     </div>
                 </div>
+                {showShortcuts && (
+                    <div className="atalhos t-start">
+                        <Link className="btnAtalho me-3" to="/ocorrencias">
+                            <i className="bi bi-display"> Monitor de Eventos</i>
+                        </Link>
+                        <Link className="btnAtalho me-3" to="/cadastroCliente">
+                            <i className="bi bi-person-fill-add"> Cadastro de Clientes</i>
+                        </Link>
+                        <Link className="btnAtalho me-3" to="/consultaCliente">
+                            <i className="bi bi-search"> Atendimentos</i>
+                        </Link>
+                    </div>
+                )}
             </nav>
 
 

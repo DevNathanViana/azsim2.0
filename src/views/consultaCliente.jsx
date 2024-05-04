@@ -60,7 +60,7 @@ function ConsultaCliente() {
     const timer = setTimeout(() => {
       setMensagemSucesso(null)
       setErro(null);
-    }, 8000);
+    }, 10000);
 
     return () => clearTimeout(timer);
   }, [erro]);
@@ -135,7 +135,7 @@ function ConsultaCliente() {
   return (
     <>
 
-      <div className="divMensagem">
+      <div className="divMensagem fixed-bottom ms-3">
         {erro && <div className="alert alert-danger">{erro}</div>}
         {mensagemSucesso && <div className="alert alert-success">{mensagemSucesso}</div>}
       </div>
