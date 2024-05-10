@@ -103,12 +103,7 @@ function Ocorrencias() {
         const limiteLista = 20;
         const dadosLimitados = dadosEmCache.slice(0, limiteLista);
         localStorage.setItem('cachedData', JSON.stringify(dadosLimitados));
-        if (dadosRecebidos.type === 'evento') {
-          setColocaEventosNaTela((dadosAntigosDaListaEventos) => [dadosRecebidos, ...dadosAntigosDaListaEventos]);
-        } else {
-          setColocaOcorrenciasNaTela((dadosAntigosDaListaOcorrencias) => [dadosRecebidos, ...dadosAntigosDaListaOcorrencias]);
-          setColocaEventosNaTela((dadosAntigosDaListaEventos) => [dadosRecebidos, ...dadosAntigosDaListaEventos]);
-        }
+        setColocaEventosNaTela((dadosAntigosDaListaEventos) => [dadosRecebidos, ...dadosAntigosDaListaEventos]);
       });
     };
 
@@ -161,6 +156,7 @@ function Ocorrencias() {
     return (
 
 
+
       <Fragment key={index} >
         <div className={`divInformacoesEventos p-3 mt-2 mb-2 ${gravidadeClassEvento}`} >
           <div className="container divInformacoesDeDentro">
@@ -201,6 +197,7 @@ function Ocorrencias() {
       return null;
     }
 
+
     const gravidadeClass = dataOcorrencia.gravidade === 'normal' ? 'normal-gravidade' :
       dataOcorrencia.gravidade === 'moderada' ? 'moderada-gravidade' :
         'grave-gravidade';
@@ -211,17 +208,27 @@ function Ocorrencias() {
       <Fragment key={index} >
         <div className={`infoOcorrencia card mb-3 ${gravidadeClass}`}  >
           <div id='cardOcorrencia' onClick={() => { setOCorrenciaModal(dataOcorrencia) }} className={`card-important card-header ${gravidadeClass}`} data-bs-toggle="modal" data-bs-target={`#modal-${dataOcorrencia.id}`}>
-            <div className="row">
-              <div className="col">
-                <div className="dataEHoraCard mt-1 text-start"><strong>{dataOcorrencia.dataDaOcorrencia}</strong></div>
+            <div className="row mb-4">
+              <div className="col dataCard mt-1 text-start">
+                <strong>
+                  {dataOcorrencia && dataOcorrencia.evento
+                    ? new Date(dataOcorrencia.evento.dataevento).toLocaleDateString('pt-BR')
+                    : 'Não disponível'}
+                </strong>
               </div>
-              <div className="col">
-                <div className="dataEHoraCard mt-1 text-end "><strong>{dataOcorrencia.horaOcorrencia}</strong></div>
+              <div className=" col HoraCard mt-1 me-4 text-end">
+                <strong>
+                  {dataOcorrencia && dataOcorrencia.evento
+                    ? new Date(dataOcorrencia.evento.dataevento).toLocaleTimeString('pt-BR')
+                    : 'Não disponível'}
+                </strong>
               </div>
-              <div className="descricaoOcorrencia mt-1 text-center"><strong>{dataOcorrencia.descricaoDaOcorrencia}</strong></div>
             </div>
-            <ScrollContainer><div className="nomeNoCard mt-2 mb-1 text-center scroll-on-hover"><strong className='ellipsis'>{dataOcorrencia.nomeOcorrencia}</strong></div></ScrollContainer>
-            <ScrollContainer><div className="nomeNoCard mb-1 text-center scroll-on-hover"><strong className='ellipsis'>{dataOcorrencia.enderecoOcorrencia}</strong></div></ScrollContainer>
+            <div className="row">
+              <div className="descricaoOcorrencia mt-1 text-center"><strong>{dataOcorrencia && dataOcorrencia.evento ? dataOcorrencia.evento.destatus : "Nao disponivel"}</strong></div>
+            </div>
+            <ScrollContainer><div className="nomeNoCard mt-2 mb-1 text-center scroll-on-hover"><strong className='ellipsis'> {dataOcorrencia && dataOcorrencia.evento ? dataOcorrencia.evento.nmcliente : "Não disponível"}</strong></div></ScrollContainer>
+            <ScrollContainer><div className="nomeNoCard mb-1 text-center scroll-on-hover"><strong className='ellipsis'> {dataOcorrencia && dataOcorrencia.evento ? dataOcorrencia.evento.endereco : "Não disponível"}</strong></div></ScrollContainer>
           </div>
         </div>
 

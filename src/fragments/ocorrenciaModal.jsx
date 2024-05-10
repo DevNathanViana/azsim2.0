@@ -25,24 +25,28 @@ function ModalOcorrencia({ dataOcorrencia, onSubmit, selectedValue, handleSelect
                         id="navbar">
                         <div className="btn-fechaModal">
                         </div>
-                        <div className="txtDescricao"><h2 className="mt-1">{dataOcorrencia.descricaoDaOcorrencia}</h2>
+                        <div className="txtDescricao"><h2 className="mt-1">{dataOcorrencia && dataOcorrencia.evento ? dataOcorrencia.evento.destatus : "nao disponivel"}</h2>
                         </div>
                     </nav>
                 </div>
                 <header className="headerModalInfo mt-3">
                     <div className="divInfosModal row">
                         <div className="col-8 mb-2ms-4">
-                            <div className="mt-4 ms-3"><strong>Cliente:  </strong>{dataOcorrencia.nomeOcorrencia}</div>
-                            <div className=' ms-3'><strong>Endereço: </strong>{dataOcorrencia.enderecoOcorrencia}&nbsp;&nbsp;<strong>Bairro: </strong> {dataOcorrencia.bairroOcorrencia}
-                                &nbsp; <strong>Cidade: </strong> {dataOcorrencia.cidadeOcorrencia}
+                            <div className="mt-4 ms-3"><strong>Cliente:  </strong>{dataOcorrencia && dataOcorrencia.evento ? dataOcorrencia.evento.nmcliente : "nao disponivel"}</div>
+                            <div className=' ms-3'><strong>Endereço: </strong>{dataOcorrencia && dataOcorrencia.evento ? dataOcorrencia.evento.endereco : "nao disponivel"} &nbsp; &nbsp;
+                                <strong>Bairro:</strong>&nbsp; &nbsp; <strong>Cidade: </strong> {dataOcorrencia && dataOcorrencia.evento ? dataOcorrencia.evento.cidade : "nao disponivel"}
                             </div>
                             <div className=' ms-3'><strong>Ponto de Referência:   </strong>{dataOcorrencia.referenciaOcorrencia}</div>
                         </div>
 
 
                         <div className="col text-end me-4">
-                            <div className="mt-4"><strong>Data: </strong>{dataOcorrencia.dataDaOcorrencia}</div>
-                            <div><strong>Hora: </strong>{dataOcorrencia.horaOcorrencia}</div>
+                            <div className="mt-4"><strong>Data: </strong> {dataOcorrencia && dataOcorrencia.evento
+                                ? new Date(dataOcorrencia.evento.dataevento).toLocaleDateString('pt-BR')
+                                : 'Não disponível'}</div>
+                            <div><strong>Hora: </strong> {dataOcorrencia && dataOcorrencia.evento
+                                ? new Date(dataOcorrencia.evento.dataevento).toLocaleTimeString('pt-BR')
+                                : 'Não disponível'}</div>
                         </div>
                     </div>
                 </header>

@@ -209,7 +209,7 @@ tbody td.active {
     width: 49.9%;
     height: 100%;
     display: inline-block;
-    background: #707070;
+    background: #ffffff;
     overflow-y: auto;
 
 }
@@ -448,8 +448,6 @@ tbody td.active {
 }
 
 
-
-
 .divEventos {
     width: 75%;
     margin-top: 225px;
@@ -465,6 +463,20 @@ tbody td.active {
     margin-bottom: 0px;
     border-radius: 5px;
     border: 0.2px solid rgb(224, 222, 222);
+}
+
+.divOcorrencias {
+    margin-top: 225px;
+    width: 23%;
+    max-height: 800px;
+    float: right;
+    overflow: auto;
+    padding-right: 30px;
+    padding-left: 40px;
+    padding-top: 20px;
+    background-color: #ffffff;
+    border: 1px solid rgb(224, 222, 222);
+
 }
 
 @media (max-width: 1390px) {
@@ -499,6 +511,12 @@ tbody td.active {
     }
 }
 
+@media (max-height: 1200px) {
+    .divOcorrencias {
+        font-size: 10px;
+    }
+}
+
 @media (max-height: 1040px) {
     .divEventos {
         max-height: 750px;
@@ -507,10 +525,7 @@ tbody td.active {
     .divOcorrencias {
         max-height: 750px;
     }
-
 }
-
-
 
 @media (max-height: 990px) {
     .divEventos {
@@ -543,19 +558,6 @@ tbody td.active {
     }
 }
 
-.divOcorrencias {
-    margin-top: 225px;
-    width: 23%;
-    max-height: 530px;
-    float: right;
-    overflow: auto;
-    padding-right: 30px;
-    padding-left: 40px;
-    padding-top: 20px;
-    background-color: #ffffff;
-    border: 1px solid rgb(224, 222, 222);
-
-}
 
 
 
@@ -574,8 +576,18 @@ td {
     display: inline-block;
 }
 
-.dataEHoraCard {
+.dataCard {
     font-size: 10px;
+    color: #000000;
+    position: absolute;
+    margin-left: -08px;
+}
+
+.HoraCard {
+    font-size: 10px;
+    color: #000000;
+    position: absolute;
+    margin-left: -10px;
 }
 
 .nomeNoCard {
@@ -858,7 +870,7 @@ h3 {
 
 
 .descricao {
-    margin-right: 30px;
+    margin-right: 80px;
 }
 
 .eventoEReferencia {
@@ -866,13 +878,14 @@ h3 {
 }
 
 .descricaoEvento {
-    margin-left: -4%
+    margin-left: -3%
 }
 
 .divMensagem {
     width: 28%;
     position: absolute;
     margin-top: 80px;
+    margin-left: 20px;
 }
 
 .alert {
