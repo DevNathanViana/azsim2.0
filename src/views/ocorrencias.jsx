@@ -166,20 +166,20 @@ function Ocorrencias() {
               </div>
               <div className="col">
                 <strong>
-                  {data.dataevento ? new Date(data.dataevento).toLocaleString('pt-BR') : 'não disponível'}
+                  {data.dataevento ? new Date(data.dataevento).toLocaleString('pt-BR') : 'N/E'}
                 </strong>
               </div>
               <div className="col eventoEReferencia">
-                <strong>{data.status ? data.status.slice(0, 40) : 'não disponível'}</strong> . <strong>{data.referencia ? data.referencia.slice(0, 40) : 'não disponível'}</strong>
+                <strong>{data.status ? data.status.slice(0, 40) : 'N/E'}</strong> . <strong>{data.referencia ? data.referencia.slice(0, 40) : 'N/E'}</strong>
               </div>
               <div className="col descricaoEvento" >
-                <strong>{data.destatus ? data.destatus.slice(0, 40) : 'não disponível'}</strong>
+                <strong>{data.destatus ? data.destatus.slice(0, 40) : 'N/E'}</strong>
               </div>
               <div className="col">
-                <strong>{data.nmcliente ? data.nmcliente.slice(0, 40) : 'não disponível'}</strong>
+                <strong>{data.nmcliente ? data.nmcliente.slice(0, 40) : 'N/E'}</strong>
               </div>
               <div className="col text-end">
-                <strong>{data.cidade ? data.cidade.slice(0, 40) : 'não disponível'}</strong>
+                <strong>{data.cidade ? data.cidade.slice(0, 40) : 'N/E'}</strong>
               </div>
             </div>
           </div>
