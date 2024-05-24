@@ -71,7 +71,7 @@ function Navbar() {
                             <i className="bi bi-person-fill-add"> Cadastro de Clientes</i>
                         </Link>
                         <Link className="btnAtalho me-3" to="/consultaCliente">
-                            <i className="bi bi-search"> Atendimentos</i>
+                            <i className="bi bi-search"> Consulta de Clientes</i>
                         </Link>
                     </div>
                 )}

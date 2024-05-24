@@ -13,12 +13,12 @@ function ConsultaCliente() {
   const [clientes, setClientes] = useState([]);
   const [clienteSelecionado, setClienteSelecionado] = useState(null);
   const [modal, setModal] = useState(false);
-  const [activeTab, setActiveTab] = useState('dados'); // Estado para controlar a aba ativa
+  const [activeTab, setActiveTab] = useState('dados');
   const [dadosBasicos, setDadosBasicos] = useState({});
-  const [erro, setErro] = useState(null); // Estado para armazenar mensagens de erro
+  const [erro, setErro] = useState(null);
   const [mensagemSucesso, setMensagemSucesso] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [exibiuMensagemSucesso, setExibiuMensagemSucesso] = useState(false); // Novo estado para controlar se a mensagem de sucesso foi exibida
+  const [exibiuMensagemSucesso, setExibiuMensagemSucesso] = useState(false);
 
 
   const buscarClientes = async () => {
@@ -33,9 +33,9 @@ function ConsultaCliente() {
       }
 
       setClientes(response.data);
-      if (!exibiuMensagemSucesso) { // Verifica se a mensagem de sucesso já foi exibida
+      if (!exibiuMensagemSucesso) {
         setMensagemSucesso('Conexão estabelecida com sucesso!');
-        setExibiuMensagemSucesso(true); // Define que a mensagem de sucesso foi exibida
+        setExibiuMensagemSucesso(true);
       }
       setErro(null);
     } catch (error) {
@@ -90,7 +90,6 @@ function ConsultaCliente() {
 
         console.log('Dados recebidos da API:', clienteParaEdicao);
 
-        // Preencha os campos do formulário com os dados do cliente para edição
         setDadosBasicos({
           ...dadosBasicos,
           unidade: clienteParaEdicao.unidade,
@@ -113,7 +112,6 @@ function ConsultaCliente() {
           viagens: clienteParaEdicao.viagens,
         });
       }
-      // Redirecionar para a página de edição, passando os detalhes do cliente como parâmetros na URL
       navigate(`/edicaoCliente/${id}`);
     } catch (error) {
       console.error('Erro ao obter detalhes do cliente. Verifique sua conexão e tente novamente.');
@@ -171,7 +169,6 @@ function ConsultaCliente() {
       {filtro && clientesParaExibir.length > 0 ? (
         <div className="divTabela">
           <table className="tabela-clientes  table table-bordered table-striped table-hover">
-            {/* Cabeçalho da tabela */}
             <thead className="table-light">
               <tr>
                 <td className="col-5">
@@ -188,8 +185,6 @@ function ConsultaCliente() {
                 </td>
               </tr>
             </thead>
-
-            {/* Corpo da tabela */}
             <tbody>
               {clientesParaExibir.map((cliente) => (
                 <tr key={cliente.id} onClick={() => handleDetalhesCliente(cliente)}>
@@ -290,7 +285,6 @@ function ConsultaCliente() {
           </ul>
 
           <div className="tab-content" id={`myTabContent-dados`}>
-            {/* Dados Básicos */}
             <div className={`tab-pane fade ${activeTab === 'dados' ? 'show active' : ''}`} id={`dados`} role="tabpanel" aria-labelledby={`dados-tab`}>
               <div className="modalDadosBasicos j-content-center">
                 <div className="container justify-content-center">
@@ -368,7 +362,6 @@ function ConsultaCliente() {
               </div>
             </div>
 
-            {/* Contatos */}
             <div className={`tab-pane fade ${activeTab === 'contatos' ? 'show active' : ''}`} id={`contatos`} role="tabpanel" aria-labelledby={`contatos-tab`}>
               <div className="modalContatos j-content-center">
                 <div className="container justify-content-center">
@@ -457,12 +450,10 @@ function ConsultaCliente() {
 
                   </div>
 
-                  {/* Continue adicionando mais campos conforme necessário */}
                 </div>
                 <br></br>
               </div>
             </div>
-            {/* Setorização */}
             <div className={`tab-pane fade ${activeTab === 'setorizacao' ? 'show active' : ''}`} id={`setorizacao`} role="tabpanel" aria-labelledby={`setorizacao-tab`}>
               <div className="modalSetorizacao j-content-center">
                 <div className="container justify-content-center">
@@ -473,7 +464,6 @@ function ConsultaCliente() {
                   <div className="row">
                     {(clienteSelecionado?.setores || []).map((setor, index) => (
                       <div key={index} className="col mb-2">
-                        {/* Adicione campos de setorização conforme necessário */}
                         <div className="row">
                           <div className="col">
                             <label htmlFor={`setor-nome-${index}`} className="form-label"><strong>Setor</strong></label>
@@ -510,18 +500,14 @@ function ConsultaCliente() {
                               />
                             </div>
                           </div>
-
-                          {/* Adicione outros campos de setorização conforme necessário */}
                         </div>
                       </div>
                     ))}
                   </div>
-                  {/* Continue adicionando mais campos de setorização conforme necessário */}
                 </div>
               </div>
             </div>
 
-            {/* Viagens */}
             <div className={`tab-pane fade ${activeTab === 'viagens' ? 'show active' : ''}`} id={`viagens`} role="tabpanel" aria-labelledby={`viagens-tab`}>
               <div className="modalViagens j-content-center">
                 <div className="container justify-content-center">
@@ -530,7 +516,6 @@ function ConsultaCliente() {
                   <div className="row">
                     {(clienteSelecionado?.viagens || []).map((viagem, index) => (
                       <div key={index} className="col mb-2">
-                        {/* Adicione campos de viagens conforme necessário */}
                         <div className="row">
                           <div className="row">
                             <div className="col">

@@ -17,22 +17,18 @@ function Formulario() {
     const { register, handleSubmit, formState: { errors }, setError, setValue } = useForm({});
     const [natureza, setNatureza] = useState("FISICA");
     const [idCliente, setIdCliente] = useState(null);
-    const [errorMessage, setErrorMessage] = useState(null); // Estado para armazenar a mensagem de erro da requisição
+    const [errorMessage, setErrorMessage] = useState(null);
     const [successMessage, setSuccessMessage] = useState('');
     const { id: idNaURL } = useParams();
-
-
     const { id } = useParams();
 
-    // Use o ID para carregar os dados do cliente ao montar o componente
-
     const carregarDadosCliente = async () => {
+
         try {
             if (id) {
                 const response = await axios.get(`http://127.0.0.1:8080/api/cliente/${id}`);
                 const clienteParaEdicao = response.data;
 
-                // Use o setValue para preencher os campos do formulário
                 Object.entries(clienteParaEdicao).forEach(([campo, valor]) => {
                     setValue(campo, valor);
                 });
@@ -203,7 +199,6 @@ function Formulario() {
                 }))
             }
 
-            // Construa o objeto de dados para a requisição
             const dadosRequisicao = {
                 id: idCliente,
                 ...dadosBasicos,
@@ -548,7 +543,7 @@ function Formulario() {
                                             />
                                         </div>
                                         <div className="col-1">
-                                            {dadosBasicos.contatos.length > 1 && ( // Verifica se há mais de um item na lista
+                                            {dadosBasicos.contatos.length > 1 && (
                                                 <button
                                                     type="button"
                                                     className="btn btn-danger btn-excluir"
@@ -651,7 +646,7 @@ function Formulario() {
                                             />
                                         </div>
                                         <div className=" col mb-1 ">
-                                            {dadosBasicos.setores.length > 1 && ( // Verifica se há mais de um item na lista
+                                            {dadosBasicos.setores.length > 1 && (
                                                 <button
                                                     type="button"
                                                     className="btn btn-danger btn-excluir"
@@ -731,7 +726,7 @@ function Formulario() {
                                         />
                                     </div>
                                     <div className=" col-1 btn-excluir">
-                                        {dadosBasicos.viagens.length > 1 && ( // Verifica se há mais de um item na lista
+                                        {dadosBasicos.viagens.length > 1 && (
                                             <button
                                                 type="button"
                                                 className="btn btn-danger btn-excluir"

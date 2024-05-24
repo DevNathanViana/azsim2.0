@@ -9,21 +9,30 @@ import styled from 'styled-components';
 import axios from 'axios';
 import SockJS from 'sockjs-client';
 import Stomp from 'stompjs';
+import { BarLoader } from "react-spinners";
 
 function Ocorrencias() {
   const [colocaEventosNaTela, setColocaEventosNaTela] = useState([]);
   const [colocaOcorrenciasNaTela, setColocaOcorrenciasNaTela] = useState([]);
   const [ocorrenciaModal, setOCorrenciaModal] = useState();
   const { register, handleSubmit } = useForm({});
-  const [selectedValue, setSelectedValue] = useState("sim");
+  const [selectedValue, setSelectedValue] = useState("nao");
   const [filtroNomeEventos, setFiltroNomeEventos] = useState('');
   const [erro, setErro] = useState(null);
   const [stompClient, setStompClient] = useState(null);
   const [mensagemUsuario, setMensagemUsuario] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleFiltroNomeChangeEvento = (event) => {
     setFiltroNomeEventos(event.target.value);
   };
+
+  // const limparCache = () => {
+  // //   localStorage.removeItem('cachedData');
+  // //   setColocaOcorrenciasNaTela([]);
+  // //   setColocaEventosNaTela([]);
+  // //   setMensagemUsuario('Cache limpo com sucesso!');
+  // // };
 
   const handleSelectChange = (event) => {
     setSelectedValue(event.target.value);
@@ -32,7 +41,6 @@ function Ocorrencias() {
   const onSubmit = (formData, dataId) => {
     const dataJson = JSON.stringify(formData);
     console.log(dataJson);
-    alert('Formulário enviado com sucesso!');
 
     setColocaOcorrenciasNaTela((ocorrenciasAntigas) => {
       const novasOcorrencias = ocorrenciasAntigas.filter((ocorrencia) => ocorrencia.id !== dataId);
@@ -49,6 +57,7 @@ function Ocorrencias() {
     } catch (error) {
       console.error('Erro ao filtrar dados:', error);
       ('Erro ao filtrar dados. Por favor, tente novamente.');
+      setLoading(false)
       setTimeout(() => {
         setErro(null);
       }, 3000);
@@ -56,16 +65,20 @@ function Ocorrencias() {
   };
 
   useEffect(() => {
+    // limparCache()
     if (erro) {
       const timer = setTimeout(() => {
         setErro(null);
       }, 3000);
 
       return () => clearTimeout(timer);
+
     }
   }, [erro]);
 
   useEffect(() => {
+    setLoading(true);
+
     if (mensagemUsuario) {
       const timer = setTimeout(() => {
         setMensagemUsuario('');
@@ -76,14 +89,19 @@ function Ocorrencias() {
   }, [mensagemUsuario]);
 
   useEffect(() => {
+    setLoading(true);
+
     const socket = new SockJS('http://127.0.0.1:8080/api/monitor-websocket');
     const client = Stomp.over(socket);
 
     const connectCallBack = () => {
-
       console.log('Conexão WebSocket estabelecida com sucesso!');
-      setMensagemUsuario('Conexão WebSocket estabelecida com sucesso!');
-      setErro(''); // Limpa o estado de erro
+      setTimeout(() => {
+        setMensagemUsuario('Conexão WebSocket estabelecida com sucesso!');
+        setLoading(false)
+
+      }, 2000);
+      setErro('');
       setStompClient(client);
       client.subscribe('/topic/ocorrencias', (message) => {
         const dadosRecebidos = JSON.parse(message.body);
@@ -111,6 +129,7 @@ function Ocorrencias() {
       client.connect({}, connectCallBack, (error) => {
         console.error('Erro ao conectar:', error);
         setErro('Erro ao conectar ao servidor WebSocket. Por favor, tente novamente.');
+        setLoading(false);
       });
     };
 
@@ -158,8 +177,8 @@ function Ocorrencias() {
 
 
       <Fragment key={index} >
-        <div className={`divInformacoesEventos p-3 mt-2 mb-2 ${gravidadeClassEvento}`} >
-          <div className="container divInformacoesDeDentro">
+        <div className={`divInformacoesEventos p-3 mt-1 mb-2 ${gravidadeClassEvento}`} >
+          <div className="container divInformacoesDeDentro" >
             <div className=" row mb-1">
               <div className="col-1 divDaBola">
                 <div className="bola"></div>
@@ -202,12 +221,23 @@ function Ocorrencias() {
       dataOcorrencia.gravidade === 'moderada' ? 'moderada-gravidade' :
         'grave-gravidade';
 
+    const PegaDadosComplementares = async (id) => {
+      try {
+        const response = await axios.get(`http://localhost:8080/api/ocorrencia/${id}`);
+        setOCorrenciaModal(response.data);
+        console.log(response)
+
+      } catch (error) {
+        console.error('Erro ao obter dados complementares:', error);
+      }
+    };
 
     return (
 
       <Fragment key={index} >
         <div className={`infoOcorrencia card mb-3 ${gravidadeClass}`}  >
-          <div id='cardOcorrencia' onClick={() => { setOCorrenciaModal(dataOcorrencia) }} className={`card-important card-header ${gravidadeClass}`} data-bs-toggle="modal" data-bs-target={`#modal-${dataOcorrencia.id}`}>
+          <div id='cardOcorrencia' onClick={() => { PegaDadosComplementares(dataOcorrencia.id) }}
+            className={`card-important card-header ${gravidadeClass}`} data-bs-toggle="modal" data-bs-target={`#modal-${dataOcorrencia.id}`}>
             <div className="row mb-4">
               <div className="col dataCard mt-1 text-start">
                 <strong>
@@ -240,8 +270,11 @@ function Ocorrencias() {
   return (
     <>
       <div className="divMensagem fixed-top">
+        {loading && <BarLoader color="#36D7B7" loading={loading} />}
+
         {erro && <div className="alert alert-danger  ms-3 ">{erro}</div>}
-        {mensagemUsuario && <div className="alert alert-success">{mensagemUsuario}</div>}
+        {mensagemUsuario && <div className="alert alert-success mt-2">{mensagemUsuario}</div>}
+
       </div>
       .
       <div className="utilitarios">
@@ -269,6 +302,7 @@ function Ocorrencias() {
 
 
       <div className='divEventos'>
+
         <div className="cabecalho">
           <div className="cabecalho2">
             <div className="row mb-1">
@@ -300,7 +334,6 @@ function Ocorrencias() {
       <div className="divOcorrencias">
         {colocaOcorrenciasNaTela.map((dataOcorrencia, index) => { return renderOcorrenciaCard(dataOcorrencia, index) })}
       </div>
-      {/* {newFunction(dataOcorrencia, handleSubmit, onSubmit, register, selectedValue, handleSelectChange)} */}
 
       <ModalOcorrencia
         dataOcorrencia={ocorrenciaModal || {}}
@@ -309,7 +342,6 @@ function Ocorrencias() {
         onSubmit={onSubmit}
         register={register}
         selectedValue={selectedValue}
-      // dismissModal={dismissModal}
       />
 
     </>

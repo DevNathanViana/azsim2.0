@@ -5,6 +5,7 @@
 
 * {
     font-family: 'Questrial', sans-serif;
+    scrollbar-width: auto;
 }
 
 html {
@@ -210,7 +211,8 @@ tbody td.active {
     height: 100%;
     display: inline-block;
     background: #ffffff;
-    overflow-y: auto;
+    overflow-x: scroll;
+    scrollbar-width: auto;
 
 }
 
@@ -222,6 +224,7 @@ tbody td.active {
     float: right;
     background: #fff;
     overflow-y: auto;
+    scrollbar-width: auto;
 }
 
 .nav-link {
@@ -235,10 +238,11 @@ tbody td.active {
     border-radius: 10px;
     margin-left: 5px;
     margin-right: 5px;
-    background: rgb(255, 255, 194);
+    background: rgb(255, 255, 255);
     color: black;
     font-size: 15px;
     margin-left: 5%;
+    border: none;
 }
 
 
@@ -326,10 +330,10 @@ tbody td.active {
 
 
 .divInformacoesSetores {
-    width: 45%;
+    width: 100%;
     border: 1px solid #dbdbdb;
     border-radius: 10px;
-    background: rgba(255, 255, 194, 0);
+    background-color: rgb(255, 255, 194);
     color: black;
     font-size: 13px;
 }
@@ -347,15 +351,15 @@ tbody td.active {
 }
 
 .divInformacoesViagens {
-    width: 65%;
+    width: 96%;
     border: 1px solid #dbdbdb;
     border-radius: 07px;
-    margin-right: 5px;
     margin-top: -9px;
     background: rgb(255, 255, 194);
     color: black;
     font-size: 13px;
-    margin-left: 18%;
+    margin-left: 2%;
+    margin-right: 2%;
 }
 
 
@@ -379,8 +383,9 @@ tbody td.active {
 
 
 .infoViagem {
-    width: 65%;
-    margin-left: 18%;
+    width: 96%;
+    margin-left: 2%;
+    margin-right: 2%;
     margin-top: 20px;
 }
 
@@ -445,6 +450,7 @@ tbody td.active {
 
 .infoOcorrencia {
     margin-right: 10px;
+    font-size: 20px;
 }
 
 
@@ -454,6 +460,7 @@ tbody td.active {
     padding-top: 10px;
     max-height: 800px;
     display: inline-block;
+    scrollbar-width: auto;
     overflow: auto;
     margin-bottom: 35px;
     margin-right: 0;
@@ -469,6 +476,7 @@ tbody td.active {
     margin-top: 225px;
     width: 23%;
     max-height: 800px;
+    scrollbar-width: auto;
     float: right;
     overflow: auto;
     padding-right: 30px;
@@ -591,7 +599,7 @@ td {
 }
 
 .nomeNoCard {
-    font-size: 8px;
+    font-size: 13px;
 
 }
 
@@ -914,4 +922,20 @@ h3 {
     .alert {
         font-size: 10px;
     }
+}
+
+.card-body {
+    background-color: #fffac3;
+}
+
+.modal-backdrop {
+    z-index: 1040 !important;
+}
+
+.modal {
+    z-index: 1050 !important;
+}
+
+.modal.modal-second {
+    z-index: 1060 !important;
 }
