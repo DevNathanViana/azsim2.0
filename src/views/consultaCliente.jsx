@@ -85,7 +85,7 @@ function ConsultaCliente() {
   const handleEditCliente = async (id) => {
     try {
       if (id) {
-        const response = await axios.get(`http://localhost:8080/api/cliente/${id}`);
+        const response = await axios.get(`http://127.0.0.1:8080/api/cliente/${id}`);
         const clienteParaEdicao = response.data;
 
         console.log('Dados recebidos da API:', clienteParaEdicao);

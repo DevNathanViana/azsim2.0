@@ -4,7 +4,6 @@ import 'bootstrap/dist/js/bootstrap.min.js';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 
 function ModalOcorrencia({ dataOcorrencia, onSubmit, selectedValue, handleSelectChange }) {
     const { register, handleSubmit, formState: { errors } } = useForm();
@@ -16,18 +15,12 @@ function ModalOcorrencia({ dataOcorrencia, onSubmit, selectedValue, handleSelect
         setSelectedCategory(e.target.value);
     };
 
-    const toggleModal = () => setModalOpen(!modalOpen);
 
     const handleBlur = () => {
         setModalOpen(true);
     };
 
 
-    const handleCloseModals = () => {
-        setModalOpen(false);
-        document.body.classList.remove('modal-open');
-        document.body.removeAttribute('style');
-    };
 
     const subCategoryOptions = {
         '1': [
@@ -266,7 +259,7 @@ function ModalOcorrencia({ dataOcorrencia, onSubmit, selectedValue, handleSelect
                                 <div className="row ms-2 me-2 mt-2 mb-3">
                                     <div className="col-sm">
                                         <label htmlFor="resumo" className="form-label">Resumo*</label>
-                                        <textarea {...register("resumo", { required: selectedValue === "sim" })} className="form-control" id={`resumo${dataOcorrencia.id}`} rows="3"></textarea>
+                                        <textarea {...register("resumo", { required: true })} className="form-control" id={`resumo${dataOcorrencia.id}`} rows="3"></textarea>
                                         {errors.resumo && <span className='fieldRequired'>Campo obrigatório</span>}
                                     </div>
                                 </div>
@@ -404,62 +397,40 @@ function ModalOcorrencia({ dataOcorrencia, onSubmit, selectedValue, handleSelect
                                 <div className="tab-pane fade" id={`viagens-${dataOcorrencia.id}`} role="tabpanel" aria-labelledby={`viagens-tab-${dataOcorrencia.id}`}>
                                     {dataOcorrencia && dataOcorrencia.cliente && dataOcorrencia.cliente.viagens && dataOcorrencia.cliente.viagens.lenght > 0
                                         ? (dataOcorrencia.cliente.viagens.map((viagens, index) => (
-                                            <div key={index}>
-                                                <div className="infoViagem card">
-                                                    <div className="card-header">
-                                                        <div className="row">
-                                                            <div className="col d-flex">
-                                                                <div className="mt-1 txt-TabDataIda"><strong>DATA SAÍDA: </strong>
-                                                                    <strong className='me-2'>{viagens.dataSaida}</strong> ||
-                                                                </div>
-                                                                <div className="ms-2 mt-1 txt-TabDataVolta"><strong>DATA VOLTA: </strong>
-                                                                    <strong>{viagens.dataVolta}</strong>
-                                                                </div>
-                                                            </div>
+                                            <div className="cardViagens p-3 mt-2 mb-2" key={index}>
+                                                <div className="container">
+                                                    <div className="row">
+                                                        <div className="col">
+                                                            <div className="mb-1"><strong>DATA DA SAÍDA: </strong> {viagens.dataSaida}</div>
+                                                            <div className="mb-1"><strong>VEÍCULO: </strong>{viagens.veiculo}</div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                                <div className="divInformacoesViagens p-3 mb-2">
-                                                    <div className="container">
-                                                        <div className="row">
-                                                            <div className="col">
-                                                                <div className="mb-3"><strong>PROCEDIMENTOS: </strong> {viagens.procedimento}</div>
-                                                                <div className="mb-1"><strong>OBSERVAÇÕES: </strong>{viagens.observacao}</div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                                    <div className="mb-1"><strong>DESTINO: </strong> {viagens.destino}</div>
                                                 </div>
                                             </div>
                                         ))
+
                                         ) : (
-                                            <div className="col m-5">
-                                                <strong>Nenhuma Viagem cadastrada.</strong>
+                                            <div className="col">
+                                                <strong>Nenhuma viagem cadastrada.</strong>
                                             </div>
                                         )}
                                 </div>
                             </div>
-
-
-
                         </div>
+
                     </div>
-                    <Modal isOpen={modalOpen} toggle={toggleModal} className="modal-dialog-centered modal-second">
-                        <ModalHeader toggle={toggleModal}>Fechar e Encerrar</ModalHeader>
-                        <ModalBody>
-                            Tem certeza de que deseja fechar e encerrar?
-                        </ModalBody>
-                        <ModalFooter>
-                            <Button color="secondary" onClick={toggleModal}>Fechar</Button>
-                            <Button onClick={() => {
-                                handleSubmit((formData) => onSubmit(formData, dataOcorrencia.id))();
-                                handleCloseModals()
-                            }} aria-label="Close" data-bs-dismiss="modal" color="success" >Fechar e Encerrar</Button>
-                        </ModalFooter>
-                    </Modal>
+                    <footer className="modal-footer justify-content-start">
+                        <div className="row">
+                            <div className="col-2 ms-1">
+                                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" onClick={() => { handleSubmit((formData) => onSubmit(formData, dataOcorrencia.id))() }}> Fechar</button>
+                            </div>
+                        </div>
+                    </footer>
                 </div>
-            </div >
-        </div >
+            </div ></div >
     )
+
 }
 
 ModalOcorrencia.propTypes = {

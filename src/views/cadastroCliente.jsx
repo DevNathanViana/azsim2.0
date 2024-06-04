@@ -212,11 +212,11 @@ function Formulario() {
             let resposta;
 
             if (idCliente) {
-                resposta = await axios.put(`http://localhost:8080/api/cliente/${idCliente}`, dadosRequisicao);
+                resposta = await axios.put(`http://127.0.0.1:8080/api/cliente/${idCliente}`, dadosRequisicao);
             } else if (idNaURL) {
-                resposta = await axios.put(`http://localhost:8080/api/cliente/${idNaURL}`, dadosRequisicao);
+                resposta = await axios.put(`http://127.0.0.1:8080/api/cliente/${idNaURL}`, dadosRequisicao);
             } else {
-                resposta = await axios.post('http://localhost:8080/api/cliente', dadosRequisicao);
+                resposta = await axios.post('http://127.0.0.1:8080/api/cliente', dadosRequisicao);
             }
 
             if (resposta.status === 200) {

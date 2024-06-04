@@ -11,21 +11,24 @@ import SockJS from 'sockjs-client';
 import Stomp from 'stompjs';
 import { BarLoader } from "react-spinners";
 
+
 function Ocorrencias() {
+
+
   const [colocaEventosNaTela, setColocaEventosNaTela] = useState([]);
   const [colocaOcorrenciasNaTela, setColocaOcorrenciasNaTela] = useState([]);
   const [ocorrenciaModal, setOCorrenciaModal] = useState();
-  const { register, handleSubmit } = useForm({});
+  const { register, handleSubmit, reset } = useForm();
   const [selectedValue, setSelectedValue] = useState("nao");
   const [filtroNomeEventos, setFiltroNomeEventos] = useState('');
   const [erro, setErro] = useState(null);
   const [stompClient, setStompClient] = useState(null);
   const [mensagemUsuario, setMensagemUsuario] = useState('');
   const [loading, setLoading] = useState(false);
-
   const handleFiltroNomeChangeEvento = (event) => {
     setFiltroNomeEventos(event.target.value);
   };
+
 
   // const limparCache = () => {
   // //   localStorage.removeItem('cachedData');
@@ -38,15 +41,23 @@ function Ocorrencias() {
     setSelectedValue(event.target.value);
   };
 
-  const onSubmit = (formData, dataId) => {
-    const dataJson = JSON.stringify(formData);
-    console.log(dataJson);
 
-    setColocaOcorrenciasNaTela((ocorrenciasAntigas) => {
-      const novasOcorrencias = ocorrenciasAntigas.filter((ocorrencia) => ocorrencia.id !== dataId);
-      return novasOcorrencias;
-    });
+  const onSubmit = async (formData, dataId) => {
+    try {
+      const response = await axios.post(`http://localhost:8080/api/ocorrencia`, formData);
+      setColocaOcorrenciasNaTela((ocorrenciasAntigas) => {
+        const novasOcorrencias = ocorrenciasAntigas.filter((ocorrencia) => ocorrencia.id !== dataId);
+        return novasOcorrencias;
+      });
+      console.log('Resposta do servidor:', response.data);
+      console.log('Dados enviados:', formData);
+    } catch (error) {
+      console.error('Erro ao enviar a ocorrência:', error);
+    }
+    reset();
+
   };
+
 
 
   const filtrarDados = async () => {
