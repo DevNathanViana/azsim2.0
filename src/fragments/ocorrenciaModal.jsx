@@ -14,13 +14,10 @@ function ModalOcorrencia({ dataOcorrencia, onSubmit, selectedValue, handleSelect
     const handleCategoryChange2 = (e) => {
         setSelectedCategory(e.target.value);
     };
-
-
+    
     const handleBlur = () => {
         setModalOpen(true);
     };
-
-
 
     const subCategoryOptions = {
         '1': [
@@ -316,7 +313,7 @@ function ModalOcorrencia({ dataOcorrencia, onSubmit, selectedValue, handleSelect
 
                                                     <div className="col-12 mb-2" >
                                                         <div className="card">
-                                                            <div className="card-body">
+                                                            <div className="card-body cardCtt">
                                                                 <div className="row">
                                                                     <div className="col">
                                                                         <strong> NOME: </strong> {contato.nome || "nao disponivel"}

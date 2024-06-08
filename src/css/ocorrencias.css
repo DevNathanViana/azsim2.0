@@ -203,6 +203,7 @@ tbody td.active {
 .divInfosModal {
     margin: 10px;
     font-size: 25px;
+    text-wrap: nowrap;
 }
 
 .div1 {
@@ -211,7 +212,7 @@ tbody td.active {
     height: 100%;
     display: inline-block;
     background: #ffffff;
-    overflow-x: scroll;
+    overflow-y: auto;
     scrollbar-width: auto;
 
 }
@@ -924,7 +925,7 @@ h3 {
     }
 }
 
-.card-body {
+.cardCtt {
     background-color: #fffac3;
 }
 

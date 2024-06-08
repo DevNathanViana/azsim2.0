@@ -2,19 +2,16 @@ import "../fragments/init"
 import '../css/ocorrencias.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.min.js';
-import { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import ModalOcorrencia from '../fragments/ocorrenciaModal';
 import styled from 'styled-components';
 import axios from 'axios';
 import SockJS from 'sockjs-client';
 import Stomp from 'stompjs';
-import { BarLoader } from "react-spinners";
-
+import Swal from 'sweetalert2';
 
 function Ocorrencias() {
-
-
   const [colocaEventosNaTela, setColocaEventosNaTela] = useState([]);
   const [colocaOcorrenciasNaTela, setColocaOcorrenciasNaTela] = useState([]);
   const [ocorrenciaModal, setOCorrenciaModal] = useState();
@@ -22,25 +19,15 @@ function Ocorrencias() {
   const [selectedValue, setSelectedValue] = useState("nao");
   const [filtroNomeEventos, setFiltroNomeEventos] = useState('');
   const [erro, setErro] = useState(null);
-  const [stompClient, setStompClient] = useState(null);
+  const stompClientRef = useRef(null);
   const [mensagemUsuario, setMensagemUsuario] = useState('');
-  const [loading, setLoading] = useState(false);
   const handleFiltroNomeChangeEvento = (event) => {
     setFiltroNomeEventos(event.target.value);
   };
 
-
-  // const limparCache = () => {
-  // //   localStorage.removeItem('cachedData');
-  // //   setColocaOcorrenciasNaTela([]);
-  // //   setColocaEventosNaTela([]);
-  // //   setMensagemUsuario('Cache limpo com sucesso!');
-  // // };
-
   const handleSelectChange = (event) => {
     setSelectedValue(event.target.value);
   };
-
 
   const onSubmit = async (formData, dataId) => {
     try {
@@ -55,10 +42,7 @@ function Ocorrencias() {
       console.error('Erro ao enviar a ocorrência:', error);
     }
     reset();
-
   };
-
-
 
   const filtrarDados = async () => {
     try {
@@ -67,8 +51,7 @@ function Ocorrencias() {
       setErro(null);
     } catch (error) {
       console.error('Erro ao filtrar dados:', error);
-      ('Erro ao filtrar dados. Por favor, tente novamente.');
-      setLoading(false)
+      setErro('Erro ao filtrar dados. Por favor, tente novamente.');
       setTimeout(() => {
         setErro(null);
       }, 3000);
@@ -76,44 +59,30 @@ function Ocorrencias() {
   };
 
   useEffect(() => {
-    // limparCache()
     if (erro) {
       const timer = setTimeout(() => {
         setErro(null);
       }, 3000);
-
       return () => clearTimeout(timer);
-
     }
   }, [erro]);
 
   useEffect(() => {
-    setLoading(true);
-
     if (mensagemUsuario) {
       const timer = setTimeout(() => {
         setMensagemUsuario('');
       }, 3000);
-
       return () => clearTimeout(timer);
     }
   }, [mensagemUsuario]);
 
   useEffect(() => {
-    setLoading(true);
-
     const socket = new SockJS('http://127.0.0.1:8080/api/monitor-websocket');
     const client = Stomp.over(socket);
 
     const connectCallBack = () => {
       console.log('Conexão WebSocket estabelecida com sucesso!');
-      setTimeout(() => {
-        setMensagemUsuario('Conexão WebSocket estabelecida com sucesso!');
-        setLoading(false)
-
-      }, 2000);
-      setErro('');
-      setStompClient(client);
+      stompClientRef.current = client;
       client.subscribe('/topic/ocorrencias', (message) => {
         const dadosRecebidos = JSON.parse(message.body);
         console.log(dadosRecebidos);
@@ -126,7 +95,7 @@ function Ocorrencias() {
       });
       client.subscribe('/topic/eventos', (message) => {
         const dadosRecebidos = JSON.parse(message.body);
-        console.log(dadosRecebidos)
+        console.log(dadosRecebidos);
         const dadosEmCache = JSON.parse(localStorage.getItem('cachedData') || '[]');
         dadosEmCache.unshift(dadosRecebidos);
         const limiteLista = 20;
@@ -139,22 +108,30 @@ function Ocorrencias() {
     const connect = () => {
       client.connect({}, connectCallBack, (error) => {
         console.error('Erro ao conectar:', error);
-        setErro('Erro ao conectar ao servidor WebSocket. Por favor, tente novamente.');
-        setLoading(false);
+        // Adicionar atraso antes de exibir o modal de erro
+        setTimeout(() => {
+          // Verificar se a conexão foi estabelecida
+          if (!stompClientRef.current || !stompClientRef.current.connected) {
+            Swal.fire({
+              title: 'Erro!',
+              text: 'Erro ao conectar. Por favor, tente novamente.',
+              icon: 'error',
+              confirmButtonText: 'Ok'
+            });
+          }
+        }, 5000);
       });
     };
-
     const reconnect = () => {
       console.log("Reconectando...");
-      if (stompClient !== null) {
-        stompClient.disconnect();
+      if (stompClientRef.current !== null) {
+        stompClientRef.current.disconnect();
       }
       connect();
     };
 
     socket.onclose = () => {
       console.log('Conexão encerrada');
-      setMensagemUsuario('Conexão WebSocket encerrada. Tentando reconectar...');
       reconnect();
     };
 
@@ -162,9 +139,11 @@ function Ocorrencias() {
 
     return () => {
       socket.close();
+      if (stompClientRef.current !== null) {
+        stompClientRef.current.disconnect();
+      }
     };
   }, []);
-
 
   useEffect(() => {
     const cachedData = JSON.parse(localStorage.getItem('cachedData') || '[]');
@@ -173,20 +152,20 @@ function Ocorrencias() {
   }, []);
 
   const ScrollContainer = styled.div`
-      overflow: hidden;
-      max-width: 100%;
-    `;
+    overflow: hidden;
+    max-width: 100%;
+  `;
 
   const renderEventCard = (data, index) => {
     if (data.id) {
       return null;
     }
-    const gravidadeClassEvento = data.gravidade === '' ? 'evento-normal-gravidade' :
-      'evento-grave-gravidade';
+
+    const gravidadeClassEvento = data.gravidade === '' ? 'evento-normal-gravidade' : 'evento-grave-gravidade';
+
+
+
     return (
-
-
-
       <Fragment key={index} >
         <div className={`divInformacoesEventos p-3 mt-1 mb-2 ${gravidadeClassEvento}`} >
           <div className="container divInformacoesDeDentro" >
@@ -280,13 +259,7 @@ function Ocorrencias() {
 
   return (
     <>
-      <div className="divMensagem fixed-top">
-        {loading && <BarLoader color="#36D7B7" loading={loading} />}
 
-        {erro && <div className="alert alert-danger  ms-3 ">{erro}</div>}
-        {mensagemUsuario && <div className="alert alert-success mt-2">{mensagemUsuario}</div>}
-
-      </div>
       .
       <div className="utilitarios">
         <div className="filtro">

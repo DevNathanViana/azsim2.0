@@ -1,12 +1,10 @@
 import '../css/consultaCliente.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.min.js';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import axios from 'axios';
 import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import { Link, useNavigate } from 'react-router-dom';
-import { BarLoader } from 'react-spinners';
-
 function ConsultaCliente() {
 
   const [filtro, setFiltro] = useState('');
@@ -15,59 +13,25 @@ function ConsultaCliente() {
   const [modal, setModal] = useState(false);
   const [activeTab, setActiveTab] = useState('dados');
   const [dadosBasicos, setDadosBasicos] = useState({});
-  const [erro, setErro] = useState(null);
-  const [mensagemSucesso, setMensagemSucesso] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [exibiuMensagemSucesso, setExibiuMensagemSucesso] = useState(false);
 
 
-  const buscarClientes = async () => {
-    setLoading(true);
+  const buscarClientes = useCallback(async () => {
     try {
       let response;
-
       if (filtro) {
         response = await axios.get(`http://127.0.0.1:8080/api/cliente?nome=${filtro}`);
       } else {
         response = await axios.get('http://127.0.0.1:8080/api/cliente');
       }
-
       setClientes(response.data);
-      if (!exibiuMensagemSucesso) {
-        setMensagemSucesso('Conexão estabelecida com sucesso!');
-        setExibiuMensagemSucesso(true);
-      }
-      setErro(null);
     } catch (error) {
-      if (clientes.length === 0) {
-        if (error.response) {
-          setErro('Erro ao buscar clientes. Por favor, verifique sua conexão de rede e tente novamente. ');
-          setLoading(false);
-
-        } else if (error.request) {
-          setErro('Falha na conexão com o servidor. Por favor, verifique sua conexão de rede e tente novamente.');
-          setLoading(false);
-
-        } else {
-          setErro('Erro ao realizar a solicitação. Por favor, tente novamente mais tarde.');
-          setLoading(false);
-        }
-      }
+      console.log(error);
     }
-  };
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setMensagemSucesso(null)
-      setErro(null);
-    }, 10000);
-
-    return () => clearTimeout(timer);
-  }, [erro]);
+  }, [filtro]);
 
   useEffect(() => {
     buscarClientes();
-  }, [filtro]);
+  }, [buscarClientes]);
 
   const toggleTab = (tab) => {
     if (activeTab !== tab) {
@@ -133,10 +97,7 @@ function ConsultaCliente() {
   return (
     <>
 
-      <div className="divMensagem fixed-bottom ms-3">
-        {erro && <div className="alert alert-danger">{erro}</div>}
-        {mensagemSucesso && <div className="alert alert-success">{mensagemSucesso}</div>}
-      </div>
+
 
       <div className="filtros d-flex justify-content-between align-items-center">
         <div className="input-group w-100 mb-3">
@@ -210,8 +171,6 @@ function ConsultaCliente() {
       ) : (
         <div className="divTabela">
           <p>Filtre para ter resultados.</p>
-          {loading && <BarLoader color="#36D7B7" loading={loading} />}
-
         </div>
 
       )}
@@ -302,6 +261,10 @@ function ConsultaCliente() {
                     <div className="col">
                       <label htmlFor="Condor" className="form-label"><strong>Condor</strong></label>
                       <input name='Condor' type="text" id="Condor" disabled value={clienteSelecionado?.codCondor || ""} className="form-control" readOnly />
+                    </div>
+                    <div className="col">
+                      <label htmlFor="codificador" className="form-label"><strong>Codificador</strong></label>
+                      <input name='codificador' type="text" id="codificador" disabled value={clienteSelecionado?.codificador || ""} className="form-control" readOnly />
                     </div>
                   </div>
                   <div className="row mt-3">
