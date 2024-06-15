@@ -3,74 +3,67 @@ import '../css/ocorrencias.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.min.js';
 import PropTypes from 'prop-types';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import InputMask from 'react-input-mask';
 
 function ModalOcorrencia({ dataOcorrencia, selectedValue, handleSelectChange, setColocaOcorrenciasNaTela }) {
-    const { register, handleSubmit, formState: { errors }, reset, setValue } = useForm();
-    const [selectedCategory, setSelectedCategory] = useState('');
+    const { register, handleSubmit, formState: { errors }, reset } = useForm();
     const [modalOpen] = useState(false);
+    const [selectedCategory, setSelectedCategory] = useState(dataOcorrencia.tipoocorrencia || '');
+    const [selectedSubCategory, setSelectedSubCategory] = useState(dataOcorrencia.subtipoocorrencia || '');
+    const [operador, setOperador] = useState(dataOcorrencia.operador || '');
+    const [deslocamento, setDeslocamento] = useState(dataOcorrencia.deslocamento || 'nao');
+    const [numAgente, setNumAgente] = useState(dataOcorrencia.numAgente || '');
+    const [agente, setAgente] = useState(dataOcorrencia.agente || '');
+    const [horaSaida, setHoraSaida] = useState(dataOcorrencia.horaSaida || '');
+    const [horaChegada, setHoraChegada] = useState(dataOcorrencia.horaChegada || '');
+    const [tempDeslocamento, setTempDeslocamento] = useState(dataOcorrencia.tempDeslocamento || '');
+    const [horaAbateLacre, setHoraAbateLacre] = useState(dataOcorrencia.horaAbateLacre || '');
+    const [horaLacre, setHoraLacre] = useState(dataOcorrencia.horaLacre || '');
+    const [tempAtendimento, setTempAtendimento] = useState(dataOcorrencia.tempAtendimento || '');
+    const [horaSaidaLocal, setHoraSaidaLocal] = useState(dataOcorrencia.horaSaidaLocal || '');
+    const [horaChegadaEmpresa, setHoraChegadaEmpresa] = useState(dataOcorrencia.horaChegadaEmpresa || '');
+    const [tempRetorno, setTempRetorno] = useState(dataOcorrencia.tempRetorno || '');
+    const [kmSaida, setKmSaida] = useState(dataOcorrencia.kmSaida || '');
+    const [kmRetorno, setKmRetorno] = useState(dataOcorrencia.kmRetorno || '');
+    const [kmTotal, setKmTotal] = useState(dataOcorrencia.kmTotal || '');
+    const [resumo, setResumo] = useState(dataOcorrencia.resumo || '');
+    const [procedimentos, setProcedimentos] = useState(dataOcorrencia.procedimentos || '');
+    const [ocorrenciaPolicial, setOcorrenciaPolicial] = useState(dataOcorrencia.ocorrenciaPolicial || '');
 
-    useEffect(() => {
-        if (dataOcorrencia) {
-            setValue('tipoocorrencia', dataOcorrencia.tipoocorrencia || '');
-            setValue('subtipoocorrencia', dataOcorrencia.subtipoocorrencia || '');
-            setValue('operador', dataOcorrencia.operador || '');
-            setValue('deslocamento', dataOcorrencia.deslocamento || 'nao');
-            setValue('idagente', dataOcorrencia.idagente || '');
-            setValue('agente', dataOcorrencia.agente || '');
-            setValue('horaSaida', dataOcorrencia.horaSaida || '');
-            setValue('horaChegada', dataOcorrencia.horaChegada || '');
-            setValue('tempDeslocamento', dataOcorrencia.tempDeslocamento || '');
-            setValue('horaSaidaLocal', dataOcorrencia.horaSaidaLocal || '');
-            setValue('horaChegadaEmpresa', dataOcorrencia.horaChegadaEmpresa || '');
-            setValue('tempRetorno', dataOcorrencia.tempRetorno || '');
-            setValue('horaAbateLacre', dataOcorrencia.horaAbateLacre || '');
-            setValue('horaLacre', dataOcorrencia.horaLacre || '');
-            setValue('tempAtendimento', dataOcorrencia.tempAtendimento || '');
-            setValue('kmSaida', dataOcorrencia.kmSaida || '');
-            setValue('kmRetorno', dataOcorrencia.kmRetorno || '');
-            setValue('kmTotal', dataOcorrencia.kmTotal || '');
-            setValue('resumo', dataOcorrencia.resumo || '');
-            setValue('procedimentos', dataOcorrencia.procedimentos || '');
-            setValue('ocorrenciapolicial', dataOcorrencia.ocorrenciapolicial || '');
-        }
-    }, [dataOcorrencia, setValue]);
+
+
+
 
     const onSubmit = async (formData) => {
         try {
+            // Adicionando o ID ao formData
             formData.id = dataOcorrencia.id;
-            formData.evento = dataOcorrencia.evento;
-            formData.cliente = dataOcorrencia.cliente;
 
-            if (formData.tipoocorrencia && formData.subtipoocorrencia && formData.resumo) {
+            if (formData.tipoocorrencia && formData.subtipoocorrencia && formData.operador && formData.resumo) {
                 const response = await axios.post(`http://localhost:8080/api/ocorrencia`, formData);
-
                 setColocaOcorrenciasNaTela((ocorrenciasAntigas) => {
-                    const novasOcorrencias = ocorrenciasAntigas.filter((ocorrencia) => ocorrencia.id !== formData.id);
+                    const novasOcorrencias = ocorrenciasAntigas.filter((ocorrencia) => ocorrencia.id !== dataOcorrencia.id);
                     return novasOcorrencias;
                 });
                 console.log('Resposta do servidor:', response.data);
                 console.log('Dados enviados:', formData);
+                reset();
             } else {
                 const responseSemTirarCard = await axios.post(`http://localhost:8080/api/ocorrencia`, formData);
-
-                setColocaOcorrenciasNaTela((ocorrenciasAntigas) => {
-                    const novasOcorrencias = ocorrenciasAntigas
-                        .map((ocorrencia) =>
-                            ocorrencia.id === dataOcorrencia.id ? responseSemTirarCard.data : ocorrencia
-                        );
-                    return novasOcorrencias;
-                });
-
                 console.log('Resposta do servidor:', responseSemTirarCard.data);
                 console.log('Dados enviados:', formData);
+                reset();
             }
-            reset();
         } catch (error) {
             console.error('Erro ao enviar a ocorrência:', error);
         }
+    };
+
+
+    const handleSubCategoryChange = (e) => {
+        setSelectedSubCategory(e.target.value);
     };
 
     const handleCategoryChange2 = (e) => {
@@ -182,9 +175,10 @@ function ModalOcorrencia({ dataOcorrencia, selectedValue, handleSelectChange, se
                                     <div className="col">
                                         <label htmlFor="tipoocorrencia" className="form-label">Categoria</label>
                                         <select
-                                            {...register("tipoocorrencia", { required: false })}
+                                            {...register("tipoocorrencia", { required: true })}
                                             id={`tipoocorrencia${dataOcorrencia.id}`}
                                             className="form-select"
+                                            value={selectedCategory}
                                             onChange={handleCategoryChange2}
                                         >
                                             <option value="">Selecione uma Categoria</option>
@@ -194,34 +188,53 @@ function ModalOcorrencia({ dataOcorrencia, selectedValue, handleSelectChange, se
                                             <option value="5">SUPORTE</option>
                                             <option value="7">RONDA</option>
                                         </select>
-                                        {errors.categoria && <span className='fieldRequired'>Campo obrigatório</span>}
+
+                                        {errors.tipoocorrencia && <span className='fieldRequired'>Campo obrigatório</span>}
                                     </div>
                                     <div className="col">
                                         <label htmlFor="subtipoocorrencia" className="form-label">Sub-Categoria</label>
                                         <select
-                                            {...register("subtipoocorrencia", { required: false })}
+                                            {...register("subtipoocorrencia", { required: true })}
                                             id={`subtipoocorrencia${dataOcorrencia.id}`}
                                             className="form-select"
+                                            value={selectedSubCategory} // Adicionado
+                                            onChange={handleSubCategoryChange}
                                         >
                                             <option value="">Selecione uma Sub-Categoria</option>
                                             {filteredSubCategories.map(sub => (
                                                 <option key={sub.value} value={sub.value}>{sub.label}</option>
                                             ))}
                                         </select>
-                                        {errors.subCategoria && <span className='fieldRequired'>Campo obrigatório</span>}
+                                        {errors.subtipoocorrencia && <span className='fieldRequired'>Campo obrigatório</span>}
                                     </div>
 
                                     <div className="col">
                                         <label htmlFor="operador" className="form-label">Operador</label>
-                                        <input {...register("operador", { required: false })} type="text" className="form-control" id={`operador${dataOcorrencia.id}`} aria-label=".form-select example" />
-                                        {errors.operador && <span className='fieldRequired'>Campo obrigatório</span>}
+                                        <input
+                                            {...register("operador", { required: false })}
+                                            type="text"
+                                            className="form-control"
+                                            id={`operador${dataOcorrencia.id}`}
+                                            aria-label=".form-select example"
+                                            value={operador} // Adicionado
+                                            onChange={(e) => setOperador(e.target.value)} // Adicionado
+                                        />                                        {errors.operador && <span className='fieldRequired'>Campo obrigatório</span>}
                                     </div>
                                 </div>
                                 <div className="row ms-1 me-2 mt-2">
                                     <div className="col-12">
                                         <label htmlFor="deslocamento" className="form-label">Foi necessário deslocamento?</label>
-                                        <select {...register("deslocamento", { required: true })} value={selectedValue} onChange={handleSelectChange} id={`deslocamento${dataOcorrencia.id}`} className="form-select" aria-label=".form-select example">
-                                            <option defaultValue="nao">Não</option>
+                                        <select
+                                            {...register("deslocamento", { required: true })}
+                                            value={deslocamento} // Adicionado
+                                            onChange={(e) => {
+                                                setDeslocamento(e.target.value);
+                                                handleSelectChange(e);
+                                            }} id={`deslocamento${dataOcorrencia.id}`}
+                                            className="form-select"
+                                            aria-label=".form-select example"
+                                        >
+                                            <option value="nao">Não</option>
                                             <option value="sim">Sim</option>
                                         </select>
                                     </div>
@@ -230,83 +243,88 @@ function ModalOcorrencia({ dataOcorrencia, selectedValue, handleSelectChange, se
                                     <div>
                                         <div className="row ms-2 me-2 mt-1">
                                             <div className="col-6">
-                                                <label htmlFor="idagente" className="form-label">Número Agente</label>
-                                                <InputMask mask="99:99"  {...register("idagente", { required: false })} disabled={selectedValue === 'nao'} type="text" className="form-control" id={`numAgente${dataOcorrencia.id}`} placeholder="" />
-                                                {errors.idagente && <span className='fieldRequired'>Campo obrigatório</span>}
+                                                <label htmlFor="numAgente" className="form-label">Número Agente</label>
+                                                <InputMask
+                                                    {...register("numAgente", { required: selectedValue === "sim" })}
+                                                    value={numAgente}
+                                                    onChange={(e) => setNumAgente(e.target.value)}
+                                                    type="text" className="form-control" id={`numAgente${dataOcorrencia.id}`}
+                                                    placeholder="" />
+                                                {errors.numAgente && <span className='fieldRequired'>Campo obrigatório</span>}
                                             </div>
                                             <div className="col-6">
                                                 <label htmlFor="agente" className="form-label">Agente</label>
-                                                <InputMask mask="99:99"  {...register("agente", { required: false })} disabled={selectedValue === 'nao'} id={`agente${dataOcorrencia.id}`} type="text" className="form-control" aria-label=".form-select example" />
+                                                <input {...register("agente", { required: selectedValue === "sim" })} value={agente} onChange={(e) => setAgente(e.target.value)} id={`agente${dataOcorrencia.id}`} type="text" className="form-control" aria-label=".form-select example" />
                                                 {errors.agente && <span className='fieldRequired'>Campo obrigatório</span>}
                                             </div>
                                         </div>
                                         <div>
                                             <div className="row ms-2 me-2 mt-2">
                                                 <div className="col">
-                                                    <label htmlFor="horasaidaemp" className="form-label">H. Saída Empr.</label>
-                                                    <InputMask mask="99:99"  {...register("horasaidaemp", { required: false })} disabled={selectedValue === 'nao'} type="text" className="form-control" id={`horaSaida${dataOcorrencia.id}`} placeholder="00:00" />
-                                                    {errors.horasaidaemp && <span className='fieldRequired'>Campo obrigatório</span>}
+                                                    <label htmlFor="horaSaida" className="form-label">H. Saída Empr.</label>
+                                                    <InputMask mask="99:99"  {...register("horaSaida", { required: selectedValue === "sim" })} value={horaSaida} onChange={(e) => setHoraSaida(e.target.value)} type="text" className="form-control" id={`horaSaida${dataOcorrencia.id}`} placeholder="00:00" />
+                                                    {errors.horaSaida && <span className='fieldRequired'>Campo obrigatório</span>}
                                                 </div>
                                                 <div className="col">
-                                                    <label htmlFor="horachegadacliente" className="form-label">H. Cheg. Local</label>
-                                                    <InputMask mask="99:99"  {...register("horachegadacliente", { required: false })} disabled={selectedValue === 'nao'} type="text" className="form-control" id={`horaChegada${dataOcorrencia.id}`} placeholder="00:00" />
-                                                    {errors.horachegadacliente && <span className='fieldRequired'>Campo obrigatório</span>}
+                                                    <label htmlFor="horaChegada" className="form-label">H. Cheg. Local</label>
+                                                    <InputMask mask="99:99"  {...register("horaChegada", { required: selectedValue === "sim" })} value={horaChegada} onChange={(e) => setHoraChegada(e.target.value)} type="text" className="form-control" id={`horaChegada${dataOcorrencia.id}`} placeholder="00:00" />
+                                                    {errors.horaChegada && <span className='fieldRequired'>Campo obrigatório</span>}
                                                 </div>
                                                 <div className="col">
-                                                    <label htmlFor="tempodeslocamento" className="form-label">Tempo de Desloc.</label>
-                                                    <InputMask mask="99:99"  {...register("tempodeslocamento", { required: false })} disabled={selectedValue === 'nao'} type="text" className="form-control" id={`tempDeslocamento${dataOcorrencia.id}`} placeholder="00:00" />
-                                                    {errors.tempodeslocamento && <span className='fieldRequired'>Campo obrigatório</span>}
+                                                    <label htmlFor="tempDeslocamento" className="form-label">Tempo de Desloc.</label>
+                                                    <InputMask mask="99:99" {...register("tempDeslocamento", { required: selectedValue === "sim" })} value={tempDeslocamento} onChange={(e) => setTempDeslocamento(e.target.value)} type="text" className="form-control" id={`tempDeslocamento${dataOcorrencia.id}`} placeholder="00:00" />
+                                                    {errors.tempDeslocamento && <span className='fieldRequired'>Campo obrigatório</span>}
                                                 </div>
                                             </div>
                                             <div className="row ms-2 me-2 mt-2">
                                                 <div className="col">
-                                                    <label htmlFor="horasaidacliente" className="form-label">H. Saída Local</label>
-                                                    <InputMask mask="99:99"  {...register("horasaidacliente", { required: false })} disabled={selectedValue === 'nao'} type="text" className="form-control" id={`horaSaidaLocal${dataOcorrencia.id}`} placeholder="00:00" />
-                                                    {errors.horasaidacliente && <span className='fieldRequired'>Campo obrigatório</span>}
+                                                    <label htmlFor="horaSaidaLocal" className="form-label">H. Saída Local</label>
+                                                    <InputMask mask="99:99" {...register("horaSaidaLocal", { required: selectedValue === "sim" })} value={horaSaidaLocal} onChange={(e) => setHoraSaidaLocal(e.target.value)} type="text" className="form-control" id={`horaSaidaLocal${dataOcorrencia.id}`} placeholder="00:00" />
+                                                    {errors.horaSaidaLocal && <span className='fieldRequired'>Campo obrigatório</span>}
                                                 </div>
                                                 <div className="col">
-                                                    <label htmlFor="horachegadaemp" className="form-label">H. Cheg. Empr.</label>
-                                                    <InputMask mask="99:99"  {...register("horachegadaemp", { required: false })} disabled={selectedValue === 'nao'} type="text" className="form-control" id={`horaChegadaEmpresa${dataOcorrencia.id}`} placeholder="00:00" />
-                                                    {errors.horachegadaemp && <span className='fieldRequired'>Campo obrigatório</span>}
+                                                    <label htmlFor="horaChegadaEmpresa" className="form-label">H. Cheg. Empr.</label>
+                                                    <InputMask mask="99:99"  {...register("horaChegadaEmpresa", { required: selectedValue === "sim" })} value={horaChegadaEmpresa} onChange={(e) => setHoraChegadaEmpresa(e.target.value)} type="text" className="form-control" id={`horaChegadaEmpresa${dataOcorrencia.id}`} placeholder="00:00" />
+                                                    {errors.horaChegadaEmpresa && <span className='fieldRequired'>Campo obrigatório</span>}
                                                 </div>
                                                 <div className="col">
-                                                    <label htmlFor="temporetorno" className="form-label">Tempo de Retorno</label>
-                                                    <InputMask mask="99:99"  {...register("temporetorno", { required: false })} disabled={selectedValue === 'nao'} type="text" className="form-control" id={`tempRetorno${dataOcorrencia.id}`} placeholder="00:00" />
-                                                    {errors.temporetorno && <span className='fieldRequired'>Campo obrigatório</span>}
+                                                    <label htmlFor="tempRetorno" className="form-label">Tempo de Retorno</label>
+                                                    <InputMask mask="99:99"  {...register("tempRetorno", { required: selectedValue === "sim" })} value={tempRetorno} onChange={(e) => setTempRetorno(e.target.value)} type="text" className="form-control" id={`tempRetorno${dataOcorrencia.id}`} placeholder="00:00" />
+                                                    {errors.tempRetorno && <span className='fieldRequired'>Campo obrigatório</span>}
                                                 </div>
                                             </div>
                                             <div className="row ms-2 me-2 mt-2">
                                                 <div className="col">
                                                     <label htmlFor="horaAbateLacre" className="form-label">H. Abate Lacre</label>
-                                                    <InputMask mask="99:99"  {...register("horaAbateLacre", { required: false })} disabled={selectedValue === 'nao'} type="text" className="form-control" id={`horaAbateLacre${dataOcorrencia.id}`} placeholder="00:00" />
+                                                    <InputMask mask="99:99"  {...register("horaAbateLacre", { required: selectedValue === "sim" })} value={horaAbateLacre} onChange={(e) => setHoraAbateLacre(e.target.value)} type="text" className="form-control" id={`horaAbateLacre${dataOcorrencia.id}`} placeholder="00:00" />
                                                     {errors.horaAbateLacre && <span className='fieldRequired'>Campo obrigatório</span>}
                                                 </div>
                                                 <div className="col">
-                                                    <label htmlFor="lacre" className="form-label">H. Lacre</label>
-                                                    <InputMask mask="99:99"  {...register("lacre", { required: false })} disabled={selectedValue === 'nao'} type="text" className="form-control" id={`horaLacre${dataOcorrencia.id}`} placeholder="00:00" />
-                                                    {errors.lacre && <span className='fieldRequired'>Campo obrigatório</span>}
+                                                    <label htmlFor="horaLacre" className="form-label">H. Lacre</label>
+                                                    <InputMask mask="99:99" {...register("horaLacre", { required: selectedValue === "sim" })} value={horaLacre} onChange={(e) => setHoraLacre(e.target.value)} type="text" className="form-control" id={`horaLacre${dataOcorrencia.id}`} placeholder="00:00" />
+                                                    {errors.horaLacre && <span className='fieldRequired'>Campo obrigatório</span>}
                                                 </div>
                                                 <div className="col">
-                                                    <label htmlFor="tempoatendimento" className="form-label">Tempo de Atendimento</label>
-                                                    <InputMask mask="99:99"  {...register("tempoatendimento", { required: false })} disabled={selectedValue === 'nao'} type="text" className="form-control" id={`tempAtendimento${dataOcorrencia.id}`} placeholder="00:00" />
-                                                    {errors.tempoatendimento && <span className='fieldRequired'>Campo obrigatório</span>}
+                                                    <label htmlFor="tempAtendimento" className="form-label">Tempo de Atendimento</label>
+                                                    <InputMask mask="99:99" {...register("tempAtendimento", { required: selectedValue === "sim" })} value={tempAtendimento} onChange={(e) => setTempAtendimento(e.target.value)} type="text" className="form-control" id={`tempAtendimento${dataOcorrencia.id}`} placeholder="00:00" />
+                                                    {errors.tempAtendimento && <span className='fieldRequired'>Campo obrigatório</span>}
                                                 </div>
                                             </div>
                                             <div className="row ms-2 me-2 mt-2">
                                                 <div className="col">
-                                                    <label htmlFor="kmsaida" className="form-label">Km de Saída</label>
-                                                    <InputMask {...register("kmsaida", { required: false })} disabled={selectedValue === 'nao'} type="text" className="form-control" id={`kmSaida${dataOcorrencia.id}`} placeholder="0km" />
-                                                    {errors.kmsaida && <span className='fieldRequired'>Campo obrigatório</span>}
+                                                    <label htmlFor="kmSaida" className="form-label">Km de Saída</label>
+                                                    <InputMask  {...register("kmSaida", { required: selectedValue === "sim" })} value={kmSaida} onChange={(e) => setKmSaida(e.target.value)} type="text" className="form-control" id={`kmSaida${dataOcorrencia.id}`} placeholder="0km" />
+                                                    {errors.kmSaida && <span className='fieldRequired'>Campo obrigatório</span>}
                                                 </div>
                                                 <div className="col">
-                                                    <label htmlFor="kmretorno" className="form-label">Km de Retorno</label>
-                                                    <InputMask {...register("kmretorno", { required: false })} disabled={selectedValue === 'nao'} type="text" className="form-control" id={`kmRetorno${dataOcorrencia.id}`} placeholder="0km" />
-                                                    {errors.kmretorno && <span className='fieldRequired'>Campo obrigatório</span>}
+                                                    <label htmlFor="kmRetorno" className="form-label">Km de Retorno</label>
+                                                    <InputMask  {...register("kmRetorno", { required: selectedValue === "sim" })} value={kmRetorno} onChange={(e) => setKmRetorno(e.target.value)} type="text" className="form-control" id={`kmRetorno${dataOcorrencia.id}`} placeholder="0km" />
+                                                    {errors.kmRetorno && <span className='fieldRequired'>Campo obrigatório</span>}
                                                 </div>
                                                 <div className="col">
-                                                    <label htmlFor="kmtotalpercorrido" className="form-label">Km Total Percorrido</label>
-                                                    <InputMask  {...register("kmtotalpercorrido", { required: false })} disabled={selectedValue === 'nao'} type="text" className="form-control" id={`kmTotal${dataOcorrencia.id}`} placeholder="0km" />
-                                                    {errors.kmtotalpercorrido && <span className='fieldRequired'>Campo obrigatório</span>}
+                                                    <label htmlFor="kmTotal" className="form-label">Km Total Percorrido</label>
+                                                    <InputMask  {...register("kmTotal", { required: selectedValue === "sim" })} value={kmTotal} onChange={(e) => setKmTotal(e.target.value)} type="text" className="form-control" id={`kmTotal${dataOcorrencia.id}`} placeholder="0km" />
+                                                    {errors.kmTotal && <span className='fieldRequired'>Campo obrigatório</span>}
                                                 </div>
                                             </div>
                                         </div>
@@ -315,22 +333,22 @@ function ModalOcorrencia({ dataOcorrencia, selectedValue, handleSelectChange, se
                                 <div className="row ms-2 me-2 mt-2 mb-3">
                                     <div className="col-sm">
                                         <label htmlFor="resumo" className="form-label">Resumo*</label>
-                                        <textarea {...register("resumo", { required: false })} className="form-control" id={`resumo${dataOcorrencia.id}`} rows="3"></textarea>
+                                        <textarea  {...register("resumo", { required: true })} value={resumo} onChange={(e) => setResumo(e.target.value)} className="form-control" id={`resumo${dataOcorrencia.id}`} rows="3"></textarea>
                                         {errors.resumo && <span className='fieldRequired'>Campo obrigatório</span>}
                                     </div>
                                 </div>
                                 <div className="row ms-2 me-2 mt-2 mb-3">
                                     <div className="col-sm">
                                         <label htmlFor="procedimentos" className="form-label">Procedimentos</label>
-                                        <textarea {...register("procedimentos")} className="form-control" id="procedimentos" rows="3"></textarea>
+                                        <textarea {...register("procedimentos")} value={procedimentos} onChange={(e) => setProcedimentos(e.target.value)} className="form-control" id="procedimentos" rows="3"></textarea>
                                         {errors.procedimentos && <span className='fieldRequired'>Campo obrigatório</span>}
                                     </div>
                                 </div>
                                 <div className="row ms-2 me-2 mt-2 mb-3">
                                     <div className="col-sm">
-                                        <label htmlFor="ocorrenciapolicial" className="form-label">Ocorrência Policial</label>
-                                        <textarea {...register("ocorrenciapolicial")} className="form-control" id="ocorrenciaPolicial" rows="3" ></textarea>
-                                        {errors.ocorrenciapolicial && <span className='fieldRequired'>Campo obrigatório</span>}
+                                        <label htmlFor="ocorrenciaPolicial" className="form-label">Ocorrência Policial</label>
+                                        <textarea {...register("ocorrenciaPolicial")} value={ocorrenciaPolicial} onChange={(e) => setOcorrenciaPolicial(e.target.value)} className="form-control" id="ocorrenciaPolicial" rows="3"></textarea>
+                                        {errors.ocorrenciaPolicial && <span className='fieldRequired'>Campo obrigatório</span>}
                                     </div>
                                 </div>
                             </form>
@@ -449,30 +467,15 @@ function ModalOcorrencia({ dataOcorrencia, selectedValue, handleSelectChange, se
                                 <div className="tab-pane fade" id={`viagens-${dataOcorrencia.id}`} role="tabpanel" aria-labelledby={`viagens-tab-${dataOcorrencia.id}`}>
                                     {dataOcorrencia && dataOcorrencia.cliente && dataOcorrencia.cliente.viagens && dataOcorrencia.cliente.viagens.lenght > 0
                                         ? (dataOcorrencia.cliente.viagens.map((viagens, index) => (
-                                            <div key={index}>
-                                                <div className="infoViagem card">
-                                                    <div className="card-header">
-                                                        <div className="row">
-                                                            <div className="col d-flex">
-                                                                <div className="mt-1 txt-TabDataIda"><strong>DATA SAÍDA: </strong>
-                                                                    <strong className='me-2'>{viagens.dataSaida}</strong> ||
-                                                                </div>
-                                                                <div className="ms-2 mt-1 txt-TabDataVolta"><strong>DATA VOLTA: </strong>
-                                                                    <strong>{viagens.dataVolta}</strong>
-                                                                </div>
-                                                            </div>
+                                            <div className="cardViagens p-3 mt-2 mb-2" key={index}>
+                                                <div className="container">
+                                                    <div className="row">
+                                                        <div className="col">
+                                                            <div className="mb-1"><strong>DATA DA SAÍDA: </strong> {viagens.dataSaida}</div>
+                                                            <div className="mb-1"><strong>VEÍCULO: </strong>{viagens.veiculo}</div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                                <div className="divInformacoesViagens p-3 mb-2">
-                                                    <div className="container">
-                                                        <div className="row">
-                                                            <div className="col">
-                                                                <div className="mb-3"><strong>PROCEDIMENTOS: </strong> {viagens.procedimento}</div>
-                                                                <div className="mb-1"><strong>OBSERVAÇÕES: </strong>{viagens.observacao}</div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                                    <div className="mb-1"><strong>DESTINO: </strong> {viagens.destino}</div>
                                                 </div>
                                             </div>
                                         ))

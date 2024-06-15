@@ -7,7 +7,7 @@ import { useCallback, useEffect, useState } from 'react';
 import axios from 'axios';
 import InputMask from 'react-input-mask';
 import ErrorCard from '../fragments/ErrorCard';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import Duplicadores from '../fragments/duplicadores';
 
@@ -16,6 +16,7 @@ function Formulario() {
     const [natureza, setNatureza] = useState("FISICA");
     const [idCliente, setIdCliente] = useState();
     const { id: idNaURL } = useParams();
+    const navigate = useNavigate();
 
     const [dadosBasicos, setDadosBasicos] = useState({
         unidade: 'Montenegro',
@@ -156,8 +157,9 @@ function Formulario() {
 
                 if (result.isConfirmed) {
                     window.location.reload();
+                    window.scrollTo(0, 0);
+                    setDadosBasicos(dadosBasicos);
                 } else {
-                    // Manter os dados do cliente cadastrado nos campos
                     console.log("Dados do cliente mantidos nos campos.")
                 }
             }
@@ -170,6 +172,13 @@ function Formulario() {
                 confirmButtonText: 'Ok',
             });
         }
+    };
+
+    const handleNovoCliente = () => {
+        setDadosBasicos(dadosBasicos); // Certifique-se de que `setDadosBasicos` está definido corretamente
+        navigate('/cadastroCliente', { replace: true });
+        window.scrollTo(0, 0);
+        window.location.reload();
     };
 
     const { duplicateContato, duplicateSetor, duplicateViagem } = Duplicadores(dadosBasicos, setDadosBasicos);
@@ -672,9 +681,7 @@ function Formulario() {
                 <div className="col">
                     <div className="col text-center mt-3 mb-3">
                         <Button id="btnCadastro" onClick={() => handleSubmit(onSubmit)()} type="submit" className="btn btn-primary">Salvar</Button>
-                        <Button id="bntNovoCliente" onClick={() => {
-                            window.location.reload(); window.scrollTo(0, 0);
-                        }} type="button" className="btn ms-3 btn-success"><i className="bi bi-person-fill-add" /> Adicionar Novo Cliente</Button>
+                        <Link id="bntNovoCliente" to="/cadastroCliente"   onClick={handleNovoCliente} type="button" className="btn ms-3 btn-success"><i className="bi bi-person-fill-add" /> Adicionar Novo Cliente</Link>
                         <Link className="ms-3 t-center btn btn-danger"
                             to="/consultaCliente">
                             Cancelar
@@ -687,5 +694,4 @@ function Formulario() {
 
 
 }
-
 export default Formulario;

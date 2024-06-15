@@ -12,15 +12,17 @@ import Stomp from 'stompjs';
 import Swal from 'sweetalert2';
 
 function Ocorrencias() {
+
   const [colocaEventosNaTela, setColocaEventosNaTela] = useState([]);
   const [colocaOcorrenciasNaTela, setColocaOcorrenciasNaTela] = useState([]);
-  const [ocorrenciaModal, setOCorrenciaModal] = useState();
-  const { register, handleSubmit, reset } = useForm();
+  const [ocorrenciaModal, setOCorrenciaModal] = useState(null);
+  const { register, handleSubmit } = useForm();
   const [selectedValue, setSelectedValue] = useState("nao");
   const [filtroNomeEventos, setFiltroNomeEventos] = useState('');
   const [erro, setErro] = useState(null);
   const stompClientRef = useRef(null);
   const [mensagemUsuario, setMensagemUsuario] = useState('');
+
   const handleFiltroNomeChangeEvento = (event) => {
     setFiltroNomeEventos(event.target.value);
   };
@@ -29,34 +31,19 @@ function Ocorrencias() {
     setSelectedValue(event.target.value);
   };
 
-  const onSubmit = async (formData, dataId) => {
-    try {
-      const response = await axios.post(`http://localhost:8080/api/ocorrencia`, formData);
-      setColocaOcorrenciasNaTela((ocorrenciasAntigas) => {
-        const novasOcorrencias = ocorrenciasAntigas.filter((ocorrencia) => ocorrencia.id !== dataId);
-        return novasOcorrencias;
-      });
-      console.log('Resposta do servidor:', response.data);
-      console.log('Dados enviados:', formData);
-    } catch (error) {
-      console.error('Erro ao enviar a ocorrência:', error);
-    }
-    reset();
-  };
-
-  const filtrarDados = async () => {
-    try {
-      const respostaEventosFiltrados = await axios.get(`http://seu-endpoint-api/eventos?nome=${filtroNomeEventos}`);
-      setColocaEventosNaTela(respostaEventosFiltrados.data);
-      setErro(null);
-    } catch (error) {
-      console.error('Erro ao filtrar dados:', error);
-      setErro('Erro ao filtrar dados. Por favor, tente novamente.');
-      setTimeout(() => {
-        setErro(null);
-      }, 3000);
-    }
-  };
+  // const filtrarDados = async () => {
+  //   try {
+  //     const respostaEventosFiltrados = await axios.get(`http://seu-endpoint-api/eventos?nome=${filtroNomeEventos}`);
+  //     setColocaEventosNaTela(respostaEventosFiltrados.data);
+  //     setErro(null);
+  //   } catch (error) {
+  //     console.error('Erro ao filtrar dados:', error);
+  //     setErro('Erro ao filtrar dados. Por favor, tente novamente.');
+  //     setTimeout(() => {
+  //       setErro(null);
+  //     }, 3000);
+  //   }
+  // };
 
   useEffect(() => {
     if (erro) {
@@ -79,7 +66,7 @@ function Ocorrencias() {
   useEffect(() => {
     const socket = new SockJS('http://127.0.0.1:8080/api/monitor-websocket');
     const client = Stomp.over(socket);
-
+    limparCache()
     const connectCallBack = () => {
       console.log('Conexão WebSocket estabelecida com sucesso!');
       stompClientRef.current = client;
@@ -156,14 +143,19 @@ function Ocorrencias() {
     max-width: 100%;
   `;
 
+  const limparCache = () => {
+    localStorage.removeItem('cachedData');
+    setColocaOcorrenciasNaTela([]);
+    setColocaEventosNaTela([]);
+    setMensagemUsuario('Cache limpo com sucesso!');
+  };
+
   const renderEventCard = (data, index) => {
     if (data.id) {
       return null;
     }
 
     const gravidadeClassEvento = data.gravidade === '' ? 'evento-normal-gravidade' : 'evento-grave-gravidade';
-
-
 
     return (
       <Fragment key={index} >
@@ -194,18 +186,13 @@ function Ocorrencias() {
           </div>
         </div>
       </Fragment>
-
-
-
     )
   }
 
   const renderOcorrenciaCard = (dataOcorrencia, index) => {
-
     if (!dataOcorrencia.id) {
       return null;
     }
-
 
     const gravidadeClass = dataOcorrencia.gravidade === 'normal' ? 'normal-gravidade' :
       dataOcorrencia.gravidade === 'moderada' ? 'moderada-gravidade' :
@@ -223,47 +210,43 @@ function Ocorrencias() {
     };
 
     return (
-
       <Fragment key={index} >
-        <div className={`infoOcorrencia card mb-3 ${gravidadeClass}`}  >
-          <div id='cardOcorrencia' onClick={() => { PegaDadosComplementares(dataOcorrencia.id) }}
+        <div onClick={() => { PegaDadosComplementares(dataOcorrencia.id) }} className={`infoOcorrencia card mb-3  ${gravidadeClass}`}  >
+          <div id='cardOcorrencia'
             className={`card-important card-header ${gravidadeClass}`} data-bs-toggle="modal" data-bs-target={`#modal-${dataOcorrencia.id}`}>
             <div className="row mb-4">
               <div className="col dataCard mt-1 text-start">
                 <strong>
                   {dataOcorrencia && dataOcorrencia.evento
                     ? new Date(dataOcorrencia.evento.dataevento).toLocaleDateString('pt-BR')
-                    : 'Não disponível'}
+                    : ''}
                 </strong>
               </div>
-              <div className=" col HoraCard mt-1 me-4 text-end">
+              <div className="col HoraCard mt-1 me-4 text-end">
                 <strong>
                   {dataOcorrencia && dataOcorrencia.evento
                     ? new Date(dataOcorrencia.evento.dataevento).toLocaleTimeString('pt-BR')
-                    : 'Não disponível'}
+                    : ''}
                 </strong>
               </div>
             </div>
             <div className="row">
-              <div className="descricaoOcorrencia mt-1 text-center"><strong>{dataOcorrencia && dataOcorrencia.evento ? dataOcorrencia.evento.destatus : "Nao disponivel"}</strong></div>
+              <div className="descricaoOcorrencia mt-1 text-center"><strong>{dataOcorrencia && dataOcorrencia.evento ? dataOcorrencia.evento.destatus : ""}</strong></div>
             </div>
-            <ScrollContainer><div className="nomeNoCard mt-2 mb-1 text-center scroll-on-hover"><strong className='ellipsis'> {dataOcorrencia && dataOcorrencia.evento ? dataOcorrencia.evento.nmcliente : "Não disponível"}</strong></div></ScrollContainer>
-            <ScrollContainer><div className="nomeNoCard mb-1 text-center scroll-on-hover"><strong className='ellipsis'> {dataOcorrencia && dataOcorrencia.evento ? dataOcorrencia.evento.endereco : "Não disponível"}</strong></div></ScrollContainer>
+            <ScrollContainer><div className="nomeNoCard mt-2 mb-1 text-center scroll-on-hover"><strong className='ellipsis'> {dataOcorrencia && dataOcorrencia.evento ? dataOcorrencia.evento.nmcliente : ""}</strong></div></ScrollContainer>
+            <ScrollContainer><div className="nomeNoCard mb-1 text-center scroll-on-hover"><strong className='ellipsis'> {dataOcorrencia && dataOcorrencia.evento ? dataOcorrencia.evento.endereco : ""}</strong></div></ScrollContainer>
           </div>
         </div>
-
       </Fragment>
-
     )
   }
+
 
   return (
     <>
 
-      .
       <div className="utilitarios">
         <div className="filtro">
-
           <div className='d-flex'>
             <input
               className='form-control'
@@ -274,19 +257,12 @@ function Ocorrencias() {
               value={filtroNomeEventos}
               onChange={handleFiltroNomeChangeEvento}
             />
-            <button className='btn btn-secondary ms-2' onClick={filtrarDados}>Filtrar</button>
-
+            <button className='btn btn-secondary ms-2'>Filtrar</button>
           </div>
-
         </div>
-
-
       </div>
 
-
-
       <div className='divEventos'>
-
         <div className="cabecalho">
           <div className="cabecalho2">
             <div className="row mb-1">
@@ -308,7 +284,6 @@ function Ocorrencias() {
               <div className="col text-end">
                 <strong>Cidade</strong>
               </div>
-
             </div>
           </div>
         </div>
@@ -323,15 +298,15 @@ function Ocorrencias() {
         dataOcorrencia={ocorrenciaModal || {}}
         handleSelectChange={handleSelectChange}
         handleSubmit={handleSubmit}
-        onSubmit={onSubmit}
         register={register}
+        setOCorrenciaModal={setOCorrenciaModal}
         selectedValue={selectedValue}
+        setColocaOcorrenciasNaTela={setColocaOcorrenciasNaTela}
       />
 
     </>
 
   )
-
 }
 
 export default Ocorrencias
