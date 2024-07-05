@@ -1,15 +1,18 @@
-import "../fragments/init"
+import "../fragments/Geral/init"
 import '../css/ocorrencias.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.min.js';
 import { Fragment, useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import ModalOcorrencia from '../fragments/ocorrenciaModal';
 import styled from 'styled-components';
 import axios from 'axios';
 import SockJS from 'sockjs-client';
 import Stomp from 'stompjs';
 import Swal from 'sweetalert2';
+import ModalOcorrencia from "../fragments/Ocorrencias/ModalOcorrencia";
+import CardEventos from "../fragments/Ocorrencias/cardEventos";
+import Utilitarios from "../fragments/Ocorrencias/utilitarios";
+import CardOcorrencia from "../fragments/Ocorrencias/cardOcorrencia";
 
 function Ocorrencias() {
 
@@ -17,7 +20,6 @@ function Ocorrencias() {
   const [colocaOcorrenciasNaTela, setColocaOcorrenciasNaTela] = useState([]);
   const [ocorrenciaModal, setOCorrenciaModal] = useState(null);
   const { register, handleSubmit } = useForm();
-  const [selectedValue, setSelectedValue] = useState("nao");
   const [filtroNomeEventos, setFiltroNomeEventos] = useState('');
   const [erro, setErro] = useState(null);
   const stompClientRef = useRef(null);
@@ -27,23 +29,6 @@ function Ocorrencias() {
     setFiltroNomeEventos(event.target.value);
   };
 
-  const handleSelectChange = (event) => {
-    setSelectedValue(event.target.value);
-  };
-
-  // const filtrarDados = async () => {
-  //   try {
-  //     const respostaEventosFiltrados = await axios.get(`http://seu-endpoint-api/eventos?nome=${filtroNomeEventos}`);
-  //     setColocaEventosNaTela(respostaEventosFiltrados.data);
-  //     setErro(null);
-  //   } catch (error) {
-  //     console.error('Erro ao filtrar dados:', error);
-  //     setErro('Erro ao filtrar dados. Por favor, tente novamente.');
-  //     setTimeout(() => {
-  //       setErro(null);
-  //     }, 3000);
-  //   }
-  // };
 
   useEffect(() => {
     if (erro) {
@@ -157,37 +142,8 @@ function Ocorrencias() {
 
     const gravidadeClassEvento = data.gravidade === '' ? 'evento-normal-gravidade' : 'evento-grave-gravidade';
 
-    return (
-      <Fragment key={index} >
-        <div className={`divInformacoesEventos p-3 mt-1 mb-2 ${gravidadeClassEvento}`} >
-          <div className="container divInformacoesDeDentro" >
-            <div className=" row mb-1">
-              <div className="col-1 divDaBola">
-                <div className="bola"></div>
-              </div>
-              <div className="col">
-                <strong>
-                  {data.dataevento ? new Date(data.dataevento).toLocaleString('pt-BR') : 'N/E'}
-                </strong>
-              </div>
-              <div className="col eventoEReferencia">
-                <strong>{data.status ? data.status.slice(0, 40) : 'N/E'}</strong> . <strong>{data.referencia ? data.referencia.slice(0, 40) : 'N/E'}</strong>
-              </div>
-              <div className="col descricaoEvento" >
-                <strong>{data.destatus ? data.destatus.slice(0, 40) : 'N/E'}</strong>
-              </div>
-              <div className="col">
-                <strong>{data.nmcliente ? data.nmcliente.slice(0, 40) : 'N/E'}</strong>
-              </div>
-              <div className="col text-end">
-                <strong>{data.cidade ? data.cidade.slice(0, 40) : 'N/E'}</strong>
-              </div>
-            </div>
-          </div>
-        </div>
-      </Fragment>
-    )
-  }
+    return <CardEventos index={index} data={data} gravidadeClassEvento={gravidadeClassEvento} />;
+  };
 
   const renderOcorrenciaCard = (dataOcorrencia, index) => {
     if (!dataOcorrencia.id) {
@@ -202,65 +158,19 @@ function Ocorrencias() {
       try {
         const response = await axios.get(`http://localhost:8080/api/ocorrencia/${id}`);
         setOCorrenciaModal(response.data);
-        console.log(response)
-
+        console.log(response);
       } catch (error) {
         console.error('Erro ao obter dados complementares:', error);
       }
     };
 
-    return (
-      <Fragment key={index} >
-        <div onClick={() => { PegaDadosComplementares(dataOcorrencia.id) }} className={`infoOcorrencia card mb-3  ${gravidadeClass}`}  >
-          <div id='cardOcorrencia'
-            className={`card-important card-header ${gravidadeClass}`} data-bs-toggle="modal" data-bs-target={`#modal-${dataOcorrencia.id}`}>
-            <div className="row mb-4">
-              <div className="col dataCard mt-1 text-start">
-                <strong>
-                  {dataOcorrencia && dataOcorrencia.evento
-                    ? new Date(dataOcorrencia.evento.dataevento).toLocaleDateString('pt-BR')
-                    : ''}
-                </strong>
-              </div>
-              <div className="col HoraCard mt-1 me-4 text-end">
-                <strong>
-                  {dataOcorrencia && dataOcorrencia.evento
-                    ? new Date(dataOcorrencia.evento.dataevento).toLocaleTimeString('pt-BR')
-                    : ''}
-                </strong>
-              </div>
-            </div>
-            <div className="row">
-              <div className="descricaoOcorrencia mt-1 text-center"><strong>{dataOcorrencia && dataOcorrencia.evento ? dataOcorrencia.evento.destatus : ""}</strong></div>
-            </div>
-            <ScrollContainer><div className="nomeNoCard mt-2 mb-1 text-center scroll-on-hover"><strong className='ellipsis'> {dataOcorrencia && dataOcorrencia.evento ? dataOcorrencia.evento.nmcliente : ""}</strong></div></ScrollContainer>
-            <ScrollContainer><div className="nomeNoCard mb-1 text-center scroll-on-hover"><strong className='ellipsis'> {dataOcorrencia && dataOcorrencia.evento ? dataOcorrencia.evento.endereco : ""}</strong></div></ScrollContainer>
-          </div>
-        </div>
-      </Fragment>
-    )
-  }
+    return <CardOcorrencia index={index} dataOcorrencia={dataOcorrencia} gravidadeClass={gravidadeClass} PegaDadosComplementares={PegaDadosComplementares} ScrollContainer={ScrollContainer} />;
+  };
 
 
   return (
-    <>
-
-      <div className="utilitarios">
-        <div className="filtro">
-          <div className='d-flex'>
-            <input
-              className='form-control'
-              type="text"
-              name="filtroNome"
-              id="filtroEvento"
-              placeholder='Digite para filtrar...'
-              value={filtroNomeEventos}
-              onChange={handleFiltroNomeChangeEvento}
-            />
-            <button className='btn btn-secondary ms-2'>Filtrar</button>
-          </div>
-        </div>
-      </div>
+    <Fragment>
+      <Utilitarios handleFiltroNomeChangeEvento={handleFiltroNomeChangeEvento} filtroNomeEventos={filtroNomeEventos} />
 
       <div className='divEventos'>
         <div className="cabecalho">
@@ -294,19 +204,16 @@ function Ocorrencias() {
         {colocaOcorrenciasNaTela.map((dataOcorrencia, index) => { return renderOcorrenciaCard(dataOcorrencia, index) })}
       </div>
 
-      <ModalOcorrencia
-        dataOcorrencia={ocorrenciaModal || {}}
-        handleSelectChange={handleSelectChange}
+      <ModalOcorrencia dataOcorrencia={ocorrenciaModal || {}}
         handleSubmit={handleSubmit}
         register={register}
         setOCorrenciaModal={setOCorrenciaModal}
-        selectedValue={selectedValue}
         setColocaOcorrenciasNaTela={setColocaOcorrenciasNaTela}
       />
-
-    </>
-
+    </Fragment>
   )
+
+
 }
 
 export default Ocorrencias

@@ -1,13 +1,14 @@
 import { Route, Routes } from 'react-router-dom';
-import Navbar from '../fragments/sidebar';
 import Formulario from './cadastroCliente';
 import Ocorrencias from './ocorrencias';
 import ConsultaCliente from './consultaCliente';
+import Navbar from '../fragments/Geral/sidebar';
+import '../css/home.css';
 
 function Home() {
 
   return (
-    <div>
+    <div className='englobaTudo'>
       <Navbar />
       <Routes>
         <Route path='/cadastroCliente' element={<Formulario />} />

@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom"
 import { useState, useEffect } from "react";
-import '../css/ocorrencias.css'
+import '../../css/ocorrencias.css'
 
 function Navbar() {
 

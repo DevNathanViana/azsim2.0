@@ -13,7 +13,8 @@ html {
 }
 
 body {
-    background-color: #909090;
+    height: 100vh;
+    background-color: rgb(255, 255, 255);
 }
 
 .navbar {
@@ -939,4 +940,8 @@ h3 {
 
 .modal.modal-second {
     z-index: 1060 !important;
+}
+
+#root {
+    background-color: transparent;
 }
