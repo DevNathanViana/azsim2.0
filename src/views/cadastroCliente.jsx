@@ -67,7 +67,7 @@ function Formulario() {
                     cidade: clienteParaEdicao.cidade,
                     uf: clienteParaEdicao.uf,
                     cep: clienteParaEdicao.cep,
-                    observacao: clienteParaEdicao.observacao,
+                    procedimento: clienteParaEdicao.procedimento,
                     contatos: clienteParaEdicao.contatos,
                     setores: clienteParaEdicao.setores,
                     viagens: clienteParaEdicao.viagens,
@@ -102,7 +102,7 @@ function Formulario() {
                     senha: contato.senha,
                     contraSenha: contato.contraSenha,
                     dataNascimento: contato.dataNascimento,
-                    observacao: contato.observacao,
+                    procedimento: contato.procedimento,
                 }));
             }
 

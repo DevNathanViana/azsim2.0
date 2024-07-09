@@ -42,7 +42,7 @@ function ModalOcorrencia({ dataOcorrencia, setColocaOcorrenciasNaTela }) {
             setValue('kmRetorno', dataOcorrencia.kmretorno || '');
             setValue('kmTotal', dataOcorrencia.kmtotal || '');
             setValue('resumo', dataOcorrencia.resumo || '');
-            setValue('procedimentos', dataOcorrencia.procedimentos || '');
+            setValue('procedimentos', dataOcorrencia.procedimento || '');
             setValue('ocorrenciapolicialresumo', dataOcorrencia.ocorrenciapolicialresumo || '');
 
             setSelectedValue(dataOcorrencia.deslocamento ? 'sim' : 'nao');

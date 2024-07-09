@@ -60,10 +60,9 @@ function Inputs({ dataOcorrencia, handleSubmit, onSubmit, register, handleCatego
                     <div>
                         <div className="row ms-2 me-2 mt-1">
                             <div className="col-6">
-                                <label htmlFor="idagente" className="form-label">Número Agente</label>
-                                <input
-                                    {...register("idagente", { required: false })} disabled={selectedValue === 'nao'} type="text" className="form-control" id={`numAgente${dataOcorrencia.id}`} placeholder="" />
-                                {errors.idagente && <span className='fieldRequired'>Campo obrigatório</span>}
+                                <label htmlFor="ocorrenciapolicialresumo" className="form-label">Ocorrência Policial</label>
+                                <textarea {...register("ocorrenciapolicialresumo")} className="form-control" id="ocorrenciapolicialresumo" rows="1" ></textarea>
+                                {errors.ocorrenciapolicial && <span className='fieldRequired'>Campo obrigatório</span>}
                             </div>
                             <div className="col-6">
                                 <label htmlFor="agente" className="form-label">Agente</label>
@@ -165,13 +164,6 @@ function Inputs({ dataOcorrencia, handleSubmit, onSubmit, register, handleCatego
                         <label htmlFor="procedimentos" className="form-label">Procedimentos</label>
                         <textarea {...register("procedimentos")} className="form-control" id="procedimentos" rows="3"></textarea>
                         {errors.procedimentos && <span className='fieldRequired'>Campo obrigatório</span>}
-                    </div>
-                </div>
-                <div className="row ms-2 me-2 mt-2 mb-3">
-                    <div className="col-sm">
-                        <label htmlFor="ocorrenciapolicialresumo" className="form-label">Ocorrência Policial</label>
-                        <textarea {...register("ocorrenciapolicialresumo")} className="form-control" id="ocorrenciapolicialresumo" rows="3" ></textarea>
-                        {errors.ocorrenciapolicial && <span className='fieldRequired'>Campo obrigatório</span>}
                     </div>
                 </div>
             </form>

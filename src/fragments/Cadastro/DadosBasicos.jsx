@@ -32,8 +32,8 @@ function DadosBasicos({ dadosBasicos, errors, setDadosBasicos, register, handleC
                     />
                 </div>
                 <div className="col h-25">
-                    <label htmlFor="codificador" className="form-label"><strong>* Codificador</strong></label>
-                    <input name='codificador' {...register("codificador", { required: true })} type="text" className="form-control" id="codificador" placeholder=""
+                    <label htmlFor="codificador" className="form-label"><strong>Codificador</strong></label>
+                    <input name='codificador' {...register("codificador", { required: false })} type="text" className="form-control" id="codificador" placeholder=""
                         onChange={(e) => setDadosBasicos({ ...dadosBasicos, codificador: e.target.value })} value={dadosBasicos.codificador || ""}
                     />
                     {errors['codificador'] && <ErrorCard id='codificadorMsgErro' message="O campo codificador deve ser preenchido." />}
@@ -180,8 +180,8 @@ function DadosBasicos({ dadosBasicos, errors, setDadosBasicos, register, handleC
             </div>
             <div className="row mt-2">
                 <div className="col-lg ">
-                    <label htmlFor="observacao" className="form-label"><strong>Observações</strong></label>
-                    <input {...register("observacao", { required: false })} className="form-control" id="observacao" rows="3" onChange={(e) => setDadosBasicos({ ...dadosBasicos, observacao: e.target.value })} value={dadosBasicos.observacao || ""} />
+                    <label htmlFor="procedimento" className="form-label"><strong>Procedimentos</strong></label>
+                    <input {...register("procedimento", { required: false })} className="form-control" id="procedimento" rows="3" onChange={(e) => setDadosBasicos({ ...dadosBasicos, procedimento: e.target.value })} value={dadosBasicos.procedimento || ""} />
                 </div>
             </div>
         </div>
